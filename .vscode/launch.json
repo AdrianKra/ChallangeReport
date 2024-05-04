@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-ReportsServiceApplication<reports_service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "blossom.reports_service.ReportsServiceApplication",
+      "projectName": "reports_service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
