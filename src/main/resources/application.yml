@@ -1,0 +1,25 @@
+#RabbitMQ Configuration
+spring:
+  cloud:
+    stream:
+      bindings:
+        eventConsumer-in-0:
+          destination: sweng.events
+          binder: cloud_rabbit
+      binders:
+        cloud_rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: roedeer.rmq.cloudamqp.com
+                port: 5672
+                username: lgjrlhvy
+                password: kkcUE6OH4-D2_FxyCG5Cp5daUDkYIA3X
+                virtual-host: lgjrlhvy
+  rabbitmq:
+    host: roedeer.rmq.cloudamqp.com
+    port: 5672
+    username: lgjrlhvy
+    password: kkcUE6OH4-D2_FxyCG5Cp5daUDkYIA3X
+    virtual-host: lgjrlhvy
