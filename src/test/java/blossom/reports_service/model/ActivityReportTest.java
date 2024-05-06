@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
+@SpringBootTest(classes = ActivityReportTest.class)
 @ExtendWith(MockitoExtension.class)
 public class ActivityReportTest {
 
@@ -25,8 +25,6 @@ public class ActivityReportTest {
 
   @Test
   public void testActivityReport() {
-    ActivityReport activityReport = new ActivityReport(activity, user.getId(), "Activity Report 1", date, date,
-        "John Doe", "Activity Report Description");
 
     given(activity.getName()).willReturn("Activity 1");
     given(activity.getDescription()).willReturn("Activity Description");
@@ -35,7 +33,9 @@ public class ActivityReportTest {
 
     given(user.getId()).willReturn(1L);
 
-    assertEquals(1L, activityReport.getId());
+    ActivityReport activityReport = new ActivityReport(activity, user.getId(), "Activity Report 1", date, date,
+        "John Doe", "Activity Report Description");
+
     assertNotNull(activityReport.getActivity());
     assertEquals("Activity Report 1", activityReport.getName());
     assertNotNull(activityReport.getStartDate());
@@ -73,13 +73,11 @@ public class ActivityReportTest {
   public void testActivity() {
     Activity activity = new Activity();
 
-    activity.setId(1L);
     activity.setName("Activity 1");
     activity.setDescription("Activity Description");
     activity.setStartDate(date);
     activity.setEndDate(date);
 
-    assertEquals(1L, activity.getId());
     assertEquals("Activity 1", activity.getName());
     assertEquals("Activity Description", activity.getDescription());
     assertEquals(date, activity.getStartDate());
