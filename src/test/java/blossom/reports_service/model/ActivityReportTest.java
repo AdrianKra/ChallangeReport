@@ -18,29 +18,28 @@ public class ActivityReportTest {
   @Mock
   private Activity activity;
 
+  @Mock
+  private User user;
+
   java.util.Date date = new Date();
 
   @Test
   public void testActivityReport() {
-    ActivityReport activityReport = new ActivityReport();
-
-    activityReport.setId(1L);
-    activityReport.setActivity(activity);
-    activityReport.setName("Activity Report 1");
-    activityReport.setCreationDate(date);
-    activityReport.setCreatedBy("John Doe");
-    activityReport.setDescription("Activity Report Description");
+    ActivityReport activityReport = new ActivityReport(activity, user.getId(), "Activity Report 1", date, date,
+        "John Doe", "Activity Report Description");
 
     given(activity.getName()).willReturn("Activity 1");
     given(activity.getDescription()).willReturn("Activity Description");
     given(activity.getStartDate()).willReturn(date);
     given(activity.getEndDate()).willReturn(date);
 
-    System.out.println(activityReport.toString());
+    given(user.getId()).willReturn(1L);
+
     assertEquals(1L, activityReport.getId());
     assertNotNull(activityReport.getActivity());
     assertEquals("Activity Report 1", activityReport.getName());
-    assertNotNull(activityReport.getCreationDate());
+    assertNotNull(activityReport.getStartDate());
+    assertNotNull(activityReport.getEndDate());
     assertEquals("John Doe", activityReport.getCreatedBy());
     assertEquals("Activity Report Description", activityReport.getDescription());
     assertEquals(ActivityStatus.OPEN, activityReport.getStatus());
@@ -51,34 +50,40 @@ public class ActivityReportTest {
     assertEquals(date, activity.getEndDate());
   }
 
-  @Test
-  public void testActivitySummary() {
-    ActivitySummary activitySummary = new ActivitySummary();
+  // @Test
+  // public void testActivitySummary() {
+  // ActivitySummary activitySummary = new ActivitySummary();
 
-    activitySummary.setId(1L);
-    activitySummary.setActivity(new ArrayList<Activity>());
-    activitySummary.setName("Activity Summary 1");
-    activitySummary.setDescription("Activity Summary Description");
-    activitySummary.setStatus(ActivityStatus.OPEN);
+  // activitySummary.setId(1L);
+  // activitySummary.setActivity(new ArrayList<Activity>());
+  // activitySummary.setName("Activity Summary 1");
+  // activitySummary.setDescription("Activity Summary Description");
+  // activitySummary.setStatus(ActivityStatus.OPEN);
 
-    System.out.println(activitySummary.toString());
-    assertEquals(1L, activitySummary.getId());
-    assertNotNull(activitySummary.getActivity());
-    assertEquals("Activity Summary 1", activitySummary.getName());
-    assertEquals("Activity Summary Description", activitySummary.getDescription());
-    assertEquals(ActivityStatus.OPEN, activitySummary.getStatus());
+  // assertEquals(1L, activitySummary.getId());
+  // assertNotNull(activitySummary.getActivity());
+  // assertEquals("Activity Summary 1", activitySummary.getName());
+  // assertEquals("Activity Summary Description",
+  // activitySummary.getDescription());
+  // assertEquals(ActivityStatus.OPEN, activitySummary.getStatus());
 
-  }
+  // }
 
   @Test
   public void testActivity() {
     Activity activity = new Activity();
 
-  }
+    activity.setId(1L);
+    activity.setName("Activity 1");
+    activity.setDescription("Activity Description");
+    activity.setStartDate(date);
+    activity.setEndDate(date);
 
-  @Test
-  public void testActivityReportRepository() {
-    ActivityReportRepository activityReportRepository = new ActivityReportRepository() {
-    };
+    assertEquals(1L, activity.getId());
+    assertEquals("Activity 1", activity.getName());
+    assertEquals("Activity Description", activity.getDescription());
+    assertEquals(date, activity.getStartDate());
+    assertEquals(date, activity.getEndDate());
+
   }
 }

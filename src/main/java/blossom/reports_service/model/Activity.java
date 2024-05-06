@@ -2,8 +2,6 @@ package blossom.reports_service.model;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.*;
 
 @Entity

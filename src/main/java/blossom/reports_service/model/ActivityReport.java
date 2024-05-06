@@ -2,7 +2,6 @@ package blossom.reports_service.model;
 
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import jakarta.persistence.*;
 
@@ -14,11 +13,17 @@ public class ActivityReport {
   private Long id;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "activity_id", referencedColumnName = "id")
+  @JoinColumn(name = "activity_id", referencedColumnName = "activity_FK")
   private Activity activity;
 
+  // fk of user
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id", referencedColumnName = "User_FK")
+  private Long userId;
+
   private String name;
-  private Date creationDate;
+  private Date startDate;
+  private Date endDate;
   private String createdBy;
   private String description;
   private ActivityStatus status;
@@ -28,10 +33,13 @@ public class ActivityReport {
   }
 
   @Autowired
-  public ActivityReport(Activity activity, String name, Date creationDate, String createdBy, String description) {
+  public ActivityReport(Activity activity, Long userId, String name, Date startDate, Date endDate, String createdBy,
+      String description) {
+    this.userId = userId;
     this.activity = activity;
     this.name = name;
-    this.creationDate = creationDate;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.createdBy = createdBy;
     this.description = description;
     this.status = ActivityStatus.OPEN;
@@ -61,12 +69,20 @@ public class ActivityReport {
     this.name = name;
   }
 
-  public Date getCreationDate() {
-    return creationDate;
+  public Date getStartDate() {
+    return startDate;
   }
 
-  public void setCreationDate(Date creationDate) {
-    this.creationDate = creationDate;
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
   }
 
   public String getCreatedBy() {
@@ -99,7 +115,8 @@ public class ActivityReport {
         "id=" + id +
         ", activity=" + activity +
         ", name='" + name + '\'' +
-        ", creationDate=" + creationDate +
+        ", creationDate=" + startDate +
+        ", endDate=" + endDate +
         ", createdBy='" + createdBy + '\'' +
         ", description='" + description + '\'' +
         ", status=" + status +
@@ -121,8 +138,11 @@ public class ActivityReport {
       return false;
     if (name != null ? !name.equals(that.name) : that.name != null)
       return false;
-    if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null)
+    if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
       return false;
+    if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) {
+      return false;
+    }
     if (createdBy != null ? !createdBy.equals(that.createdBy) : that.createdBy != null)
       return false;
     if (description != null ? !description.equals(that.description) : that.description != null)
@@ -135,7 +155,8 @@ public class ActivityReport {
     int result = id != null ? id.hashCode() : 0;
     result = 31 * result + (activity != null ? activity.hashCode() : 0);
     result = 31 * result + (name != null ? name.hashCode() : 0);
-    result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+    result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+    result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
     result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
     result = 31 * result + (description != null ? description.hashCode() : 0);
     result = 31 * result + (status != null ? status.hashCode() : 0);
