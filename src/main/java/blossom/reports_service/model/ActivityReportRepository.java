@@ -2,12 +2,16 @@ package blossom.reports_service.model;
 
 import java.util.Optional;
 
-public interface ActivityReportRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ActivityReportRepository extends JpaRepository<ActivityReport, Long> {
 
   // find
-  ActivityReport findById(Long id);
+  Optional<ActivityReport> findById(Long id);
 
-  ActivityReport findByName(String name);
+  Optional<ActivityReport> findByName(String name);
 
   Optional<ActivityReport> findByActivity(Activity activity);
 
@@ -17,13 +21,6 @@ public interface ActivityReportRepository {
   void deleteByName(String name);
 
   // save
-  void save(ActivityReport activityReport);
-
-  void saveAll(ActivityReport activityReport);
-
-  // update
-  void update(ActivityReport activityReport);
-
-  void updateAll(ActivityReport activityReport);
+  ActivityReport save(ActivityReport activityReport);
 
 }

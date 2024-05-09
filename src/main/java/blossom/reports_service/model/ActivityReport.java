@@ -13,12 +13,13 @@ public class ActivityReport {
   private Long id;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "activity_id", referencedColumnName = "activity_FK")
+  @JoinColumn(name = "activity_FK")
   private Activity activity;
 
   // fk of user
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", referencedColumnName = "User_FK")
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_FK")
+  private User user;
   private Long userId;
 
   private String name;
@@ -33,9 +34,9 @@ public class ActivityReport {
   }
 
   @Autowired
-  public ActivityReport(Activity activity, Long userId, String name, Date startDate, Date endDate, String createdBy,
+  public ActivityReport(Activity activity, User user, String name, Date startDate, Date endDate, String createdBy,
       String description) {
-    this.userId = userId;
+    this.userId = user.getId();
     this.activity = activity;
     this.name = name;
     this.startDate = startDate;

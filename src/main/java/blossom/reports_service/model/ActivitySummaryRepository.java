@@ -2,14 +2,16 @@ package blossom.reports_service.model;
 
 import java.util.Optional;
 
-public interface ActivitySummaryRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ActivitySummaryRepository extends JpaRepository<ActivitySummary, Long> {
 
   // find
   Optional<ActivitySummary> findById(Long id);
 
   Optional<ActivitySummary> findByActivity(Activity activity);
-
-  Iterable<ActivitySummary> findAll();
 
   // delete
   void deleteById(Long id);

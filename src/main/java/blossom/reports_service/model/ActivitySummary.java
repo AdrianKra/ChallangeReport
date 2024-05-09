@@ -14,8 +14,9 @@ public class ActivitySummary {
   @JoinColumn(name = "activity_id", referencedColumnName = "id")
   private ArrayList<Activity> activity;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "Shopping_List_FK")
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_FK")
+  private User user;
   private Long userId;
 
   private int activityCount;
@@ -30,9 +31,9 @@ public class ActivitySummary {
     this.activity = new ArrayList<Activity>();
   }
 
-  public ActivitySummary(Long userId, ArrayList<Activity> activity, int activityCount, int doneCount, int pendingCount,
+  public ActivitySummary(User user, ArrayList<Activity> activity, int activityCount, int doneCount, int pendingCount,
       int overdueCount, int consecutiveDays, int longestStreak) {
-    this.userId = userId;
+    this.userId = user.getId();
     this.activity = activity;
     this.activityCount = activityCount;
     this.doneCount = doneCount;

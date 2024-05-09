@@ -25,11 +25,12 @@ public class ReportsService {
   // create activitySummary for a new user
   public ActivitySummary creActivitySummary(Activity activity, Long userId, Date date) {
     var user = userRepository.findById(userId);
-    if (user == null) {
+    if (user.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
     ArrayList<Activity> activities = new ArrayList<Activity>();
-    var activitySummary = new ActivitySummary(userId, activities, 0, 0, 0, 0, 0, 0);
+    activities.add(activity);
+    var activitySummary = new ActivitySummary(user.get(), activities, 1, 0, 1, 0, 1, 1);
     activitySummaryRepository.save(activitySummary);
     return activitySummary;
   }
@@ -45,7 +46,8 @@ public class ReportsService {
     if (userOptional.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
-    var activityReport = new ActivityReport(activity, userId, name, startDate, endDate, createdBy, description);
+    var user = userOptional.get();
+    var activityReport = new ActivityReport(activity, user, name, startDate, endDate, createdBy, description);
     activityReportRepository.save(activityReport);
     return activityReport;
   }
@@ -57,7 +59,6 @@ public class ReportsService {
     if (activityReportOptional.isEmpty()) {
       throw new ActivityReportNotFoundException("Activity report not found");
     }
-    activityReportRepository.update(activityReport);
     return activityReport;
   }
 

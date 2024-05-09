@@ -33,8 +33,8 @@ public class ActivityReportTest {
 
     given(user.getId()).willReturn(1L);
 
-    ActivityReport activityReport = new ActivityReport(activity, user.getId(), "Activity Report 1", date, date,
-        "John Doe", "Activity Report Description");
+    ActivityReport activityReport = new ActivityReport(activity, user, "Activity Report 1", date, date, "John Doe",
+        "Activity Report Description");
 
     assertNotNull(activityReport.getActivity());
     assertEquals("Activity Report 1", activityReport.getName());
