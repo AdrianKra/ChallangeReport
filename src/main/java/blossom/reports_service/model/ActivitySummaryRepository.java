@@ -11,6 +11,8 @@ public interface ActivitySummaryRepository extends JpaRepository<ActivitySummary
   // find
   Optional<ActivitySummary> findById(Long id);
 
+  Optional<ActivitySummary> findByUser(User user);
+
   // delete
   void deleteById(Long id);
 

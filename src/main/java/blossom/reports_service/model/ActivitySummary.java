@@ -19,6 +19,8 @@ public class ActivitySummary {
   private User user;
   private Long userId;
 
+  private int dailyActivitys;
+
   private int activityCount;
   private int doneCount;
   private int pendingCount;

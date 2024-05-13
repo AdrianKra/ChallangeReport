@@ -51,12 +51,6 @@ public class PersistenceTests {
   }
 
   @Test
-  public void ReportFindByName() {
-    Optional<ActivityReport> activityReport = activityReportRepository.findByName("Report 1");
-    assert (activityReport.isPresent());
-  }
-
-  @Test
   public void ReportFindByActivity() {
     Optional<Activity> activity = activityRepository.findById(1L);
     Optional<ActivityReport> activityReport = activityReportRepository.findByActivity(activity.get());
@@ -77,20 +71,16 @@ public class PersistenceTests {
   }
 
   @Test
-  public void ReportDeleteByName() {
-    activityReportRepository.deleteByName("Report 1");
-    Optional<ActivityReport> activityReport = activityReportRepository.findByName("Report 1");
-    assert (activityReport.isEmpty());
-  }
-
-  @Test
   public void ReportSave() {
-    Optional<Activity> activity = activityRepository.findById(3L);
-    Optional<User> user = userRepository.findById(3L);
-    ActivityReport activityReport = new ActivityReport(activity.get(), user.get(), "Report 3",
+    Optional<Activity> activityOptional = activityRepository.findById(3L);
+    Optional<User> userOptional = userRepository.findById(3L);
+
+    ActivityReport activityReport = new ActivityReport(activityOptional.get(), userOptional.get(), "Report 3",
         new java.util.Date(), "John Doe", "Report Description");
+
     activityReportRepository.save(activityReport);
-    Optional<ActivityReport> activityReport2 = activityReportRepository.findByName("Report 3");
-    assert (activityReport2.isPresent());
+
+    Optional<ActivityReport> activity = activityReportRepository.findById(activityReport.getId());
+    assert (activity.isPresent());
   }
 }

@@ -36,6 +36,7 @@ public class ActivityReport {
   @Autowired
   public ActivityReport(Activity activity, User user, String name, Date startDate, String createdBy,
       String description) {
+
     this.userId = user.getId();
     this.activity = activity;
     this.name = name;
@@ -60,6 +61,14 @@ public class ActivityReport {
 
   public void setActivity(Activity activity) {
     this.activity = activity;
+  }
+
+  public Long getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
   }
 
   public String getName() {

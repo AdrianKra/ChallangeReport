@@ -1,6 +1,7 @@
 package blossom.reports_service.model;
 
 import java.util.Date;
+import java.util.Optional;
 
 import jakarta.persistence.*;
 
@@ -64,6 +65,11 @@ public class Activity {
 
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
+  }
+
+  public Optional<Activity> findById(Long activityId) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'findById'");
   }
 
 }

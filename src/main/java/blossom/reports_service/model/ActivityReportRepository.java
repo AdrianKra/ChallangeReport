@@ -11,11 +11,11 @@ public interface ActivityReportRepository extends JpaRepository<ActivityReport, 
   // find
   Optional<ActivityReport> findById(Long id);
 
-  Optional<ActivityReport> findByName(String name);
-
   Optional<ActivityReport> findByActivity(Activity activity);
 
   Iterable<ActivityReport> findAllByStatus(Enum status);
+
+  Iterable<ActivityReport> findAllByUser(User user);
 
   // delete
   void deleteById(Long id);
@@ -24,5 +24,9 @@ public interface ActivityReportRepository extends JpaRepository<ActivityReport, 
 
   // save
   ActivityReport save(ActivityReport activityReport);
+
+  Iterable<ActivityReport> findAllByUserId(Long userId);
+
+  boolean existsByActivityIdAndUserId(Long activityId, Long userId);
 
 }
