@@ -18,7 +18,7 @@ public class ActivityReport {
 
   // fk of user
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_FK")
+  @JoinColumn(name = "users_FK")
   private User user;
   private Long userId;
 
@@ -34,13 +34,13 @@ public class ActivityReport {
   }
 
   @Autowired
-  public ActivityReport(Activity activity, User user, String name, Date startDate, Date endDate, String createdBy,
+  public ActivityReport(Activity activity, User user, String name, Date startDate, String createdBy,
       String description) {
     this.userId = user.getId();
     this.activity = activity;
     this.name = name;
     this.startDate = startDate;
-    this.endDate = endDate;
+    this.endDate = null;
     this.createdBy = createdBy;
     this.description = description;
     this.status = ActivityStatus.OPEN;

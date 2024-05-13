@@ -15,6 +15,8 @@ public interface ActivityReportRepository extends JpaRepository<ActivityReport, 
 
   Optional<ActivityReport> findByActivity(Activity activity);
 
+  Iterable<ActivityReport> findAllByStatus(Enum status);
+
   // delete
   void deleteById(Long id);
 

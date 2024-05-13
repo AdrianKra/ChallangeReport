@@ -23,14 +23,13 @@ public class ReportsService {
   }
 
   // create activitySummary for a new user
-  public ActivitySummary creActivitySummary(Activity activity, Long userId, Date date) {
+  public ActivitySummary creActivitySummary(Long userId, Date date) {
     var user = userRepository.findById(userId);
     if (user.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
     ArrayList<Activity> activities = new ArrayList<Activity>();
-    activities.add(activity);
-    var activitySummary = new ActivitySummary(user.get(), activities, 1, 0, 1, 0, 1, 1);
+    var activitySummary = new ActivitySummary(user.get(), activities);
     activitySummaryRepository.save(activitySummary);
     return activitySummary;
   }
@@ -47,24 +46,8 @@ public class ReportsService {
       throw new UserNotFoundException("User not found");
     }
     var user = userOptional.get();
-    var activityReport = new ActivityReport(activity, user, name, startDate, endDate, createdBy, description);
+    var activityReport = new ActivityReport(activity, user, name, startDate, createdBy, description);
     activityReportRepository.save(activityReport);
     return activityReport;
   }
-
-  // update activityReport
-  public ActivityReport updateActivityReport(ActivityReport activityReport) {
-    Optional<ActivityReport> activityReportOptional = activityReportRepository
-        .findByActivity(activityReport.getActivity());
-    if (activityReportOptional.isEmpty()) {
-      throw new ActivityReportNotFoundException("Activity report not found");
-    }
-    return activityReport;
-  }
-
-  // delete activityReport
-  public void deleteActivityReport(Long id) {
-    activityReportRepository.deleteById(id);
-  }
-
 }

@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest(classes = ActivityReportTest.class)
 @ExtendWith(MockitoExtension.class)
-public class ActivityReportTest {
+public class UnitTest {
 
   @Mock
   private Activity activity;
@@ -31,15 +30,13 @@ public class ActivityReportTest {
     given(activity.getStartDate()).willReturn(date);
     given(activity.getEndDate()).willReturn(date);
 
-    given(user.getId()).willReturn(1L);
-
-    ActivityReport activityReport = new ActivityReport(activity, user, "Activity Report 1", date, date, "John Doe",
+    ActivityReport activityReport = new ActivityReport(activity, user, "Activity Report 1", date, "John Doe",
         "Activity Report Description");
 
     assertNotNull(activityReport.getActivity());
     assertEquals("Activity Report 1", activityReport.getName());
     assertNotNull(activityReport.getStartDate());
-    assertNotNull(activityReport.getEndDate());
+    assertNull(activityReport.getEndDate());
     assertEquals("John Doe", activityReport.getCreatedBy());
     assertEquals("Activity Report Description", activityReport.getDescription());
     assertEquals(ActivityStatus.OPEN, activityReport.getStatus());
@@ -50,33 +47,24 @@ public class ActivityReportTest {
     assertEquals(date, activity.getEndDate());
   }
 
-  // @Test
-  // public void testActivitySummary() {
-  // ActivitySummary activitySummary = new ActivitySummary();
+  @Test
+  public void testActivitySummary() {
+    ActivitySummary activitySummary = new ActivitySummary(user, new ArrayList<Activity>());
 
-  // activitySummary.setId(1L);
-  // activitySummary.setActivity(new ArrayList<Activity>());
-  // activitySummary.setName("Activity Summary 1");
-  // activitySummary.setDescription("Activity Summary Description");
-  // activitySummary.setStatus(ActivityStatus.OPEN);
+    assertEquals(user, user);
+    assertNotNull(activitySummary.getActivitys());
+    assertEquals(0, activitySummary.getActivityCount());
+    assertEquals(0, activitySummary.getDoneCount());
+    assertEquals(0, activitySummary.getPendingCount());
+    assertEquals(0, activitySummary.getOverdueCount());
+    assertEquals(0, activitySummary.getConsecutiveDays());
+    assertEquals(0, activitySummary.getLongestStreak());
 
-  // assertEquals(1L, activitySummary.getId());
-  // assertNotNull(activitySummary.getActivity());
-  // assertEquals("Activity Summary 1", activitySummary.getName());
-  // assertEquals("Activity Summary Description",
-  // activitySummary.getDescription());
-  // assertEquals(ActivityStatus.OPEN, activitySummary.getStatus());
-
-  // }
+  }
 
   @Test
   public void testActivity() {
-    Activity activity = new Activity();
-
-    activity.setName("Activity 1");
-    activity.setDescription("Activity Description");
-    activity.setStartDate(date);
-    activity.setEndDate(date);
+    Activity activity = new Activity("Activity 1", "Activity Description", date, date);
 
     assertEquals("Activity 1", activity.getName());
     assertEquals("Activity Description", activity.getDescription());

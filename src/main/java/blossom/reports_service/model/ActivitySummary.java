@@ -12,7 +12,7 @@ public class ActivitySummary {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "activity_id", referencedColumnName = "id")
-  private ArrayList<Activity> activity;
+  private ArrayList<Activity> activitys;
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
@@ -28,19 +28,18 @@ public class ActivitySummary {
   private int longestStreak;
 
   public ActivitySummary() {
-    this.activity = new ArrayList<Activity>();
+    this.activitys = new ArrayList<Activity>();
   }
 
-  public ActivitySummary(User user, ArrayList<Activity> activity, int activityCount, int doneCount, int pendingCount,
-      int overdueCount, int consecutiveDays, int longestStreak) {
+  public ActivitySummary(User user, ArrayList<Activity> activitys) {
     this.userId = user.getId();
-    this.activity = activity;
-    this.activityCount = activityCount;
-    this.doneCount = doneCount;
-    this.pendingCount = pendingCount;
-    this.overdueCount = overdueCount;
-    this.consecutiveDays = consecutiveDays;
-    this.longestStreak = longestStreak;
+    this.activitys = activitys;
+    this.activityCount = 0;
+    this.doneCount = 0;
+    this.pendingCount = 0;
+    this.overdueCount = 0;
+    this.consecutiveDays = 0;
+    this.longestStreak = 0;
   }
 
   public Long getId() {
@@ -51,12 +50,20 @@ public class ActivitySummary {
     this.id = id;
   }
 
-  public ArrayList<Activity> getActivity() {
-    return activity;
+  public User getUser() {
+    return user;
   }
 
-  public void setActivity(ArrayList<Activity> activity) {
-    this.activity = activity;
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public ArrayList<Activity> getActivitys() {
+    return activitys;
+  }
+
+  public void setActivitys(ArrayList<Activity> activitys) {
+    this.activitys = activitys;
   }
 
   public Long getUserId() {
@@ -117,7 +124,7 @@ public class ActivitySummary {
 
   @Override
   public String toString() {
-    return "ActivitySummary [activity=" + activity + ", activityCount=" + activityCount + ", consecutiveDays="
+    return "ActivitySummary [activity=" + activitys + ", activityCount=" + activityCount + ", consecutiveDays="
         + consecutiveDays + ", doneCount=" + doneCount + ", id=" + id + ", longestStreak=" + longestStreak
         + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + userId + "]";
   }
@@ -131,10 +138,10 @@ public class ActivitySummary {
     if (getClass() != obj.getClass())
       return false;
     ActivitySummary other = (ActivitySummary) obj;
-    if (activity == null) {
-      if (other.activity != null)
+    if (activitys == null) {
+      if (other.activitys != null)
         return false;
-    } else if (!activity.equals(other.activity))
+    } else if (!activitys.equals(other.activitys))
       return false;
     if (activityCount != other.activityCount)
       return false;
@@ -165,7 +172,7 @@ public class ActivitySummary {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((activity == null) ? 0 : activity.hashCode());
+    result = prime * result + ((activitys == null) ? 0 : activitys.hashCode());
     result = prime * result + activityCount;
     result = prime * result + consecutiveDays;
     result = prime * result + doneCount;

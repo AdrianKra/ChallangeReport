@@ -6,15 +6,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActivitySummaryRepository extends JpaRepository<ActivitySummary, Long> {
+public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
   // find
-  Optional<ActivitySummary> findById(Long id);
+  Optional<Activity> findById(Long id);
+
+  Optional<Activity> findByName(String name);
 
   // delete
   void deleteById(Long id);
 
-  // save
-  ActivitySummary save(ActivitySummary activitySummary);
+  void deleteByName(String name);
 
+  // save
+  Activity save(Activity activity);
 }

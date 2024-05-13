@@ -3,7 +3,7 @@ package blossom.reports_service.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "\"users\"")
+@Table(name = "users")
 public class User {
 
   @Id
