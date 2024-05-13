@@ -17,13 +17,13 @@ public class ReportsService {
   private final ActivityReportRepository activityReportRepository;
   private final ActivitySummaryRepository activitySummaryRepository;
   private final UserRepository userRepository;
-  private final Activity activityRepository;
+  private final ActivityRepository activityRepository;
 
   @Autowired
   public ReportsService(ActivityReportRepository activityReportRepository,
       ActivitySummaryRepository activitySummaryRepository,
       UserRepository userRepository,
-      Activity activityRepository) {
+      ActivityRepository activityRepository) {
 
     this.activityReportRepository = activityReportRepository;
     this.activitySummaryRepository = activitySummaryRepository;
