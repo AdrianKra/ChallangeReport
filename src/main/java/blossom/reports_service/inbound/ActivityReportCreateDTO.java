@@ -2,6 +2,8 @@ package blossom.reports_service.inbound;
 
 import java.util.Date;
 
+import blossom.reports_service.model.ActivityStatus;
+
 public class ActivityReportCreateDTO {
   private Long activityId;
   private Long userId;
@@ -10,6 +12,7 @@ public class ActivityReportCreateDTO {
   private Date endDate;
   private String createdBy;
   private String description;
+  private ActivityStatus status;
 
   // Standard-Konstruktor
   public ActivityReportCreateDTO() {
@@ -83,5 +86,13 @@ public class ActivityReportCreateDTO {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public ActivityStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(ActivityStatus status) {
+    this.status = status;
   }
 }

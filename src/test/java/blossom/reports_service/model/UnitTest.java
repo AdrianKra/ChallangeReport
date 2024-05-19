@@ -48,10 +48,9 @@ public class UnitTest {
 
   @Test
   public void testActivitySummary() {
-    ActivitySummary activitySummary = new ActivitySummary(user, new ArrayList<Activity>());
+    ActivitySummary activitySummary = new ActivitySummary(user);
 
     assertEquals(user, user);
-    assertNotNull(activitySummary.getActivitys());
     assertEquals(0, activitySummary.getActivityCount());
     assertEquals(0, activitySummary.getDoneCount());
     assertEquals(0, activitySummary.getPendingCount());

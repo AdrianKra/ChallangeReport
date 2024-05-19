@@ -18,8 +18,10 @@ public class SetupController {
     this.reportsService = reportsService;
   }
 
-  @RequestMapping("/createActivitySummary/{userId}/{date}")
-  public ActivitySummary createActivitySummary(@PathVariable Long userId, @PathVariable Date date) {
+  @RequestMapping("/createActivitySummary/{userId}")
+  public ActivitySummary createActivitySummary(@PathVariable Long userId) {
+    // create new date specific to the current day
+    Date date = new Date(System.currentTimeMillis());
     return reportsService.createActivitySummary(userId, date);
   }
 

@@ -1,6 +1,8 @@
 package blossom.reports_service.model;
 
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.ArrayList;
 
 @Entity
@@ -10,14 +12,12 @@ public class ActivitySummary {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "activity_id", referencedColumnName = "id")
-  private ArrayList<Activity> activitys;
-
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
   private User user;
   private Long userId;
+
+  private Date lastActive;
 
   private int dailyActivitys;
 
@@ -30,12 +30,11 @@ public class ActivitySummary {
   private int longestStreak;
 
   public ActivitySummary() {
-    this.activitys = new ArrayList<Activity>();
   }
 
-  public ActivitySummary(User user, ArrayList<Activity> activitys) {
+  public ActivitySummary(User user) {
     this.userId = user.getId();
-    this.activitys = activitys;
+    this.lastActive = null;
     this.activityCount = 0;
     this.doneCount = 0;
     this.pendingCount = 0;
@@ -60,20 +59,20 @@ public class ActivitySummary {
     this.user = user;
   }
 
-  public ArrayList<Activity> getActivitys() {
-    return activitys;
-  }
-
-  public void setActivitys(ArrayList<Activity> activitys) {
-    this.activitys = activitys;
-  }
-
   public Long getUserId() {
     return userId;
   }
 
   public void setUserId(Long userId) {
     this.userId = userId;
+  }
+
+  public Date getLastActive() {
+    return lastActive;
+  }
+
+  public void setLastActive(Date lastActive) {
+    this.lastActive = lastActive;
   }
 
   public int getActivityCount() {
@@ -126,7 +125,7 @@ public class ActivitySummary {
 
   @Override
   public String toString() {
-    return "ActivitySummary [activity=" + activitys + ", activityCount=" + activityCount + ", consecutiveDays="
+    return "ActivitySummary [activityCount=" + activityCount + ", consecutiveDays="
         + consecutiveDays + ", doneCount=" + doneCount + ", id=" + id + ", longestStreak=" + longestStreak
         + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + userId + "]";
   }
@@ -140,11 +139,6 @@ public class ActivitySummary {
     if (getClass() != obj.getClass())
       return false;
     ActivitySummary other = (ActivitySummary) obj;
-    if (activitys == null) {
-      if (other.activitys != null)
-        return false;
-    } else if (!activitys.equals(other.activitys))
-      return false;
     if (activityCount != other.activityCount)
       return false;
     if (consecutiveDays != other.consecutiveDays)
@@ -174,7 +168,6 @@ public class ActivitySummary {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((activitys == null) ? 0 : activitys.hashCode());
     result = prime * result + activityCount;
     result = prime * result + consecutiveDays;
     result = prime * result + doneCount;
