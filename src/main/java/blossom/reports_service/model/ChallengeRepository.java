@@ -1,23 +1,23 @@
 package blossom.reports_service.model;
 
-import java.util.Optional;
-
+import java.util.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
-  // find
-  Optional<Challenge> findById(Long id);
+    Optional<Challenge> findOneById(Long id);
 
-  Optional<Challenge> findByName(String name);
+    Challenge save(@NonNull Challenge challenge);
 
-  // delete
-  void deleteById(Long id);
+    void deleteById(@NonNull Long id);
 
-  void deleteByName(String name);
+    List<Challenge> findAll();
 
-  // save
-  Challenge save(Challenge challenge);
+    List<Challenge> findAllByChallengeVisibility(Visibility visibility);
+
+    List<Challenge> findAllByUserId(Long userId);
+
 }

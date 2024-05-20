@@ -20,13 +20,14 @@ public class ChallengeReport {
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "users_FK")
   private User user;
-  private Long userId;
 
   private String name;
   private Date startDate;
   private Date endDate;
   private String createdBy;
   private String description;
+
+  @Enumerated(EnumType.STRING)
   private ChallengeStatus status;
 
   public ChallengeReport() {
@@ -37,7 +38,7 @@ public class ChallengeReport {
   public ChallengeReport(Challenge challenge, User user, String name, Date startDate, String createdBy,
       String description) {
 
-    this.userId = user.getId();
+    this.user = user;
     this.challenge = challenge;
     this.name = name;
     this.startDate = startDate;
@@ -55,20 +56,20 @@ public class ChallengeReport {
     this.id = id;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   public Challenge getChallenge() {
     return challenge;
   }
 
   public void setChallenge(Challenge challenge) {
     this.challenge = challenge;
-  }
-
-  public Long getUserId() {
-    return userId;
-  }
-
-  public void setUserId(Long userId) {
-    this.userId = userId;
   }
 
   public String getName() {

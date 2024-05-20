@@ -76,7 +76,7 @@ public class ReportsService {
     // Convert DTO to ChallengeReport entity
     ChallengeReport challengeReport = new ChallengeReport();
     challengeReport.setChallenge(optionalChallenge.get());
-    challengeReport.setUserId(optionalUser.get().getId());
+    challengeReport.setUser(optionalUser.get());
     challengeReport.setName(dto.getName());
     challengeReport.setStartDate(dto.getStartDate());
     challengeReport.setEndDate(dto.getEndDate());
@@ -169,7 +169,7 @@ public class ReportsService {
     }
 
     // Check if User exists
-    Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUserId());
+    Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUser().getId());
     if (optionalUser.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
