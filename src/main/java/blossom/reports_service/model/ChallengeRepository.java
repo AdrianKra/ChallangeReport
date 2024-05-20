@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActivityRepository extends JpaRepository<Activity, Long> {
+public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
   // find
-  Optional<Activity> findById(Long id);
+  Optional<Challenge> findById(Long id);
 
-  Optional<Activity> findByName(String name);
+  Optional<Challenge> findByName(String name);
 
   // delete
   void deleteById(Long id);
@@ -19,5 +19,5 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
   void deleteByName(String name);
 
   // save
-  Activity save(Activity activity);
+  Challenge save(Challenge challenge);
 }

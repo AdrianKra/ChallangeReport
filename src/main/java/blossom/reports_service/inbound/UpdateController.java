@@ -1,40 +1,41 @@
-package blossom.reports_service.model;
+package blossom.reports_service.inbound;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import blossom.reports_service.inbound.ActivityReportCreateDTO;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import blossom.reports_service.model.ChallengeReport;
+import blossom.reports_service.model.ReportsService;
+
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/call")
 public class UpdateController {
 
-  private final ReportsService reportsService;
+  private ReportsService reportsService;
 
   @Autowired
   public UpdateController(ReportsService reportsService) {
     this.reportsService = reportsService;
   }
 
-  @PostMapping("/createActivityReport")
+  @PostMapping("/createChallengeReport")
   @ResponseStatus(HttpStatus.CREATED)
-  public ActivityReport createActivityReport(@RequestBody ActivityReportCreateDTO dto) {
+  public ChallengeReport createChallengeReport(@RequestBody ReportDTO dto) {
     // create new date specific to the current day
-    return reportsService.createActivityReport(dto);
+    return reportsService.createChallengeReport(dto);
   }
 
-  @PutMapping("updateActivityReport/{id}")
-  public ActivityReport putMethodName(@PathVariable Long id, @RequestBody ActivityReportCreateDTO dto) {
-    return reportsService.updateActivityReport(id, dto);
+  @PutMapping("updateChallengeReport/{id}")
+  public ChallengeReport putMethodName(@PathVariable Long id, @RequestBody ReportDTO dto) {
+    return reportsService.updateChallengeReport(id, dto);
   }
 
-  @DeleteMapping("deleteActivityReport/{id}")
+  @DeleteMapping("deleteChallengeReport/{id}")
   public void deleteMethodName(@PathVariable Long id) {
-    reportsService.deleteActivityReport(id);
+    reportsService.deleteChallengeReport(id);
   }
 }

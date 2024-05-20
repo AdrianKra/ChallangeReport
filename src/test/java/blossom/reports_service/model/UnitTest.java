@@ -14,7 +14,7 @@ import static org.mockito.BDDMockito.given;
 public class UnitTest {
 
   @Mock
-  private Activity activity;
+  private Challenge challenge;
 
   @Mock
   private User user;
@@ -22,51 +22,49 @@ public class UnitTest {
   java.util.Date date = new Date();
 
   @Test
-  public void testActivityReport() {
+  public void testChallengeReport() {
 
-    given(activity.getName()).willReturn("Activity 1");
-    given(activity.getDescription()).willReturn("Activity Description");
-    given(activity.getStartDate()).willReturn(date);
-    given(activity.getEndDate()).willReturn(date);
+    given(challenge.getTitle()).willReturn("Challenge 1");
+    given(challenge.getDescription()).willReturn("Challenge Description");
+    given(challenge.getDeadline()).willReturn(date);
 
-    ActivityReport activityReport = new ActivityReport(activity, user, "Activity Report 1", date, "John Doe",
-        "Activity Report Description");
+    ChallengeReport challengeReport = new ChallengeReport(challenge, user, "Challenge Report 1", date, "John Doe",
+        "Challenge Report Description");
 
-    assertNotNull(activityReport.getActivity());
-    assertEquals("Activity Report 1", activityReport.getName());
-    assertNotNull(activityReport.getStartDate());
-    assertNull(activityReport.getEndDate());
-    assertEquals("John Doe", activityReport.getCreatedBy());
-    assertEquals("Activity Report Description", activityReport.getDescription());
-    assertEquals(ActivityStatus.OPEN, activityReport.getStatus());
+    assertNotNull(challengeReport.getChallenge());
+    assertEquals("Challenge Report 1", challengeReport.getName());
+    assertNotNull(challengeReport.getStartDate());
+    assertNull(challengeReport.getEndDate());
+    assertEquals("John Doe", challengeReport.getCreatedBy());
+    assertEquals("Challenge Report Description", challengeReport.getDescription());
+    assertEquals(ChallengeStatus.OPEN, challengeReport.getStatus());
 
-    assertEquals("Activity 1", activity.getName());
-    assertEquals("Activity Description", activity.getDescription());
-    assertEquals(date, activity.getStartDate());
-    assertEquals(date, activity.getEndDate());
+    assertEquals("Challenge 1", challenge.getTitle());
+    assertEquals("Challenge Description", challenge.getDescription());
+    assertEquals(date, challenge.getDeadline());
   }
 
   @Test
-  public void testActivitySummary() {
-    ActivitySummary activitySummary = new ActivitySummary(user);
+  public void testChallengeSummary() {
+    ChallengeSummary challengeSummary = new ChallengeSummary(user);
 
     assertEquals(user, user);
-    assertEquals(0, activitySummary.getActivityCount());
-    assertEquals(0, activitySummary.getDoneCount());
-    assertEquals(0, activitySummary.getPendingCount());
-    assertEquals(0, activitySummary.getOverdueCount());
-    assertEquals(0, activitySummary.getConsecutiveDays());
-    assertEquals(0, activitySummary.getLongestStreak());
+    assertEquals(0, challengeSummary.getChallengeCount());
+    assertEquals(0, challengeSummary.getDoneCount());
+    assertEquals(0, challengeSummary.getPendingCount());
+    assertEquals(0, challengeSummary.getOverdueCount());
+    assertEquals(0, challengeSummary.getConsecutiveDays());
+    assertEquals(0, challengeSummary.getLongestStreak());
 
   }
 
   @Test
-  public void testActivity() {
-    Activity activity = new Activity("Activity 1", "Activity Description", date, date);
+  public void testChallenge() {
+    Challenge challenge = new Challenge("Challenge 1", "Challenge Description", Unit.HOURS, 100, date, 10, 5, user,
+        Visibility.PUBLIC);
 
-    assertEquals("Activity 1", activity.getName());
-    assertEquals("Activity Description", activity.getDescription());
-    assertEquals(date, activity.getStartDate());
-    assertEquals(date, activity.getEndDate());
+    assertEquals("Challenge 1", challenge.getTitle());
+    assertEquals("Challenge Description", challenge.getDescription());
+    assertEquals(date, challenge.getDeadline());
   }
 }

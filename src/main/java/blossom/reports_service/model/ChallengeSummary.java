@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.ArrayList;
 
 @Entity
-public class ActivitySummary {
+public class ChallengeSummary {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,9 @@ public class ActivitySummary {
 
   private Date lastActive;
 
-  private int dailyActivitys;
+  private int dailyChallenges;
 
-  private int activityCount;
+  private int challengeCount;
   private int doneCount;
   private int pendingCount;
   private int overdueCount;
@@ -29,13 +29,13 @@ public class ActivitySummary {
   private int consecutiveDays;
   private int longestStreak;
 
-  public ActivitySummary() {
+  public ChallengeSummary() {
   }
 
-  public ActivitySummary(User user) {
+  public ChallengeSummary(User user) {
     this.userId = user.getId();
     this.lastActive = null;
-    this.activityCount = 0;
+    this.challengeCount = 0;
     this.doneCount = 0;
     this.pendingCount = 0;
     this.overdueCount = 0;
@@ -75,12 +75,12 @@ public class ActivitySummary {
     this.lastActive = lastActive;
   }
 
-  public int getActivityCount() {
-    return activityCount;
+  public int getChallengeCount() {
+    return challengeCount;
   }
 
-  public void setActivityCount(int activityCount) {
-    this.activityCount = activityCount;
+  public void setChallengeCount(int challengeCount) {
+    this.challengeCount = challengeCount;
   }
 
   public int getDoneCount() {
@@ -125,7 +125,7 @@ public class ActivitySummary {
 
   @Override
   public String toString() {
-    return "ActivitySummary [activityCount=" + activityCount + ", consecutiveDays="
+    return "ChallengeSummary [challengeCount=" + challengeCount + ", consecutiveDays="
         + consecutiveDays + ", doneCount=" + doneCount + ", id=" + id + ", longestStreak=" + longestStreak
         + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + userId + "]";
   }
@@ -138,8 +138,8 @@ public class ActivitySummary {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ActivitySummary other = (ActivitySummary) obj;
-    if (activityCount != other.activityCount)
+    ChallengeSummary other = (ChallengeSummary) obj;
+    if (challengeCount != other.challengeCount)
       return false;
     if (consecutiveDays != other.consecutiveDays)
       return false;
@@ -168,7 +168,7 @@ public class ActivitySummary {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + activityCount;
+    result = prime * result + challengeCount;
     result = prime * result + consecutiveDays;
     result = prime * result + doneCount;
     result = prime * result + ((id == null) ? 0 : id.hashCode());

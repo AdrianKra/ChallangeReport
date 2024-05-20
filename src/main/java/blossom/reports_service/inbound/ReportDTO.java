@@ -2,27 +2,27 @@ package blossom.reports_service.inbound;
 
 import java.util.Date;
 
-import blossom.reports_service.model.ActivityStatus;
+import blossom.reports_service.model.ChallengeStatus;
 
-public class ActivityReportCreateDTO {
-  private Long activityId;
+public class ReportDTO {
+  private Long challengeId;
   private Long userId;
   private String name;
   private Date startDate;
   private Date endDate;
   private String createdBy;
   private String description;
-  private ActivityStatus status;
+  private ChallengeStatus status;
 
   // Standard-Konstruktor
-  public ActivityReportCreateDTO() {
+  public ReportDTO() {
   }
 
   // Konstruktor mit allen Feldern
-  public ActivityReportCreateDTO(Long activityId, Long userId, String name, Date startDate, Date endDate,
+  public ReportDTO(Long challengeId, Long userId, String name, Date startDate, Date endDate,
       String createdBy, String description) {
 
-    this.activityId = activityId;
+    this.challengeId = challengeId;
     this.userId = userId;
     this.name = name;
     this.startDate = startDate;
@@ -32,12 +32,12 @@ public class ActivityReportCreateDTO {
   }
 
   // Getter und Setter
-  public Long getActivityId() {
-    return activityId;
+  public Long getChallengeId() {
+    return challengeId;
   }
 
-  public void setActivityId(Long activityId) {
-    this.activityId = activityId;
+  public void setChallengeId(Long challengeId) {
+    this.challengeId = challengeId;
   }
 
   public Long getUserId() {
@@ -88,11 +88,11 @@ public class ActivityReportCreateDTO {
     this.description = description;
   }
 
-  public ActivityStatus getStatus() {
+  public ChallengeStatus getStatus() {
     return status;
   }
 
-  public void setStatus(ActivityStatus status) {
+  public void setStatus(ChallengeStatus status) {
     this.status = status;
   }
 }

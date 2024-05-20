@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.persistence.*;
 
 @Entity
-public class ActivityReport {
+public class ChallengeReport {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "activity_FK")
-  private Activity activity;
+  @JoinColumn(name = "challenge_FK")
+  private Challenge challenge;
 
   // fk of user
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -27,24 +27,24 @@ public class ActivityReport {
   private Date endDate;
   private String createdBy;
   private String description;
-  private ActivityStatus status;
+  private ChallengeStatus status;
 
-  public ActivityReport() {
-    this.status = ActivityStatus.OPEN;
+  public ChallengeReport() {
+    this.status = ChallengeStatus.OPEN;
   }
 
   @Autowired
-  public ActivityReport(Activity activity, User user, String name, Date startDate, String createdBy,
+  public ChallengeReport(Challenge challenge, User user, String name, Date startDate, String createdBy,
       String description) {
 
     this.userId = user.getId();
-    this.activity = activity;
+    this.challenge = challenge;
     this.name = name;
     this.startDate = startDate;
     this.endDate = null;
     this.createdBy = createdBy;
     this.description = description;
-    this.status = ActivityStatus.OPEN;
+    this.status = ChallengeStatus.OPEN;
   }
 
   public Long getId() {
@@ -55,12 +55,12 @@ public class ActivityReport {
     this.id = id;
   }
 
-  public Activity getActivity() {
-    return activity;
+  public Challenge getChallenge() {
+    return challenge;
   }
 
-  public void setActivity(Activity activity) {
-    this.activity = activity;
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
   }
 
   public Long getUserId() {
@@ -111,19 +111,19 @@ public class ActivityReport {
     this.description = description;
   }
 
-  public ActivityStatus getStatus() {
+  public ChallengeStatus getStatus() {
     return status;
   }
 
-  public void setStatus(ActivityStatus status) {
+  public void setStatus(ChallengeStatus status) {
     this.status = status;
   }
 
   @Override
   public String toString() {
-    return "ActivityReport{" +
+    return "ChallengeReport{" +
         "id=" + id +
-        ", activity=" + activity +
+        ", challenge=" + challenge +
         ", name='" + name + '\'' +
         ", creationDate=" + startDate +
         ", endDate=" + endDate +
@@ -140,11 +140,11 @@ public class ActivityReport {
     if (o == null || getClass() != o.getClass())
       return false;
 
-    ActivityReport that = (ActivityReport) o;
+    ChallengeReport that = (ChallengeReport) o;
 
     if (id != null ? !id.equals(that.id) : that.id != null)
       return false;
-    if (activity != null ? !activity.equals(that.activity) : that.activity != null)
+    if (challenge != null ? !challenge.equals(that.challenge) : that.challenge != null)
       return false;
     if (name != null ? !name.equals(that.name) : that.name != null)
       return false;
@@ -163,7 +163,7 @@ public class ActivityReport {
   @Override
   public int hashCode() {
     int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (activity != null ? activity.hashCode() : 0);
+    result = 31 * result + (challenge != null ? challenge.hashCode() : 0);
     result = 31 * result + (name != null ? name.hashCode() : 0);
     result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
     result = 31 * result + (endDate != null ? endDate.hashCode() : 0);

@@ -1,5 +1,5 @@
 package blossom.reports_service.model;
 
-public enum ActivityStatus {
+public enum ChallengeStatus {
   OPEN, DONE, OVERDUE
 }

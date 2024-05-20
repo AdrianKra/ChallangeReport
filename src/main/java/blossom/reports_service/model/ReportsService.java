@@ -6,112 +6,113 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 
-import blossom.reports_service.inbound.ActivityReportCreateDTO;
+import blossom.reports_service.inbound.ReportDTO;
 
 @Service
 public class ReportsService {
 
-  private final ActivityReportRepository activityReportRepository;
-  private final ActivitySummaryRepository activitySummaryRepository;
+  private final ChallengeReportRepository challengeReportRepository;
+  private final ChallengeSummaryRepository challengeSummaryRepository;
   private final UserRepository userRepository;
-  private final ActivityRepository activityRepository;
+  private final ChallengeRepository challengeRepository;
 
   @Autowired
-  public ReportsService(ActivityReportRepository activityReportRepository,
-      ActivitySummaryRepository activitySummaryRepository,
+  public ReportsService(ChallengeReportRepository challengeReportRepository,
+      ChallengeSummaryRepository challengeSummaryRepository,
       UserRepository userRepository,
-      ActivityRepository activityRepository) {
+      ChallengeRepository challengeRepository) {
 
-    this.activityReportRepository = activityReportRepository;
-    this.activitySummaryRepository = activitySummaryRepository;
+    this.challengeReportRepository = challengeReportRepository;
+    this.challengeSummaryRepository = challengeSummaryRepository;
     this.userRepository = userRepository;
-    this.activityRepository = activityRepository;
+    this.challengeRepository = challengeRepository;
   }
 
-  // create activitySummary for a new user
-  public ActivitySummary createActivitySummary(Long userId, Date date) {
+  // create challengeSummary for a new user
+  public ChallengeSummary createChallengeSummary(Long userId) {
     var user = userRepository.findById(userId);
 
     if (user.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
 
-    var activitySummary = new ActivitySummary(user.get());
+    var challengeSummary = new ChallengeSummary(user.get());
 
-    activitySummaryRepository.save(activitySummary);
-    return activitySummary;
+    challengeSummaryRepository.save(challengeSummary);
+    return challengeSummary;
   }
 
-  // get the activitySummary for a User
-  public ActivitySummary getActivitySummary(Long userId) {
+  // get the challengeSummary for a User
+  public ChallengeSummary getChallengeSummary(Long userId) {
     var userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
 
-    var activitySummary = activitySummaryRepository.findByUser(userOptional.get());
-    return activitySummary.get();
+    var challengeSummary = challengeSummaryRepository.findByUser(userOptional.get());
+    return challengeSummary.get();
   }
 
-  // create activityReport for a new activity
-  public ActivityReport createActivityReport(ActivityReportCreateDTO dto) {
+  // create challengeReport for a new challenge
+  public ChallengeReport createChallengeReport(ReportDTO dto) {
     // Check if user exists
     Optional<User> optionalUser = userRepository.findById(dto.getUserId());
     if (optionalUser.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
 
-    Optional<Activity> optionalActivity = activityRepository.findById(dto.getActivityId());
-    if (optionalActivity.isEmpty()) {
-      throw new ActivityNotFoundException("Activity not found");
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
+    if (optionalChallenge.isEmpty()) {
+      throw new ChallengeNotFoundException("Challenge not found");
     }
 
-    // Check if ActivityReport already exists for the given activityId and userId
-    boolean reportExists = activityReportRepository.existsByActivityIdAndUserId(dto.getActivityId(), dto.getUserId());
+    // Check if ChallengeReport already exists for the given challengeId and userId
+    boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(dto.getChallengeId(),
+        dto.getUserId());
     if (reportExists) {
-      throw new ActivityReportAlreadyExistsException("ActivityReport already exists");
+      throw new ChallengeReportAlreadyExistsException("ChallengeReport already exists");
     }
 
-    // Convert DTO to ActivityReport entity
-    ActivityReport activityReport = new ActivityReport();
-    activityReport.setActivity(optionalActivity.get());
-    activityReport.setUserId(optionalUser.get().getId());
-    activityReport.setName(dto.getName());
-    activityReport.setStartDate(dto.getStartDate());
-    activityReport.setEndDate(dto.getEndDate());
-    activityReport.setCreatedBy(dto.getCreatedBy());
-    activityReport.setDescription(dto.getDescription());
+    // Convert DTO to ChallengeReport entity
+    ChallengeReport challengeReport = new ChallengeReport();
+    challengeReport.setChallenge(optionalChallenge.get());
+    challengeReport.setUserId(optionalUser.get().getId());
+    challengeReport.setName(dto.getName());
+    challengeReport.setStartDate(dto.getStartDate());
+    challengeReport.setEndDate(dto.getEndDate());
+    challengeReport.setCreatedBy(dto.getCreatedBy());
+    challengeReport.setDescription(dto.getDescription());
 
-    var activitySummary = activitySummaryRepository.findByUser(optionalUser.get()).get();
-    activitySummary.setActivityCount(activitySummary.getActivityCount() + 1);
-    activitySummary.setPendingCount(activitySummary.getPendingCount() + 1);
+    var challengeSummary = challengeSummaryRepository.findByUser(optionalUser.get()).get();
+    challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
+    challengeSummary.setPendingCount(challengeSummary.getPendingCount() + 1);
 
-    // Save and return the new ActivityReport
-    return activityReportRepository.save(activityReport);
+    // Save and return the new ChallengeReport
+    return challengeReportRepository.save(challengeReport);
   }
 
-  // get all activityReports for a user
-  public Iterable<ActivityReport> getActivityReports(Long userId) {
+  // get all challengeReports for a user
+  public Iterable<ChallengeReport> getChallengeReports(Long userId) {
     var userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
 
-    return activityReportRepository.findAllByUser(userOptional.get());
+    return challengeReportRepository.findAllByUser(userOptional.get());
   }
 
-  // update an activityReport
-  public ActivityReport updateActivityReport(Long activityReportId, ActivityReportCreateDTO dto) {
-    // Check if ActivityReport exists
-    Optional<ActivityReport> optionalActivityReport = activityReportRepository.findById(activityReportId);
-    if (optionalActivityReport.isEmpty()) {
-      throw new ActivityReportNotFoundException("ActivityReport not found");
+  // update an challengeReport
+  public ChallengeReport updateChallengeReport(Long challengeReportId, ReportDTO dto) {
+    // Check if ChallengeReport exists
+    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
+    if (optionalChallengeReport.isEmpty()) {
+      throw new ChallengeReportNotFoundException("ChallengeReport not found");
     }
 
-    // Check if Activity exists
-    Optional<Activity> optionalActivity = activityRepository.findById(dto.getActivityId());
-    if (optionalActivity.isEmpty()) {
-      throw new ActivityNotFoundException("Activity not found");
+    // Check if Challenge exists
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
+    if (optionalChallenge.isEmpty()) {
+      throw new ChallengeNotFoundException("Challenge not found");
     }
 
     var userOptional = userRepository.findById(dto.getUserId());
@@ -119,90 +120,91 @@ public class ReportsService {
       throw new UserNotFoundException("User not found");
     }
 
-    // Convert DTO to ActivityReport entity
-    ActivityReport activityReport = optionalActivityReport.get();
+    // Convert DTO to ChallengeReport entity
+    ChallengeReport challengeReport = optionalChallengeReport.get();
     // * */
-    activityReport.setActivity(optionalActivity.get());
-    activityReport.setName(dto.getName());
-    activityReport.setStartDate(dto.getStartDate());
-    activityReport.setEndDate(dto.getEndDate());
-    activityReport.setCreatedBy(dto.getCreatedBy());
-    activityReport.setDescription(dto.getDescription());
-    activityReport.setStatus(dto.getStatus());
+    challengeReport.setChallenge(optionalChallenge.get());
+    challengeReport.setName(dto.getName());
+    challengeReport.setStartDate(dto.getStartDate());
+    challengeReport.setEndDate(dto.getEndDate());
+    challengeReport.setCreatedBy(dto.getCreatedBy());
+    challengeReport.setDescription(dto.getDescription());
+    challengeReport.setStatus(dto.getStatus());
 
-    // update activitySummary attributes
+    // update challengeSummary attributes
     Date date = new Date();
 
     // done
-    var activitySummary = activitySummaryRepository.findByUser(userOptional.get()).get();
-    if (activityReport.getStatus().equals(ActivityStatus.DONE)) {
-      activitySummary.setDoneCount(activitySummary.getDoneCount() + 1);
-      activitySummary.setPendingCount(activitySummary.getPendingCount() - 1);
-      // update OverdueCount if the activity was overdue
-      if (date.after(activityReport.getEndDate())) {
-        activitySummary.setOverdueCount(activitySummary.getOverdueCount() - 1);
+    var challengeSummary = challengeSummaryRepository.findByUser(userOptional.get()).get();
+    if (challengeReport.getStatus().equals(ChallengeStatus.DONE)) {
+      challengeSummary.setDoneCount(challengeSummary.getDoneCount() + 1);
+      challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
+      // update OverdueCount if the challenge was overdue
+      if (date.after(challengeReport.getEndDate())) {
+        challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
       }
     }
     // overdue
-    if (date.after(activityReport.getEndDate())) {
-      activitySummary.setOverdueCount(activitySummary.getOverdueCount() + 1);
-      activityReport.setStatus(ActivityStatus.OVERDUE);
+    if (date.after(challengeReport.getEndDate())) {
+      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() + 1);
+      challengeReport.setStatus(ChallengeStatus.OVERDUE);
     }
     // update lastActive and streaks
-    activitySummary.setConsecutiveDays(activitySummary.getConsecutiveDays() + 1);
-    if (activitySummary.getConsecutiveDays() > activitySummary.getLongestStreak()) {
-      activitySummary.setLongestStreak(activitySummary.getConsecutiveDays());
+    challengeSummary.setConsecutiveDays(challengeSummary.getConsecutiveDays() + 1);
+    if (challengeSummary.getConsecutiveDays() > challengeSummary.getLongestStreak()) {
+      challengeSummary.setLongestStreak(challengeSummary.getConsecutiveDays());
     }
-    activitySummary.setLastActive(date);
+    challengeSummary.setLastActive(date);
 
-    // Save and return the updated ActivityReport
-    return activityReportRepository.save(activityReport);
+    // Save and return the updated ChallengeReport
+    return challengeReportRepository.save(challengeReport);
   }
 
-  // delete an activityReport
-  public void deleteActivityReport(Long activityReportId) {
-    // Check if ActivityReport exists
-    Optional<ActivityReport> optionalActivityReport = activityReportRepository.findById(activityReportId);
-    if (optionalActivityReport.isEmpty()) {
-      throw new ActivityReportNotFoundException("ActivityReport not found");
+  // delete an challengeReport
+  public void deleteChallengeReport(Long challengeReportId) {
+    // Check if ChallengeReport exists
+    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
+    if (optionalChallengeReport.isEmpty()) {
+      throw new ChallengeReportNotFoundException("ChallengeReport not found");
     }
 
     // Check if User exists
-    Optional<User> optionalUser = userRepository.findById(optionalActivityReport.get().getUserId());
+    Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUserId());
     if (optionalUser.isEmpty()) {
       throw new UserNotFoundException("User not found");
     }
 
-    // update activitySummary attributes
-    var activitySummary = activitySummaryRepository.findByUser(optionalUser.get()).get();
-    // if (optionalActivityReport.get().getStatus().equals(ActivityStatus.DONE)) {
-    // activitySummary.setDoneCount(activitySummary.getDoneCount() - 1);
+    // update challengeSummary attributes
+    var challengeSummary = challengeSummaryRepository.findByUser(optionalUser.get()).get();
+    // if (optionalChallengeReport.get().getStatus().equals(ChallengeStatus.DONE)) {
+    // challengeSummary.setDoneCount(challengeSummary.getDoneCount() - 1);
     // } else {
-    activitySummary.setPendingCount(activitySummary.getPendingCount() - 1);
+    challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
     // }
-    if (optionalActivityReport.get().getStatus().equals(ActivityStatus.OVERDUE)) {
-      activitySummary.setOverdueCount(activitySummary.getOverdueCount() - 1);
+    if (optionalChallengeReport.get().getStatus().equals(ChallengeStatus.OVERDUE)) {
+      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
     }
-    activitySummary.setActivityCount(activitySummary.getActivityCount() - 1);
+    challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() - 1);
 
-    // delete the ActivityReport
-    activityReportRepository.deleteById(activityReportId);
+    // delete the ChallengeReport
+    challengeReportRepository.deleteById(challengeReportId);
   }
 
-  // // sort activityReports by startDate
-  // public Iterable<ActivityReport> sortActivityReportsByStartDate(Long userId) {
+  // // sort challengeReports by startDate
+  // public Iterable<ChallengeReport> sortChallengeReportsByStartDate(Long userId)
+  // {
   // var userOptional = userRepository.findById(userId);
   // if (userOptional.isEmpty()) {
   // throw new UserNotFoundException("User not found");
   // }
 
-  // Iterable<ActivityReport> activityReports =
-  // activityReportRepository.findAllByUser(userOptional.get());
+  // Iterable<ChallengeReport> challengeReports =
+  // challengeReportRepository.findAllByUser(userOptional.get());
 
-  // List<ActivityReport> activityList = toList(activityReports);
-  // activityList.sort(Comparator.comparing(ActivityReport::getStartDate));
+  // List<ChallengeReport> challengeList = toList(challengeReports);
+  // challengeList.sort(Comparator.comparing(ChallengeReport::getStartDate));
 
-  // return activityList;
+  // return challengeList;
   // }
 
   // // turn generic Iterable into List
