@@ -1,28 +1,29 @@
 package blossom.reports_service.inbound;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import blossom.reports_service.model.ChallengeSummary;
 import blossom.reports_service.model.ReportsService;
 
-@Controller
+@RestController
 @RequestMapping("/setup")
 public class SetupController {
 
-  private ReportsService reportsService;
+  private final ReportsService reportsService;
 
   @Autowired
   public SetupController(ReportsService reportsService) {
     this.reportsService = reportsService;
   }
 
-  @PostMapping("/createChallengeSummary/{userId}")
+  @PostMapping("/createSummary/{userId}")
+  @ResponseStatus(value = HttpStatus.OK)
   public ChallengeSummary createChallengeSummary(@PathVariable Long userId) {
     return reportsService.createChallengeSummary(userId);
   }
-
 }

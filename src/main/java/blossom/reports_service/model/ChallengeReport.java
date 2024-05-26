@@ -18,7 +18,7 @@ public class ChallengeReport {
 
   // fk of user
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "users_FK")
+  @JoinColumn(name = "user_FK")
   private User user;
 
   private String name;

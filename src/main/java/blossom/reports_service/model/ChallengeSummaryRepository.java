@@ -13,6 +13,8 @@ public interface ChallengeSummaryRepository extends JpaRepository<ChallengeSumma
 
   Optional<ChallengeSummary> findByUser(User user);
 
+  Optional<ChallengeSummary> findByUserId(Long userId);
+
   // delete
   void deleteById(Long id);
 

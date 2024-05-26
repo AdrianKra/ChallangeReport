@@ -30,13 +30,18 @@ public class ReportsService {
 
   // create challengeSummary for a new user
   public ChallengeSummary createChallengeSummary(Long userId) {
-    var user = userRepository.findById(userId);
+    var userOptional = userRepository.findById(userId);
 
-    if (user.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+    if (userOptional.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
+    var user = userOptional.get();
+
+    if (challengeSummaryRepository.findByUserId(userId).isPresent()) {
+      throw new AlreadyExistsException("ChallengeSummary already exists");
     }
 
-    var challengeSummary = new ChallengeSummary(user.get());
+    var challengeSummary = new ChallengeSummary(user);
 
     challengeSummaryRepository.save(challengeSummary);
     return challengeSummary;
@@ -46,56 +51,63 @@ public class ReportsService {
   public ChallengeSummary getChallengeSummary(Long userId) {
     var userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new NotFoundException("User not found");
     }
+    var user = userOptional.get();
 
-    var challengeSummary = challengeSummaryRepository.findByUser(userOptional.get());
-    return challengeSummary.get();
+    var challengeSummaryOptional = challengeSummaryRepository.findByUser(user);
+    if (challengeSummaryOptional.isEmpty()) {
+      throw new NotFoundException("ChallengeSummary not found");
+    }
+    var challengeSummary = challengeSummaryOptional.get();
+
+    return challengeSummary;
   }
 
   // create challengeReport for a new challenge
   public ChallengeReport createChallengeReport(ReportDTO dto) {
+
+    // deserialize the dto
+
     // Check if user exists
     Optional<User> optionalUser = userRepository.findById(dto.getUserId());
     if (optionalUser.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new NotFoundException("User not found");
     }
+    var user = optionalUser.get();
 
     Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
     if (optionalChallenge.isEmpty()) {
-      throw new ChallengeNotFoundException("Challenge not found");
+      throw new NotFoundException("Challenge not found");
     }
+    var challenge = optionalChallenge.get();
 
     // Check if ChallengeReport already exists for the given challengeId and userId
     boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(dto.getChallengeId(),
         dto.getUserId());
     if (reportExists) {
-      throw new ChallengeReportAlreadyExistsException("ChallengeReport already exists");
+      throw new AlreadyExistsException("ChallengeReport already exists");
     }
 
     // Convert DTO to ChallengeReport entity
-    ChallengeReport challengeReport = new ChallengeReport();
-    challengeReport.setChallenge(optionalChallenge.get());
-    challengeReport.setUser(optionalUser.get());
-    challengeReport.setName(dto.getName());
-    challengeReport.setStartDate(dto.getStartDate());
-    challengeReport.setEndDate(dto.getEndDate());
-    challengeReport.setCreatedBy(dto.getCreatedBy());
-    challengeReport.setDescription(dto.getDescription());
+    ChallengeReport challengeReport = new ChallengeReport(challenge, user, dto.getName(), dto.getStartDate(),
+        dto.getCreatedBy(), dto.getDescription());
 
-    var challengeSummary = challengeSummaryRepository.findByUser(optionalUser.get()).get();
+    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
     challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
     challengeSummary.setPendingCount(challengeSummary.getPendingCount() + 1);
 
     // Save and return the new ChallengeReport
-    return challengeReportRepository.save(challengeReport);
+    challengeReportRepository.save(challengeReport);
+
+    return challengeReport;
   }
 
   // get all challengeReports for a user
   public Iterable<ChallengeReport> getChallengeReports(Long userId) {
     var userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new NotFoundException("User not found");
     }
 
     return challengeReportRepository.findAllByUser(userOptional.get());
@@ -106,18 +118,18 @@ public class ReportsService {
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
     if (optionalChallengeReport.isEmpty()) {
-      throw new ChallengeReportNotFoundException("ChallengeReport not found");
+      throw new NotFoundException("ChallengeReport not found");
     }
 
     // Check if Challenge exists
     Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
     if (optionalChallenge.isEmpty()) {
-      throw new ChallengeNotFoundException("Challenge not found");
+      throw new NotFoundException("Challenge not found");
     }
 
     var userOptional = userRepository.findById(dto.getUserId());
     if (userOptional.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new NotFoundException("User not found");
     }
 
     // Convert DTO to ChallengeReport entity
@@ -165,13 +177,13 @@ public class ReportsService {
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
     if (optionalChallengeReport.isEmpty()) {
-      throw new ChallengeReportNotFoundException("ChallengeReport not found");
+      throw new NotFoundException("ChallengeReport not found");
     }
 
     // Check if User exists
     Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUser().getId());
     if (optionalUser.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new NotFoundException("User not found");
     }
 
     // update challengeSummary attributes
@@ -195,7 +207,7 @@ public class ReportsService {
   // {
   // var userOptional = userRepository.findById(userId);
   // if (userOptional.isEmpty()) {
-  // throw new UserNotFoundException("User not found");
+  // throw new NotFoundException("User not found");
   // }
 
   // Iterable<ChallengeReport> challengeReports =

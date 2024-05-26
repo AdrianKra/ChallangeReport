@@ -15,7 +15,6 @@ public class ChallengeSummary {
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
   private User user;
-  private Long userId;
 
   private Date lastActive;
 
@@ -33,7 +32,7 @@ public class ChallengeSummary {
   }
 
   public ChallengeSummary(User user) {
-    this.userId = user.getId();
+    this.user = user;
     this.lastActive = null;
     this.challengeCount = 0;
     this.doneCount = 0;
@@ -57,14 +56,6 @@ public class ChallengeSummary {
 
   public void setUser(User user) {
     this.user = user;
-  }
-
-  public Long getUserId() {
-    return userId;
-  }
-
-  public void setUserId(Long userId) {
-    this.userId = userId;
   }
 
   public Date getLastActive() {
@@ -127,7 +118,7 @@ public class ChallengeSummary {
   public String toString() {
     return "ChallengeSummary [challengeCount=" + challengeCount + ", consecutiveDays="
         + consecutiveDays + ", doneCount=" + doneCount + ", id=" + id + ", longestStreak=" + longestStreak
-        + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + userId + "]";
+        + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + user.toString() + "]";
   }
 
   @Override
@@ -156,10 +147,10 @@ public class ChallengeSummary {
       return false;
     if (pendingCount != other.pendingCount)
       return false;
-    if (userId == null) {
-      if (other.userId != null)
+    if (user == null) {
+      if (other.user != null)
         return false;
-    } else if (!userId.equals(other.userId))
+    } else if (!user.equals(other.user))
       return false;
     return true;
   }
@@ -175,7 +166,7 @@ public class ChallengeSummary {
     result = prime * result + longestStreak;
     result = prime * result + overdueCount;
     result = prime * result + pendingCount;
-    result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+    result = prime * result + ((user == null) ? 0 : user.hashCode());
     return result;
   }
 

@@ -20,7 +20,7 @@ public class ReportDTO {
 
   // Konstruktor mit allen Feldern
   public ReportDTO(Long challengeId, Long userId, String name, Date startDate, Date endDate,
-      String createdBy, String description) {
+      String createdBy, String description, ChallengeStatus status) {
 
     this.challengeId = challengeId;
     this.userId = userId;
@@ -29,6 +29,7 @@ public class ReportDTO {
     this.endDate = endDate;
     this.createdBy = createdBy;
     this.description = description;
+    this.status = status;
   }
 
   // Getter und Setter

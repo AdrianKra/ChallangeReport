@@ -15,8 +15,6 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
 
   Iterable<ChallengeReport> findAllByStatus(Enum status);
 
-  Iterable<ChallengeReport> findAllByUser(User user);
-
   // delete
   void deleteById(Long id);
 
@@ -28,5 +26,7 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
   Iterable<ChallengeReport> findAllByUserId(Long userId);
 
   boolean existsByChallengeIdAndUserId(Long challengeId, Long userId);
+
+  Iterable<ChallengeReport> findAllByUser(User user);
 
 }
