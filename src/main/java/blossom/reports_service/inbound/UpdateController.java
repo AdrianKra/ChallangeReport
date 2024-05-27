@@ -32,7 +32,7 @@ public class UpdateController {
     return reportsService.updateChallengeReport(userId, dto);
   }
 
-  @DeleteMapping("/deleteChallengeReport/{userId}")
+  @DeleteMapping("/deleteChallengeReport/{challengeId}")
   @ResponseStatus(value = HttpStatus.OK)
   public void deleteReport(@PathVariable Long userId) {
     reportsService.deleteChallengeReport(userId);

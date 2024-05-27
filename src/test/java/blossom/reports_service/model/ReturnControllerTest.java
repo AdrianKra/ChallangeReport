@@ -20,7 +20,7 @@ import java.util.Date;
 
 // for every controller
 @WebMvcTest(ReturnController.class)
-public class AutomaticControllerTest {
+public class ReturnControllerTest {
 
   @Autowired
   private MockMvc mvc;

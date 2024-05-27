@@ -106,11 +106,10 @@ public class ReportsService {
   // get all challengeReports for a user
   public Iterable<ChallengeReport> getChallengeReports(Long userId) {
     var userOptional = userRepository.findById(userId);
-    if (userOptional.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
+    // Check if User exists with orElseThrow
+    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
 
-    return challengeReportRepository.findAllByUser(userOptional.get());
+    return challengeReportRepository.findAllByUser(user);
   }
 
   // update an challengeReport
@@ -180,12 +179,10 @@ public class ReportsService {
 
     // Check if User exists
     Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUser().getId());
-    if (optionalUser.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
+    var user = optionalUser.orElseThrow(() -> new NotFoundException("User not found"));
 
     // update challengeSummary attributes
-    var challengeSummary = challengeSummaryRepository.findByUser(optionalUser.get()).get();
+    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
     // if (optionalChallengeReport.get().getStatus().equals(ChallengeStatus.DONE)) {
     // challengeSummary.setDoneCount(challengeSummary.getDoneCount() - 1);
     // } else {
