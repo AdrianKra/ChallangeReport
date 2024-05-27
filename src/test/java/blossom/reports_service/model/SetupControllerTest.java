@@ -36,7 +36,7 @@ public class SetupControllerTest {
 
   @BeforeEach
   public void setUp() {
-    user = new User();
+    user = new User("example@org.de");
     challengeSummary = new ChallengeSummary(user);
   }
 

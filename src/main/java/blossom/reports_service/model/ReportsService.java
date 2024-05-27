@@ -197,6 +197,25 @@ public class ReportsService {
     challengeReportRepository.deleteById(challengeReportId);
   }
 
+  // update challenge progress
+  public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, String timestamp) {
+    // Check if Challenge exists
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
+    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found"));
+
+    // Check if User exists
+    Optional<User> optionalUser = userRepository.findByEmail(userEmail);
+    var user = optionalUser.orElseThrow(() -> new NotFoundException("User not found"));
+
+    // Check if ChallengeReport exists
+    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findByChallenge(challenge);
+    var challengeReport = optionalChallengeReport.orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
+
+    // update progress and timestamp
+    challengeReport.addProgress(progress);
+    challengeReport.addTimestamp(timestamp);
+  }
+
   // // sort challengeReports by startDate
   // public Iterable<ChallengeReport> sortChallengeReportsByStartDate(Long userId)
   // {

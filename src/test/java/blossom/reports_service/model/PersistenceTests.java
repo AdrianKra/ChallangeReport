@@ -16,9 +16,6 @@ public class PersistenceTests {
   private ChallengeReportRepository challengeReportRepository;
 
   @Autowired
-  private ChallengeSummaryRepository challengeSummaryRepository;
-
-  @Autowired
   private UserRepository userRepository;
 
   // Challenge Tests

@@ -4,7 +4,7 @@ spring:
     stream:
       bindings:
         eventConsumer-in-0:
-          destination: sweng.events
+          destination: blossom.prod.challenge.progress.updated
           binder: cloud_rabbit
       binders:
         cloud_rabbit:

@@ -40,7 +40,7 @@ public class ReturnControllerTest {
 
   @BeforeEach
   public void setUp() {
-    user = new User();
+    user = new User("example@org.de");
   }
 
   // Test for getChallengeReports with status code 200

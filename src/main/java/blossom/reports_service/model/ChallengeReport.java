@@ -1,6 +1,9 @@
 package blossom.reports_service.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.*;
@@ -24,6 +27,8 @@ public class ChallengeReport {
   private Date startDate;
   private Date endDate;
   private String description;
+  private List<Double> progress;
+  private List<String> timestamps;
 
   @Enumerated(EnumType.STRING)
   private ChallengeStatus status;
@@ -40,6 +45,10 @@ public class ChallengeReport {
     this.startDate = startDate;
     this.endDate = null;
     this.description = description;
+    this.progress = new ArrayList<>();
+    this.progress.add(0.0);
+    this.timestamps = new ArrayList<>();
+    this.timestamps.add("");
     this.status = ChallengeStatus.OPEN;
   }
 
@@ -89,6 +98,30 @@ public class ChallengeReport {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public List<Double> getProgress() {
+    return progress;
+  }
+
+  public void setProgress(List<Double> progress) {
+    this.progress = progress;
+  }
+
+  public void addProgress(Double progress) {
+    this.progress.add(progress);
+  }
+
+  public List<String> getTimestamp() {
+    return timestamps;
+  }
+
+  public void setTimestamp(List<String> timestamps) {
+    this.timestamps = timestamps;
+  }
+
+  public void addTimestamp(String timestamp) {
+    this.timestamps.add(timestamp);
   }
 
   public ChallengeStatus getStatus() {
