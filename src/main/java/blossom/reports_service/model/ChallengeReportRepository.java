@@ -18,8 +18,6 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
   // delete
   void deleteById(Long id);
 
-  void deleteByName(String name);
-
   // save
   ChallengeReport save(ChallengeReport challengeReport);
 

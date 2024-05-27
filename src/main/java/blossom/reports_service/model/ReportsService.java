@@ -3,10 +3,12 @@ package blossom.reports_service.model;
 import java.util.Date;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 
 import blossom.reports_service.inbound.ReportDTO;
+import ch.qos.logback.core.model.Model;
 
 @Service
 public class ReportsService {
@@ -67,31 +69,29 @@ public class ReportsService {
   // create challengeReport for a new challenge
   public ChallengeReport createChallengeReport(ReportDTO dto) {
 
-    // deserialize the dto
+    // Convert DTO to ChallengeReport entity
+    ModelMapper modelMapper = new ModelMapper();
+    ChallengeReport challengeReport = modelMapper.map(dto, ChallengeReport.class);
 
     // Check if user exists
-    Optional<User> optionalUser = userRepository.findById(dto.getUserId());
+    Optional<User> optionalUser = userRepository.findById(challengeReport.getUser().getId());
     if (optionalUser.isEmpty()) {
       throw new NotFoundException("User not found");
     }
     var user = optionalUser.get();
 
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeReport.getChallenge().getId());
     if (optionalChallenge.isEmpty()) {
       throw new NotFoundException("Challenge not found");
     }
     var challenge = optionalChallenge.get();
 
     // Check if ChallengeReport already exists for the given challengeId and userId
-    boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(dto.getChallengeId(),
-        dto.getUserId());
+    boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(
+        challengeReport.getChallenge().getId(), dto.getUserId());
     if (reportExists) {
       throw new AlreadyExistsException("ChallengeReport already exists");
     }
-
-    // Convert DTO to ChallengeReport entity
-    ChallengeReport challengeReport = new ChallengeReport(challenge, user, dto.getName(), dto.getStartDate(),
-        dto.getCreatedBy(), dto.getDescription());
 
     var challengeSummary = challengeSummaryRepository.findByUser(user).get();
     challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
@@ -136,10 +136,8 @@ public class ReportsService {
     ChallengeReport challengeReport = optionalChallengeReport.get();
     // * */
     challengeReport.setChallenge(optionalChallenge.get());
-    challengeReport.setName(dto.getName());
     challengeReport.setStartDate(dto.getStartDate());
     challengeReport.setEndDate(dto.getEndDate());
-    challengeReport.setCreatedBy(dto.getCreatedBy());
     challengeReport.setDescription(dto.getDescription());
     challengeReport.setStatus(dto.getStatus());
 

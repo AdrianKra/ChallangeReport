@@ -27,14 +27,11 @@ public class UnitTest {
     given(challenge.getDescription()).willReturn("Challenge Description");
     given(challenge.getDeadline()).willReturn(date);
 
-    ChallengeReport challengeReport = new ChallengeReport(challenge, user, "Challenge Report 1", date, "John Doe",
-        "Challenge Report Description");
+    ChallengeReport challengeReport = new ChallengeReport(challenge, user, date, "Challenge Report Description");
 
     assertNotNull(challengeReport.getChallenge());
-    assertEquals("Challenge Report 1", challengeReport.getName());
     assertNotNull(challengeReport.getStartDate());
     assertNull(challengeReport.getEndDate());
-    assertEquals("John Doe", challengeReport.getCreatedBy());
     assertEquals("Challenge Report Description", challengeReport.getDescription());
     assertEquals(ChallengeStatus.OPEN, challengeReport.getStatus());
 

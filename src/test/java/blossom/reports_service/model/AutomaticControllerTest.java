@@ -47,15 +47,13 @@ public class AutomaticControllerTest {
   @Test
   public void getChallengeReportsTest() throws Exception {
     challenge = new Challenge("Challenge 1", "Description 1", Unit.KM, 2.0, date, 1, 2, user, Visibility.PUBLIC);
-    challengeReport = new ChallengeReport(challenge, user, "Challenge 1", date, "User 1", "Description 1");
+    challengeReport = new ChallengeReport(challenge, user, date, "Description 1");
 
     given(this.reportsService.getChallengeReports(1L)).willReturn(Collections.singletonList(challengeReport));
     this.mvc.perform(get("/report/list/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].name").value("Challenge 1"))
-        .andExpect(jsonPath("$[0].description").value("Description 1"))
-        .andExpect(jsonPath("$[0].createdBy").value("User 1"));
+        .andExpect(jsonPath("$[0].description").value("Description 1"));
   }
 
   // Test for getChallengeReports with status code 404 because of the User

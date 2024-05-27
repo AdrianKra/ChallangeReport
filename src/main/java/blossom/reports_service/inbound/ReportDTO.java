@@ -7,10 +7,8 @@ import blossom.reports_service.model.ChallengeStatus;
 public class ReportDTO {
   private Long challengeId;
   private Long userId;
-  private String name;
   private Date startDate;
   private Date endDate;
-  private String createdBy;
   private String description;
   private ChallengeStatus status;
 
@@ -19,15 +17,13 @@ public class ReportDTO {
   }
 
   // Konstruktor mit allen Feldern
-  public ReportDTO(Long challengeId, Long userId, String name, Date startDate, Date endDate,
-      String createdBy, String description, ChallengeStatus status) {
+  public ReportDTO(Long challengeId, Long userId, Date startDate, Date endDate, String description,
+      ChallengeStatus status) {
 
     this.challengeId = challengeId;
     this.userId = userId;
-    this.name = name;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.createdBy = createdBy;
     this.description = description;
     this.status = status;
   }
@@ -49,14 +45,6 @@ public class ReportDTO {
     this.userId = userId;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public Date getStartDate() {
     return startDate;
   }
@@ -71,14 +59,6 @@ public class ReportDTO {
 
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
   }
 
   public String getDescription() {

@@ -11,10 +11,10 @@ INSERT INTO challenges (deadline, score_penalty, score_reward, target_progress, 
   VALUES ('2021-12-31', 5, 10, 100.0, 0, 3, 'PUBLIC', 'Description 3', 'Challenge 3', 'HOURS');
 
 -- INSERT statements with different values
-INSERT INTO challenge_report (status, challenge_fk, end_date, start_date, user_fk, created_by, description, name)
-  VALUES ('OPEN', 1, '2021-12-31', '2021-12-01', 1, 'A', 'Description 1', 'Report 1');
-INSERT INTO challenge_report (status, challenge_fk, end_date, start_date, user_fk, created_by, description, name)
-  VALUES ('OPEN', 2, '2021-12-31', '2021-12-01', 2, 'B', 'Description 2', 'Report 2');
+INSERT INTO challenge_report (status, challenge_fk, end_date, start_date, user_fk, description)
+  VALUES ('OPEN', 1, '2021-12-31', '2021-12-01', 1,  'Description 1');
+INSERT INTO challenge_report (status, challenge_fk, end_date, start_date, user_fk, description)
+  VALUES ('OPEN', 2, '2021-12-31', '2021-12-01', 2,  'Description 2');
 
 -- INSERT statements with different values
 INSERT INTO challenge_summary (challenge_count, consecutive_days, daily_challenges, done_count, longest_streak, overdue_count, pending_count, last_active, user_fk)
