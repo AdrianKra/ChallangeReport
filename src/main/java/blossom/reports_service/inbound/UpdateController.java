@@ -34,7 +34,7 @@ public class UpdateController {
 
   @DeleteMapping("/deleteChallengeReport/{challengeId}")
   @ResponseStatus(value = HttpStatus.OK)
-  public void deleteReport(@PathVariable Long userId) {
-    reportsService.deleteChallengeReport(userId);
+  public void deleteReport(@PathVariable Long challengeId) {
+    reportsService.deleteChallengeReport(challengeId);
   }
 }
