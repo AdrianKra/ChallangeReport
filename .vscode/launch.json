@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ApiTest",
+      "request": "launch",
+      "mainClass": "blossom.reports_service.model.ApiTest",
+      "projectName": "reports_service"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-ReportsServiceApplication<reports_service>",
       "request": "launch",
       "cwd": "${workspaceFolder}",

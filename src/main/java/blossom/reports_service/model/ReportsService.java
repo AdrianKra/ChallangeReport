@@ -1,14 +1,15 @@
 package blossom.reports_service.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.*;
 
 import blossom.reports_service.inbound.ReportDTO;
-import ch.qos.logback.core.model.Model;
 
 @Service
 public class ReportsService {
@@ -17,17 +18,24 @@ public class ReportsService {
   private final ChallengeSummaryRepository challengeSummaryRepository;
   private final UserRepository userRepository;
   private final ChallengeRepository challengeRepository;
+  private final Client quotesClient;
+
+  private final String apiKey;
 
   @Autowired
   public ReportsService(ChallengeReportRepository challengeReportRepository,
       ChallengeSummaryRepository challengeSummaryRepository,
       UserRepository userRepository,
-      ChallengeRepository challengeRepository) {
+      ChallengeRepository challengeRepository,
+      Client quotesClient,
+      @Value("${api.ninjas.key}") String apiKey) {
 
     this.challengeReportRepository = challengeReportRepository;
     this.challengeSummaryRepository = challengeSummaryRepository;
     this.userRepository = userRepository;
     this.challengeRepository = challengeRepository;
+    this.quotesClient = quotesClient;
+    this.apiKey = apiKey;
   }
 
   // create challengeSummary for a new user
@@ -214,6 +222,15 @@ public class ReportsService {
     // update progress and timestamp
     challengeReport.addProgress(progress);
     challengeReport.addTimestamp(timestamp);
+  }
+
+  public List<Quote> getQuotes(String category) {
+    // return if list is not empty, otherwise throw exception
+    List<Quote> quotes = quotesClient.getQuotes(apiKey, category);
+    if (quotes.isEmpty()) {
+      throw new NotFoundException("No quotes found");
+    }
+    return quotes;
   }
 
   // // sort challengeReports by startDate
