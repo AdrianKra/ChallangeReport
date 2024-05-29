@@ -46,7 +46,7 @@ public class ReturnController {
 
   // get feign client quote
   @GetMapping("/quote/{category}")
-  public List<Quote> getQuotes(@PathVariable String category) {
+  public Quote[] getQuotes(@PathVariable String category) {
     if (apiKey == null || apiKey.isEmpty()) {
       throw new IllegalArgumentException("API key is not configured");
     }

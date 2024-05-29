@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @FeignClient(name = "quotesClient", url = "https://api.api-ninjas.com/v1/")
-public interface Client {
+public interface QuotesServiceClient {
 
   @GetMapping("/quotes")
-  List<Quote> getQuotes(@RequestHeader("X-Api-Key") String apiKey, @RequestParam("category") String category);
+  Quote[] getQuotes(@RequestHeader("X-Api-Key") String apiKey, @RequestParam("category") String category);
 }

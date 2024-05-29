@@ -124,7 +124,7 @@ public class ReturnControllerTest {
   public void testGetQuotes() throws Exception {
     // Mock the behavior of the ReportsService
     when(reportsService.getQuotes(anyString()))
-        .thenReturn(Collections.singletonList(new Quote("Test quote", "Test author")));
+        .thenReturn(new Quote[] { new Quote("Test quote", "Test author") });
 
     // Perform GET request to /report/quote/{category}
     this.mvc.perform(get("/report/quote/happiness"))

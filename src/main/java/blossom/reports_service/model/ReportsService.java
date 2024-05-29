@@ -18,7 +18,7 @@ public class ReportsService {
   private final ChallengeSummaryRepository challengeSummaryRepository;
   private final UserRepository userRepository;
   private final ChallengeRepository challengeRepository;
-  private final Client quotesClient;
+  private final QuotesServiceClient quotesClient;
 
   private final String apiKey;
 
@@ -27,7 +27,7 @@ public class ReportsService {
       ChallengeSummaryRepository challengeSummaryRepository,
       UserRepository userRepository,
       ChallengeRepository challengeRepository,
-      Client quotesClient,
+      QuotesServiceClient quotesClient,
       @Value("${api.ninjas.key}") String apiKey) {
 
     this.challengeReportRepository = challengeReportRepository;
@@ -224,11 +224,11 @@ public class ReportsService {
     challengeReport.addTimestamp(timestamp);
   }
 
-  public List<Quote> getQuotes(String category) {
+  public Quote[] getQuotes(String category) {
     // return if list is not empty, otherwise throw exception
-    List<Quote> quotes = quotesClient.getQuotes(apiKey, category);
-    if (quotes.isEmpty()) {
-      throw new NotFoundException("No quotes found");
+    Quote[] quotes = quotesClient.getQuotes(apiKey, category);
+    if (quotes.length == 0) {
+      throw new NotFoundException("No quotes found for the given category");
     }
     return quotes;
   }
