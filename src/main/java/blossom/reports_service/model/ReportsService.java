@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 
 import blossom.reports_service.inbound.ReportDTO;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -33,6 +35,16 @@ public class ReportsService {
     this.challengeRepository = challengeRepository;
   }
 
+  @PostConstruct
+  public void init() {
+    LOGGER.info("ReportsService initialized");
+  }
+
+  @PreDestroy
+  public void destroy() {
+    LOGGER.info("ReportsService destroyed");
+  }
+
   // create challengeSummary for a new user
   @Transactional
   public ChallengeSummary createChallengeSummary(Long userId) {
@@ -54,6 +66,7 @@ public class ReportsService {
   }
 
   // get the challengeSummary for a User
+  @Transactional
   public ChallengeSummary getChallengeSummary(Long userId) {
     LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
 
@@ -73,6 +86,7 @@ public class ReportsService {
   }
 
   // create challengeReport for a new challenge
+  @Transactional
   public ChallengeReport createChallengeReport(ReportDTO dto) {
     LOGGER.info("Creating ChallengeReport for user with id: {}", dto.getUserId());
 
@@ -104,13 +118,11 @@ public class ReportsService {
     challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
     challengeSummary.setPendingCount(challengeSummary.getPendingCount() + 1);
 
-    // Save and return the new ChallengeReport
-    challengeReportRepository.save(challengeReport);
-
     return challengeReport;
   }
 
   // get all challengeReports for a user
+  @Transactional
   public Iterable<ChallengeReport> getChallengeReports(Long userId) {
     LOGGER.info("Getting all ChallengeReports for user with id: {}", userId);
 
@@ -122,6 +134,7 @@ public class ReportsService {
   }
 
   // update an challengeReport
+  @Transactional
   public ChallengeReport updateChallengeReport(Long challengeReportId, ReportDTO dto) {
     LOGGER.info("Updating ChallengeReport with id: {}", challengeReportId);
 
@@ -176,6 +189,7 @@ public class ReportsService {
   }
 
   // delete an challengeReport
+  @Transactional
   public void deleteChallengeReport(Long challengeReportId) {
     LOGGER.info("Deleting ChallengeReport with id: {}", challengeReportId);
 
@@ -206,6 +220,7 @@ public class ReportsService {
   }
 
   // update challenge progress
+  @Transactional
   public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, String timestamp) {
     LOGGER.info("Updating ChallengeProgress for challenge with id: {}", challengeId);
 
@@ -215,7 +230,9 @@ public class ReportsService {
 
     // Check if User exists
     Optional<User> optionalUser = userRepository.findByEmail(userEmail);
-    var user = optionalUser.orElseThrow(() -> new NotFoundException("User not found"));
+    if (optionalUser.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
 
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findByChallenge(challenge);

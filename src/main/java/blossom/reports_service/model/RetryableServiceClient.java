@@ -1,6 +1,6 @@
 package blossom.reports_service.model;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
@@ -12,10 +12,10 @@ import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Service
+@Component
 public class RetryableServiceClient {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+  private final Logger LOGGER = LoggerFactory.getLogger(RetryableServiceClient.class);
 
   private final QuotesServiceClient quotesClient;
   private final String apiKey;

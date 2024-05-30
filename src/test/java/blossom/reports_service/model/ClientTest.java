@@ -26,6 +26,7 @@ public class ClientTest {
   @Test
   public void getQuotesTest() {
     LOGGER.info("Starting Mock Test for getQuotesTest...");
+    LOGGER.info("Mocking fetch of quotes for category: happiness...");
     Quote[] mockQuotes = new Quote[] { new Quote("Happiness is a journey, not a destination.", "author") };
     when(quotesClient.getQuotes(anyString(), anyString())).thenReturn(mockQuotes);
 

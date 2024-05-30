@@ -7,17 +7,18 @@
         </encoder>
     </appender>
 
-
+    <!-- file appenders are not required for your team projects -->
+<!--
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file> logs\log-${byDay}.txt </file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] trace[%X{traceId:-}, %X{spanId:-}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-
+-->
     <root level="info">
         <appender-ref ref="STDOUT" />
-         <appender-ref ref="FILE" />
+   <!-- <appender-ref ref="FILE" /> -->
     </root>
 
 </configuration>
