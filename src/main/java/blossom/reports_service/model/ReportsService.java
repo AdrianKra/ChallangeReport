@@ -1,45 +1,43 @@
 package blossom.reports_service.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.*;
 
 import blossom.reports_service.inbound.ReportDTO;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ReportsService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportsService.class);
 
   private final ChallengeReportRepository challengeReportRepository;
   private final ChallengeSummaryRepository challengeSummaryRepository;
   private final UserRepository userRepository;
   private final ChallengeRepository challengeRepository;
-  private final QuotesServiceClient quotesClient;
-
-  private final String apiKey;
 
   @Autowired
   public ReportsService(ChallengeReportRepository challengeReportRepository,
       ChallengeSummaryRepository challengeSummaryRepository,
       UserRepository userRepository,
-      ChallengeRepository challengeRepository,
-      QuotesServiceClient quotesClient,
-      @Value("${api.ninjas.key}") String apiKey) {
+      ChallengeRepository challengeRepository) {
 
     this.challengeReportRepository = challengeReportRepository;
     this.challengeSummaryRepository = challengeSummaryRepository;
     this.userRepository = userRepository;
     this.challengeRepository = challengeRepository;
-    this.quotesClient = quotesClient;
-    this.apiKey = apiKey;
   }
 
   // create challengeSummary for a new user
+  @Transactional
   public ChallengeSummary createChallengeSummary(Long userId) {
+    LOGGER.info("Creating ChallengeSummary for user with id: {}", userId);
+
     var userOptional = userRepository.findById(userId);
 
     if (userOptional.isEmpty()) {
@@ -52,13 +50,13 @@ public class ReportsService {
     }
 
     var challengeSummary = new ChallengeSummary(user);
-
-    challengeSummaryRepository.save(challengeSummary);
     return challengeSummary;
   }
 
   // get the challengeSummary for a User
   public ChallengeSummary getChallengeSummary(Long userId) {
+    LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
+
     var userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) {
       throw new NotFoundException("User not found");
@@ -76,6 +74,7 @@ public class ReportsService {
 
   // create challengeReport for a new challenge
   public ChallengeReport createChallengeReport(ReportDTO dto) {
+    LOGGER.info("Creating ChallengeReport for user with id: {}", dto.getUserId());
 
     // Convert DTO to ChallengeReport entity
     ModelMapper modelMapper = new ModelMapper();
@@ -113,6 +112,8 @@ public class ReportsService {
 
   // get all challengeReports for a user
   public Iterable<ChallengeReport> getChallengeReports(Long userId) {
+    LOGGER.info("Getting all ChallengeReports for user with id: {}", userId);
+
     var userOptional = userRepository.findById(userId);
     // Check if User exists with orElseThrow
     var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
@@ -122,6 +123,8 @@ public class ReportsService {
 
   // update an challengeReport
   public ChallengeReport updateChallengeReport(Long challengeReportId, ReportDTO dto) {
+    LOGGER.info("Updating ChallengeReport with id: {}", challengeReportId);
+
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
     if (optionalChallengeReport.isEmpty()) {
@@ -140,13 +143,8 @@ public class ReportsService {
     }
 
     // Convert DTO to ChallengeReport entity
-    ChallengeReport challengeReport = optionalChallengeReport.get();
-    // * */
-    challengeReport.setChallenge(optionalChallenge.get());
-    challengeReport.setStartDate(dto.getStartDate());
-    challengeReport.setEndDate(dto.getEndDate());
-    challengeReport.setDescription(dto.getDescription());
-    challengeReport.setStatus(dto.getStatus());
+    ModelMapper modelMapper = new ModelMapper();
+    ChallengeReport challengeReport = modelMapper.map(dto, ChallengeReport.class);
 
     // update challengeSummary attributes
     Date date = new Date();
@@ -179,6 +177,8 @@ public class ReportsService {
 
   // delete an challengeReport
   public void deleteChallengeReport(Long challengeReportId) {
+    LOGGER.info("Deleting ChallengeReport with id: {}", challengeReportId);
+
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
     if (optionalChallengeReport.isEmpty()) {
@@ -207,6 +207,8 @@ public class ReportsService {
 
   // update challenge progress
   public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, String timestamp) {
+    LOGGER.info("Updating ChallengeProgress for challenge with id: {}", challengeId);
+
     // Check if Challenge exists
     Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
     var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found"));
@@ -222,15 +224,6 @@ public class ReportsService {
     // update progress and timestamp
     challengeReport.addProgress(progress);
     challengeReport.addTimestamp(timestamp);
-  }
-
-  public Quote[] getQuotes(String category) {
-    // return if list is not empty, otherwise throw exception
-    Quote[] quotes = quotesClient.getQuotes(apiKey, category);
-    if (quotes.length == 0) {
-      throw new NotFoundException("No quotes found for the given category");
-    }
-    return quotes;
   }
 
   // // sort challengeReports by startDate

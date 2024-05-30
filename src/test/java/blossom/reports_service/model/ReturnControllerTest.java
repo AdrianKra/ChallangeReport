@@ -1,20 +1,15 @@
 package blossom.reports_service.model;
 
+import blossom.reports_service.inbound.ReturnController;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import blossom.reports_service.inbound.ReturnController;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -24,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 // for every controller
 @WebMvcTest(ReturnController.class)
@@ -35,6 +29,9 @@ public class ReturnControllerTest {
 
   @MockBean
   private ReportsService reportsService;
+
+  @MockBean
+  private RetryableServiceClient quotesService;
 
   @MockBean
   private UserRepository userRepository;
@@ -123,7 +120,7 @@ public class ReturnControllerTest {
   @Test
   public void testGetQuotes() throws Exception {
     // Mock the behavior of the ReportsService
-    when(reportsService.getQuotes(anyString()))
+    when(quotesService.getQuotes(anyString()))
         .thenReturn(new Quote[] { new Quote("Test quote", "Test author") });
 
     // Perform GET request to /report/quote/{category}
