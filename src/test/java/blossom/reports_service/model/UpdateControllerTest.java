@@ -137,7 +137,7 @@ public class UpdateControllerTest {
         // Test for updateReport with status code 201
         @Test
         public void updateReportTest() throws Exception {
-                given(this.reportsService.updateChallengeReport(any(Long.class), any(ReportDTO.class)))
+                given(this.reportsService.updateChallengeReport(any(ReportDTO.class)))
                                 .willReturn(challengeReport);
 
                 ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
@@ -160,7 +160,7 @@ public class UpdateControllerTest {
         // challengeReport
         @Test
         public void updateReportBadRequestTest() throws Exception {
-                given(this.reportsService.updateChallengeReport(any(Long.class), any(ReportDTO.class)))
+                given(this.reportsService.updateChallengeReport(any(ReportDTO.class)))
                                 .willThrow(new NotFoundException("ChallengeReport not found"));
 
                 ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
@@ -178,7 +178,7 @@ public class UpdateControllerTest {
         // challenge
         @Test
         public void updateReportBadRequestTest2() throws Exception {
-                given(this.reportsService.updateChallengeReport(any(Long.class), any(ReportDTO.class)))
+                given(this.reportsService.updateChallengeReport(any(ReportDTO.class)))
                                 .willThrow(new NotFoundException("Challenge not found"));
 
                 ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
@@ -196,7 +196,7 @@ public class UpdateControllerTest {
         // user
         @Test
         public void updateReportBadRequestTest3() throws Exception {
-                given(this.reportsService.updateChallengeReport(any(Long.class), any(ReportDTO.class)))
+                given(this.reportsService.updateChallengeReport(any(ReportDTO.class)))
                                 .willThrow(new NotFoundException("User not found"));
 
                 ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();

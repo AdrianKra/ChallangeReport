@@ -26,10 +26,10 @@ public class UpdateController {
     return ResponseEntity.status(HttpStatus.CREATED).body(challengeReport);
   }
 
-  @PutMapping("/updateChallengeReport/{userId}")
+  @PutMapping("/updateChallengeReport")
   @ResponseStatus(value = HttpStatus.OK)
-  public ChallengeReport updateReport(@PathVariable Long userId, @RequestBody ReportDTO dto) {
-    return reportsService.updateChallengeReport(userId, dto);
+  public ChallengeReport updateReport(@RequestBody ReportDTO dto) {
+    return reportsService.updateChallengeReport(dto);
   }
 
   @DeleteMapping("/deleteChallengeReport/{challengeId}")

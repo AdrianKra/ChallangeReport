@@ -20,7 +20,7 @@ public class ChallengeReport {
   private Challenge challenge;
 
   // fk of user
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
   private User user;
 

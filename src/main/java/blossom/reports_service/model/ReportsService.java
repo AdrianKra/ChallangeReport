@@ -3,17 +3,26 @@ package blossom.reports_service.model;
 import java.util.Date;
 import java.util.Optional;
 
+import org.hibernate.StaleStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import blossom.reports_service.inbound.ReportDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.persistence.OptimisticLockException;
 
 @Service
+@Retryable(include = { OptimisticLockException.class, StaleStateException.class },
+    // StaleStateException sometimes occurs when OptimisticLockException is expected
+    // -> a bug!?
+    maxAttempts = 3, // first attempt and 2 retries
+    backoff = @Backoff(delay = 100, maxDelay = 500))
 public class ReportsService {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportsService.class);
 
@@ -141,58 +150,71 @@ public class ReportsService {
 
   // update an challengeReport
   @Transactional
-  public ChallengeReport updateChallengeReport(Long challengeReportId, ReportDTO dto) {
-    LOGGER.info("Updating ChallengeReport with id: {}", challengeReportId);
+  public ChallengeReport updateChallengeReport(ReportDTO dto) {
+    Long challengeId = dto.getChallengeId();
+    Long userId = dto.getUserId();
+    ChallengeStatus status = dto.getStatus();
+
+    LOGGER.info("Updating ChallengeReport with id: {}", challengeId);
 
     // Check if ChallengeReport exists
-    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
-    if (optionalChallengeReport.isEmpty()) {
-      throw new NotFoundException("ChallengeReport not found");
-    }
+    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeId);
+    var challengeReport = optionalChallengeReport
+        .orElseThrow(() -> new NotFoundException("ChallengeReport not found!"));
 
     // Check if Challenge exists
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
-    if (optionalChallenge.isEmpty()) {
-      throw new NotFoundException("Challenge not found");
-    }
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
+    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found!"));
 
-    var userOptional = userRepository.findById(dto.getUserId());
-    if (userOptional.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
+    var userOptional = userRepository.findById(userId);
+    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found!"));
 
     // Convert DTO to ChallengeReport entity
-    ChallengeReport challengeReport = new ChallengeReport();
-    challengeReport.setUser(userOptional.get());
-    challengeReport.setChallenge(optionalChallenge.get());
+    // Update challenge report fields
+    challengeReport.setStartDate(dto.getStartDate());
+    challengeReport.setDescription(dto.getDescription());
+    challengeReport.setStatus(dto.getStatus());
 
-    // update challengeSummary attributes
     Date date = new Date();
+    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
 
-    // done
-    var challengeSummary = challengeSummaryRepository.findByUser(userOptional.get()).get();
-    if (challengeReport.getStatus().equals(ChallengeStatus.DONE)) {
+    // Handle challenge completion status
+    // if status is already DONE, do nothing
+    if (dto.getStatus().equals(ChallengeStatus.DONE)) {
+      challengeReport.setEndDate(date);
       challengeSummary.setDoneCount(challengeSummary.getDoneCount() + 1);
       challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
-      // update OverdueCount if the challenge was overdue
-      if (date.after(challengeReport.getEndDate())) {
-        challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
+
+      // Decrement overdue count if the challenge was overdue
+      if (date.after(challenge.getDeadline())) {
+        challengeSummary.setOverdueCount(Math.max(0, challengeSummary.getOverdueCount() - 1));
+      }
+    } else {
+      System.out.println("!!!!" + "Deadline:" + challenge.getDeadline() + ", Current:" + date);
+      // Handle overdue status if the challenge is not done and overdue
+      if (date.after(challenge.getDeadline())) {
+        challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() + 1);
+        challengeReport.setStatus(ChallengeStatus.OVERDUE);
       }
     }
-    // overdue
-    if (date.after(challengeReport.getEndDate())) {
-      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() + 1);
-      challengeReport.setStatus(ChallengeStatus.OVERDUE);
+
+    // Update lastActive and consecutive days
+    long currentTime = date.getTime();
+    long lastActiveTime = challengeSummary.getLastActive().getTime();
+
+    if (currentTime - lastActiveTime > 24 * 60 * 60 * 1000) {
+      challengeSummary.setConsecutiveDays(0);
+    } else {
+      challengeSummary.setConsecutiveDays(challengeSummary.getConsecutiveDays() + 1);
+      if (challengeSummary.getConsecutiveDays() > challengeSummary.getLongestStreak()) {
+        challengeSummary.setLongestStreak(challengeSummary.getConsecutiveDays());
+      }
     }
-    // update lastActive and streaks
-    challengeSummary.setConsecutiveDays(challengeSummary.getConsecutiveDays() + 1);
-    if (challengeSummary.getConsecutiveDays() > challengeSummary.getLongestStreak()) {
-      challengeSummary.setLongestStreak(challengeSummary.getConsecutiveDays());
-    }
+
     challengeSummary.setLastActive(date);
 
     // Save and return the updated ChallengeReport
-    return challengeReport;
+    return challengeReportRepository.save(challengeReport);
   }
 
   // delete an challengeReport

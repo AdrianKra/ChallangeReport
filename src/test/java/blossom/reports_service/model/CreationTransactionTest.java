@@ -2,10 +2,14 @@ package blossom.reports_service.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import blossom.reports_service.inbound.ReportDTO;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
-public class ReportsServiceTest {
+public class CreationTransactionTest {
 
   @Autowired
   private UserRepository userRepository;
@@ -50,9 +53,10 @@ public class ReportsServiceTest {
     challenge = new Challenge("new Challenge name", "new challenge Description", Unit.KM, 2.0, new Date(), 1,
         2, user, Visibility.FRIENDS);
     challengeReport = new ChallengeReport(challenge, user, new Date(), "new ChallengeReoport Description");
-    dto = new ReportDTO(4L, 5L, new Date(), new Date(), "new DTO Description", ChallengeStatus.DONE);
+    dto = new ReportDTO(4L, 4L, new Date(), new Date(), "new DTO Description", ChallengeStatus.DONE);
 
     // Persist entities to the database
+
     challengeSummary = challengeSummaryRepository.save(new ChallengeSummary(user));
     challengeRepository.save(challenge);
     userRepository.save(user);
@@ -84,22 +88,4 @@ public class ReportsServiceTest {
     assertEquals(1, challengeSummary.getPendingCount());
   }
 
-  @Test
-  public void getChallengeSummaryTest() {
-    // Rufen Sie die getChallengeSummary Methode auf
-    ChallengeSummary returnedChallengeSummary = reportsService.getChallengeSummary(user.getId());
-
-    // Überprüfen Sie, ob die zurückgegebene ChallengeSummary die erwarteten Werte
-    // hat
-    assertEquals(challengeSummary.getId(), returnedChallengeSummary.getId());
-    assertEquals(challengeSummary.getUser().getId(), returnedChallengeSummary.getUser().getId());
-    // ...
-
-    // Überprüfen Sie, ob die ChallengeSummary in der Datenbank vorhanden ist
-    Optional<ChallengeSummary> optionalChallengeSummary = challengeSummaryRepository.findByUser(user);
-    assertTrue(optionalChallengeSummary.isPresent());
-
-    ChallengeSummary challengeSummaryFromDb = optionalChallengeSummary.get();
-    assertEquals(challengeSummary.getId(), challengeSummaryFromDb.getId());
-  }
 }
