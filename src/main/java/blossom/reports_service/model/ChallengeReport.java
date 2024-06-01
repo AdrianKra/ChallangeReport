@@ -33,6 +33,9 @@ public class ChallengeReport {
   @Enumerated(EnumType.STRING)
   private ChallengeStatus status;
 
+  @Version
+  private int version;
+
   public ChallengeReport() {
     this.status = ChallengeStatus.OPEN;
   }

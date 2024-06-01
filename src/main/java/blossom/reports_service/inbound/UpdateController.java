@@ -9,7 +9,7 @@ import blossom.reports_service.model.ChallengeReport;
 import blossom.reports_service.model.ReportsService;
 
 @RestController
-@RequestMapping("/call")
+@RequestMapping("/rest/call")
 public class UpdateController {
 
   private ReportsService reportsService;

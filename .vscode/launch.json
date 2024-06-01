@@ -1,21 +1,21 @@
 {
+  // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+  // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+  // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
   "configurations": [
     {
       "type": "java",
-      "name": "ApiTest",
+      "name": "Current File",
       "request": "launch",
-      "mainClass": "blossom.reports_service.model.ApiTest",
-      "projectName": "reports_service"
+      "mainClass": "${file}"
     },
     {
       "type": "java",
-      "name": "Spring Boot-ReportsServiceApplication<reports_service>",
+      "name": "ReportsServiceApplication",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
       "mainClass": "blossom.reports_service.ReportsServiceApplication",
-      "projectName": "reports_service",
-      "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "projectName": "reports_service"
     }
   ]
 }

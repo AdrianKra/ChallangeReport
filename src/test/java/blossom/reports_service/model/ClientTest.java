@@ -34,5 +34,10 @@ public class ClientTest {
     for (Quote quote : quotes) {
       System.out.println(quote);
     }
+
+    assert (quotes.length == 1);
+    assert (quotes[0].getQuote().equals("Happiness is a journey, not a destination."));
+    assert (quotes[0].getAuthor().equals("author"));
+    LOGGER.info("Mock Test for getQuotesTest completed successfully.");
   }
 }

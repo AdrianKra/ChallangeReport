@@ -3,16 +3,15 @@ package blossom.reports_service.model;
 import java.util.Date;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import blossom.reports_service.inbound.ReportDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.transaction.Transactional;
 
 @Service
 public class ReportsService {
@@ -62,11 +61,12 @@ public class ReportsService {
     }
 
     var challengeSummary = new ChallengeSummary(user);
+
     return challengeSummary;
   }
 
   // get the challengeSummary for a User
-  @Transactional
+  @Transactional(readOnly = true)
   public ChallengeSummary getChallengeSummary(Long userId) {
     LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
 
@@ -88,28 +88,27 @@ public class ReportsService {
   // create challengeReport for a new challenge
   @Transactional
   public ChallengeReport createChallengeReport(ReportDTO dto) {
-    LOGGER.info("Creating ChallengeReport for user with id: {}", dto.getUserId());
-
-    // Convert DTO to ChallengeReport entity
-    ModelMapper modelMapper = new ModelMapper();
-    ChallengeReport challengeReport = modelMapper.map(dto, ChallengeReport.class);
+    LOGGER.info("Creating ChallengeReport for the challenge with id {} for the user with id: {}. ",
+        dto.getChallengeId(), dto.getUserId());
 
     // Check if user exists
-    Optional<User> optionalUser = userRepository.findById(challengeReport.getUser().getId());
+    Optional<User> optionalUser = userRepository.findById(dto.getUserId());
     if (optionalUser.isEmpty()) {
       throw new NotFoundException("User not found");
     }
     var user = optionalUser.get();
 
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeReport.getChallenge().getId());
+    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
     if (optionalChallenge.isEmpty()) {
       throw new NotFoundException("Challenge not found");
     }
     var challenge = optionalChallenge.get();
 
+    ChallengeReport challengeReport = new ChallengeReport(challenge, user, dto.getStartDate(), dto.getDescription());
+
     // Check if ChallengeReport already exists for the given challengeId and userId
     boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(
-        challengeReport.getChallenge().getId(), dto.getUserId());
+        dto.getChallengeId(), dto.getUserId());
     if (reportExists) {
       throw new AlreadyExistsException("ChallengeReport already exists");
     }
@@ -117,6 +116,13 @@ public class ReportsService {
     var challengeSummary = challengeSummaryRepository.findByUser(user).get();
     challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
     challengeSummary.setPendingCount(challengeSummary.getPendingCount() + 1);
+
+    challengeSummaryRepository.save(challengeSummary);
+
+    // Save the ChallengeReport
+    challengeReportRepository.save(challengeReport);
+
+    LOGGER.info("ChallengeReport created successfully!");
 
     return challengeReport;
   }
@@ -156,8 +162,9 @@ public class ReportsService {
     }
 
     // Convert DTO to ChallengeReport entity
-    ModelMapper modelMapper = new ModelMapper();
-    ChallengeReport challengeReport = modelMapper.map(dto, ChallengeReport.class);
+    ChallengeReport challengeReport = new ChallengeReport();
+    challengeReport.setUser(userOptional.get());
+    challengeReport.setChallenge(optionalChallenge.get());
 
     // update challengeSummary attributes
     Date date = new Date();
@@ -185,7 +192,7 @@ public class ReportsService {
     challengeSummary.setLastActive(date);
 
     // Save and return the updated ChallengeReport
-    return challengeReportRepository.save(challengeReport);
+    return challengeReport;
   }
 
   // delete an challengeReport

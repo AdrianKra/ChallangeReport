@@ -45,7 +45,7 @@ public class SetupControllerTest {
   public void createChallengeSummaryTest() throws Exception {
 
     given(this.reportsService.createChallengeSummary(1L)).willReturn(challengeSummary);
-    this.mvc.perform(post("/setup/createSummary/{userId}", 1))
+    this.mvc.perform(post("/rest/setup/createSummary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.lastActive").value(Matchers.nullValue()))
@@ -61,18 +61,19 @@ public class SetupControllerTest {
   @Test
   public void createChallengeSummaryTestUserNotFound() throws Exception {
     given(this.reportsService.createChallengeSummary(1L)).willThrow(new NotFoundException("User not found"));
-    this.mvc.perform(post("/setup/createSummary/{userId}", 1))
+    this.mvc.perform(post("/rest/setup/createSummary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isNotFound());
   }
 
-  // Test for createChallengeSummary with status code 409 when challengeSummary
+  // Test for void createChallengeSummary with status code 409 when
+  // challengeSummary
   // already exists
   @Test
   public void createChallengeSummaryTestAlreadyExists() throws Exception {
     given(this.reportsService.createChallengeSummary(1L))
         .willThrow(new AlreadyExistsException("ChallengeSummary already exists"));
-    this.mvc.perform(post("/setup/createSummary/{userId}", 1))
+    this.mvc.perform(post("/rest/setup/createSummary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isConflict());
   }

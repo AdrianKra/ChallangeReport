@@ -1,5 +1,6 @@
 package blossom.reports_service.model;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,9 @@ public interface ChallengeSummaryRepository extends JpaRepository<ChallengeSumma
 
   // save
   ChallengeSummary save(ChallengeSummary challengeSummary);
+
+  // get all
+
+  List<ChallengeSummary> findAll();
 
 }

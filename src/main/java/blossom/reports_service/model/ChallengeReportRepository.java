@@ -27,4 +27,6 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
 
   Iterable<ChallengeReport> findAllByUser(User user);
 
+  Optional<ChallengeReport> findByChallengeIdAndUserId(Long challengeId, Long userId);
+
 }

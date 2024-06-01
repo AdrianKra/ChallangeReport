@@ -11,7 +11,7 @@ import blossom.reports_service.model.ChallengeSummary;
 import blossom.reports_service.model.ReportsService;
 
 @RestController
-@RequestMapping("/setup")
+@RequestMapping("/rest/setup")
 public class SetupController {
 
   private final ReportsService reportsService;
@@ -23,7 +23,7 @@ public class SetupController {
 
   @PostMapping("/createSummary/{userId}")
   @ResponseStatus(value = HttpStatus.OK)
-  public ChallengeSummary createChallengeSummary(@PathVariable Long userId) {
-    return reportsService.createChallengeSummary(userId);
+  public void createChallengeSummary(@PathVariable Long userId) {
+    reportsService.createChallengeSummary(userId);
   }
 }

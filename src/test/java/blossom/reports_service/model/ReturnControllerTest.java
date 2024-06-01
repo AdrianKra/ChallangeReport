@@ -55,7 +55,7 @@ public class ReturnControllerTest {
     challengeReport = new ChallengeReport(challenge, user, date, "Description 1");
 
     given(this.reportsService.getChallengeReports(1L)).willReturn(Collections.singletonList(challengeReport));
-    this.mvc.perform(get("/report/list/{userId}", 1))
+    this.mvc.perform(get("/rest/report/list/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].description").value("Description 1"));
@@ -65,7 +65,7 @@ public class ReturnControllerTest {
   @Test
   public void getChallengeReportsNotFoundTest() throws Exception {
     given(this.reportsService.getChallengeReports(2L)).willThrow(new NotFoundException("User not found"));
-    this.mvc.perform(get("/report/list/{userId}", 2))
+    this.mvc.perform(get("/rest/report/list/{userId}", 2))
         .andDo(print())
         .andExpect(status().isNotFound());
   }
@@ -75,7 +75,7 @@ public class ReturnControllerTest {
   @Test
   public void getChallengeReportsNotFoundChallengeReportTest() throws Exception {
     given(this.reportsService.getChallengeReports(1L)).willThrow(new NotFoundException("ChallengeReport not found"));
-    this.mvc.perform(get("/report/list/{userId}", 1))
+    this.mvc.perform(get("/rest/report/list/{userId}", 1))
         .andDo(print())
         .andExpect(status().isNotFound());
   }
@@ -86,7 +86,7 @@ public class ReturnControllerTest {
     challengeSummary = new ChallengeSummary(user);
 
     given(this.reportsService.getChallengeSummary(1L)).willReturn(challengeSummary);
-    this.mvc.perform(get("/report/summary/{userId}", 1))
+    this.mvc.perform(get("/rest/report/summary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.lastActive").value(Matchers.nullValue()))
@@ -102,7 +102,7 @@ public class ReturnControllerTest {
   @Test
   public void getSummaryNotFoundTest() throws Exception {
     given(this.reportsService.getChallengeSummary(2L)).willThrow(new NotFoundException("User not found"));
-    this.mvc.perform(get("/report/summary/{userId}", 2))
+    this.mvc.perform(get("/rest/report/summary/{userId}", 2))
         .andDo(print())
         .andExpect(status().isNotFound());
   }
@@ -112,7 +112,7 @@ public class ReturnControllerTest {
   @Test
   public void getSummaryNotFoundChallengeSummaryTest() throws Exception {
     given(this.reportsService.getChallengeSummary(1L)).willThrow(new NotFoundException("ChallengeSummary not found"));
-    this.mvc.perform(get("/report/summary/{userId}", 1))
+    this.mvc.perform(get("/rest/report/summary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isNotFound());
   }
@@ -124,7 +124,7 @@ public class ReturnControllerTest {
         .thenReturn(new Quote[] { new Quote("Test quote", "Test author") });
 
     // Perform GET request to /report/quote/{category}
-    this.mvc.perform(get("/report/quote/happiness"))
+    this.mvc.perform(get("/rest/report/quote/happiness"))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].quote").value("Test quote"))

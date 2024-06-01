@@ -3,6 +3,7 @@ package blossom.reports_service.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+
 import java.util.ArrayList;
 
 @Entity
@@ -28,12 +29,15 @@ public class ChallengeSummary {
   private int consecutiveDays;
   private int longestStreak;
 
+  @Version
+  private int version;
+
   public ChallengeSummary() {
   }
 
   public ChallengeSummary(User user) {
     this.user = user;
-    this.lastActive = null;
+    this.lastActive = new Date();
     this.challengeCount = 0;
     this.doneCount = 0;
     this.pendingCount = 0;

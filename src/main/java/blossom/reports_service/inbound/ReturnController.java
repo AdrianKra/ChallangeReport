@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/rest/report")
 public class ReturnController {
 
   private ReportsService reportsService;
