@@ -1,6 +1,7 @@
 INSERT INTO users(email, version) VALUES ('example@gmail.com', 0);
 INSERT INTO users(email, version) VALUES ('example@gmail.com', 0);
 INSERT INTO users(email, version) VALUES ('example2@gmail.com', 0);
+INSERT INTO users(email, version) VALUES ('example2@gmail.com', 0);
 
 -- INSERT statements with completly different values
 INSERT INTO challenges (deadline, score_penalty, score_reward, target_progress, version, user_id, challenge_visibility, description, title, unit) 

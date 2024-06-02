@@ -29,7 +29,7 @@ public class ChallengeReport {
   private Date endDate;
   private String description;
   private List<Double> progress;
-  private List<String> timestamps;
+  private List<Date> timestamps;
 
   @Enumerated(EnumType.STRING)
   private ChallengeStatus status;
@@ -45,14 +45,14 @@ public class ChallengeReport {
   public ChallengeReport(Challenge challenge, User user, Date startDate, String description) {
 
     this.user = user;
-    this.challenge = challenge;
-    this.startDate = startDate;
-    this.endDate = null;
-    this.description = description;
+    // this.challenge = challenge;
+    // this.startDate = startDate;
+    // this.endDate = null;
+    // this.description = description;
     this.progress = new ArrayList<>();
     this.progress.add(0.0);
     this.timestamps = new ArrayList<>();
-    this.timestamps.add("");
+    this.timestamps.add(null);
     this.status = ChallengeStatus.OPEN;
   }
 
@@ -116,15 +116,15 @@ public class ChallengeReport {
     this.progress.add(progress);
   }
 
-  public List<String> getTimestamp() {
+  public List<Date> getTimestamp() {
     return timestamps;
   }
 
-  public void setTimestamp(List<String> timestamps) {
+  public void setTimestamp(List<Date> timestamps) {
     this.timestamps = timestamps;
   }
 
-  public void addTimestamp(String timestamp) {
+  public void addTimestamp(Date timestamp) {
     this.timestamps.add(timestamp);
   }
 

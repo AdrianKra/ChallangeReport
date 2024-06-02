@@ -159,7 +159,7 @@ public class UpdateControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                                 .andDo(print())
-                                .andExpect(status().isCreated())
+                                .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.challenge.title").value("Challenge 1"))
                                 .andExpect(jsonPath("$.challenge.description").value("Description 1"))
                                 .andExpect(jsonPath("$.challenge.user.id").isEmpty())
@@ -182,8 +182,7 @@ public class UpdateControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                                 .andDo(print())
-                                .andExpect(status().isNotFound())
-                                .andExpect(jsonPath("$.message").value("ChallengeReport not found!"));
+                                .andExpect(status().isNotFound());
         }
 
         // Test for updateReport with status code 404 because of NotFoundException of

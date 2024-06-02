@@ -77,8 +77,8 @@ public class PersistenceTests {
 
   @Test
   public void ReportSave() {
-    Optional<Challenge> challengeOptional = challengeRepository.findById(3L);
-    Optional<User> userOptional = userRepository.findById(3L);
+    Optional<Challenge> challengeOptional = challengeRepository.findById(4L);
+    Optional<User> userOptional = userRepository.findById(4L);
 
     ChallengeReport challengeReport = new ChallengeReport(challengeOptional.get(), userOptional.get(),
         new java.util.Date(), "Report Description");

@@ -1,5 +1,4 @@
-package blossom.reports_service;
-// package blossom.reports_service.model;
+// package blossom.reports_service;
 
 // import org.junit.jupiter.api.Test;
 // import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,10 @@ package blossom.reports_service;
 // import
 // org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
 // import org.springframework.messaging.support.MessageBuilder;
+
+// import blossom.reports_service.model.ChallengeProgressUpdateEvent;
+// import blossom.reports_service.model.Services.ReportsService;
+
 // import static org.mockito.Mockito.times;
 // import static org.mockito.Mockito.verify;
 

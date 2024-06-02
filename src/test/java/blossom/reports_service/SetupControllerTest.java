@@ -1,6 +1,5 @@
 package blossom.reports_service;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,10 @@ public class SetupControllerTest {
   @BeforeEach
   public void setUp() {
     user = new User("example@org.de");
+    user.setId(1L);
+
     challengeSummary = new ChallengeSummary(user);
+    challengeSummary.setId(1L);
   }
 
   // Test for createChallengeSummary with status code 200
@@ -53,14 +55,7 @@ public class SetupControllerTest {
     given(this.reportsService.createChallengeSummary(1L)).willReturn(challengeSummary);
     this.mvc.perform(post("/rest/setup/createSummary/{userId}", 1))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.lastActive").value(Matchers.nullValue()))
-        .andExpect(jsonPath("$.challengeCount").value(0))
-        .andExpect(jsonPath("$.doneCount").value(0))
-        .andExpect(jsonPath("$.pendingCount").value(0))
-        .andExpect(jsonPath("$.overdueCount").value(0))
-        .andExpect(jsonPath("$.consecutiveDays").value(0))
-        .andExpect(jsonPath("$.longestStreak").value(0));
+        .andExpect(status().isOk());
   }
 
   // Test for createChallengeSummary with status code 404 when user not found

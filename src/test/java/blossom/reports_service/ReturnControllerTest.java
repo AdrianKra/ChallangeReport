@@ -9,6 +9,7 @@ import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.Unit;
 import blossom.reports_service.model.Enums.Visibility;
 import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
 import blossom.reports_service.model.Repositories.UserRepository;
 import blossom.reports_service.model.Services.ReportsService;
 import blossom.reports_service.model.Services.RetryableServiceClient;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 // for every controller
 @WebMvcTest(ReturnController.class)
@@ -47,6 +49,11 @@ public class ReturnControllerTest {
   @MockBean
   private UserRepository userRepository;
 
+  @MockBean
+  private ChallengeSummaryRepository challengeSummaryRepository;
+
+  private final String email = "example@org.de";
+
   private User user;
   private Challenge challenge;
   private ChallengeReport challengeReport;
@@ -56,20 +63,46 @@ public class ReturnControllerTest {
 
   @BeforeEach
   public void setUp() {
-    user = new User("example@org.de");
+    user = new User(email);
+    user.setId(1L);
   }
 
   // Test for getChallengeReports with status code 200
   @Test
   public void getChallengeReportsTest() throws Exception {
-    challenge = new Challenge("Challenge 1", "Description 1", Unit.KM, 2.0, date, 1, 2, user, Visibility.PUBLIC);
-    challengeReport = new ChallengeReport(challenge, user, date, "Description 1");
+    challenge = new Challenge("Challenge 1", "Description 1", Unit.KM, 2.0, date, 1,
+        2, user, Visibility.PUBLIC);
+    challenge.setId(1L);
+
+    challengeReport = new ChallengeReport(challenge, user, null, "Description 1");
+    challengeReport.setId(1L);
 
     given(this.reportsService.getChallengeReports(1L)).willReturn(Collections.singletonList(challengeReport));
     this.mvc.perform(get("/rest/report/list/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].description").value("Description 1"));
+        .andExpect(jsonPath("$[0].id").value(1))
+        .andExpect(jsonPath("$[0].challenge").exists())
+        .andExpect(jsonPath("$[0].challenge.id").value(1))
+        .andExpect(jsonPath("$[0].challenge.title").value("Challenge 1"))
+        .andExpect(jsonPath("$[0].challenge.description").value("Description 1"))
+        .andExpect(jsonPath("$[0].challenge.unit").value("KM"))
+        .andExpect(jsonPath("$[0].challenge.targetProgress").value(2.0))
+        .andExpect(jsonPath("$[0].challenge.deadline", Matchers.matchesPattern(
+            "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(.\\d+)?(Z|[+-]\\d{2}:\\d{2})")))
+        .andExpect(jsonPath("$[0].challenge.scoreReward").value(1))
+        .andExpect(jsonPath("$[0].challenge.scorePenalty").value(2))
+        .andExpect(jsonPath("$[0].challenge.user").exists())
+        .andExpect(jsonPath("$[0].challenge.user.id").value(1))
+        .andExpect(jsonPath("$[0].challenge.user.email").value(email))
+        .andExpect(jsonPath("$[0].challenge.challengeVisibility").value("PUBLIC"))
+        .andExpect(jsonPath("$[0].user.id").value(1))
+        .andExpect(jsonPath("$[0].user.email").value(email))
+        .andExpect(jsonPath("$[0].startDate").doesNotExist())
+        .andExpect(jsonPath("$[0].endDate").doesNotExist())
+        .andExpect(jsonPath("$[0].description").value("Description 1"))
+        .andExpect(jsonPath("$[0].progress").value(0.0))
+        .andExpect(jsonPath("$[0].status").value("OPEN"));
   }
 
   // Test for getChallengeReports with status code 404 because of the User
@@ -95,12 +128,18 @@ public class ReturnControllerTest {
   @Test
   public void getSummaryTest() throws Exception {
     challengeSummary = new ChallengeSummary(user);
+    challengeSummary.setId(1L);
 
     given(this.reportsService.getChallengeSummary(1L)).willReturn(challengeSummary);
     this.mvc.perform(get("/rest/report/summary/{userId}", 1))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.lastActive").value(Matchers.nullValue()))
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.user").exists())
+        .andExpect(jsonPath("$.user.id").value(1))
+        .andExpect(jsonPath("$.user.email").value(email))
+        .andExpect(jsonPath("$.lastActive", Matchers.matchesPattern(
+            "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(.\\d+)?(Z|[+-]\\d{2}:\\d{2})")))
         .andExpect(jsonPath("$.challengeCount").value(0))
         .andExpect(jsonPath("$.doneCount").value(0))
         .andExpect(jsonPath("$.pendingCount").value(0))

@@ -197,6 +197,8 @@ public class UpdateTransActionTest {
     int expectedPendingCount = previousPendingCount - 1;
     int expectedOverdueCount = previousOverdueCount - 1;
 
+    System.out.println("!!!!" + challengeSummary.toString());
+
     assertEquals(expectedDoneCount, challengeSummary.getDoneCount());
     assertEquals(expectedPendingCount, challengeSummary.getPendingCount());
     assertEquals(expectedOverdueCount, challengeSummary.getOverdueCount());

@@ -22,7 +22,7 @@ public class SetupController {
     this.reportsService = reportsService;
   }
 
-  @PostMapping("/createSummary/{userId}")
+  @PostMapping("/createSummary/{userId}") // change to email
   @ResponseStatus(value = HttpStatus.OK)
   public void createChallengeSummary(@PathVariable Long userId) {
     reportsService.createChallengeSummary(userId);

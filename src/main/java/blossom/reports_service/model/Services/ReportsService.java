@@ -91,16 +91,11 @@ public class ReportsService {
     LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
 
     var userOptional = userRepository.findById(userId);
-    if (userOptional.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
-    var user = userOptional.get();
+    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
 
     var challengeSummaryOptional = challengeSummaryRepository.findByUser(user);
-    if (challengeSummaryOptional.isEmpty()) {
-      throw new NotFoundException("ChallengeSummary not found");
-    }
-    var challengeSummary = challengeSummaryOptional.get();
+    var challengeSummary = challengeSummaryOptional
+        .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
 
     return challengeSummary;
   }
@@ -171,14 +166,14 @@ public class ReportsService {
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeId);
     var challengeReport = optionalChallengeReport
-        .orElseThrow(() -> new NotFoundException("ChallengeReport not found!"));
+        .orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
 
     // Check if Challenge exists
     Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
-    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found!"));
+    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found"));
 
     var userOptional = userRepository.findById(userId);
-    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found!"));
+    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
 
     // Convert DTO to ChallengeReport entity
     // Update challenge report fields
@@ -201,7 +196,6 @@ public class ReportsService {
         challengeSummary.setOverdueCount(Math.max(0, challengeSummary.getOverdueCount() - 1));
       }
     } else {
-      System.out.println("!!!!" + "Deadline:" + challenge.getDeadline() + ", Current:" + date);
       // Handle overdue status if the challenge is not done and overdue
       if (date.after(challenge.getDeadline())) {
         challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() + 1);
@@ -259,7 +253,7 @@ public class ReportsService {
 
   // update challenge progress
   @Transactional
-  public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, String timestamp) {
+  public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, Date timestamp) {
     LOGGER.info("Updating ChallengeProgress for challenge with id: {}", challengeId);
 
     // Check if Challenge exists
