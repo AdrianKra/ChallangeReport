@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import blossom.reports_service.model.Quote;
 import blossom.reports_service.model.Services.QuotesServiceClient;
 import blossom.reports_service.model.Services.RetryableServiceClient;
 

@@ -1,6 +1,7 @@
-package blossom.reports_service.model;
+package blossom.reports_service;
 
 import blossom.reports_service.inbound.Controller.ReturnController;
+import blossom.reports_service.model.Quote;
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.ChallengeSummary;

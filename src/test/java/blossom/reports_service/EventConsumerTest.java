@@ -1,3 +1,4 @@
+package blossom.reports_service;
 // package blossom.reports_service.model;
 
 // import org.junit.jupiter.api.Test;

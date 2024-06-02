@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -154,12 +154,12 @@ public class UpdateControllerTest {
                 ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
                 String requestJson = ow.writeValueAsString(dto);
 
-                this.mvc.perform(put("/rest/call/updateChallengeReport/1")
+                this.mvc.perform(put("/rest/call/updateChallengeReport")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                                 .andDo(print())
-                                .andExpect(status().isOk())
+                                .andExpect(status().isCreated())
                                 .andExpect(jsonPath("$.challenge.title").value("Challenge 1"))
                                 .andExpect(jsonPath("$.challenge.description").value("Description 1"))
                                 .andExpect(jsonPath("$.challenge.user.id").isEmpty())
@@ -182,7 +182,8 @@ public class UpdateControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestJson))
                                 .andDo(print())
-                                .andExpect(status().isNotFound());
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("ChallengeReport not found!"));
         }
 
         // Test for updateReport with status code 404 because of NotFoundException of

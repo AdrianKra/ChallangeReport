@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
