@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Entities;
 
 import jakarta.persistence.*;
 

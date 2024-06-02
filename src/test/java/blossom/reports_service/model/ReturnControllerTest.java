@@ -1,6 +1,16 @@
 package blossom.reports_service.model;
 
-import blossom.reports_service.inbound.ReturnController;
+import blossom.reports_service.inbound.Controller.ReturnController;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
+import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Repositories.UserRepository;
+import blossom.reports_service.model.Services.ReportsService;
+import blossom.reports_service.model.Services.RetryableServiceClient;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;

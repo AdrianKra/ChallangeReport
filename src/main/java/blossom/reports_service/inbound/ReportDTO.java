@@ -2,7 +2,7 @@ package blossom.reports_service.inbound;
 
 import java.util.Date;
 
-import blossom.reports_service.model.ChallengeStatus;
+import blossom.reports_service.model.Enums.ChallengeStatus;
 
 public class ReportDTO {
   private Long challengeId;

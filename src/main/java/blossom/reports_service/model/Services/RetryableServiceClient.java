@@ -1,6 +1,10 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Services;
 
 import org.springframework.stereotype.Component;
+
+import blossom.reports_service.model.Quote;
+import blossom.reports_service.model.Exceptions.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;

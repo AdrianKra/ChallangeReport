@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Entities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import blossom.reports_service.model.Enums.ChallengeStatus;
 import jakarta.persistence.*;
 
 @Entity

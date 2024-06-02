@@ -12,7 +12,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import blossom.reports_service.inbound.ReportDTO;
-import blossom.reports_service.inbound.UpdateController;
+import blossom.reports_service.inbound.Controller.UpdateController;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
+import blossom.reports_service.model.Exceptions.AlreadyExistsException;
+import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Repositories.ChallengeRepository;
+import blossom.reports_service.model.Repositories.UserRepository;
+import blossom.reports_service.model.Services.ReportsService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

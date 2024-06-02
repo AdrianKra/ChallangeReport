@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import blossom.reports_service.model.Services.QuotesServiceClient;
+import blossom.reports_service.model.Services.RetryableServiceClient;
+
 @SpringBootTest
 @TestPropertySource("classpath:application.properties")
 public class ClientTest {

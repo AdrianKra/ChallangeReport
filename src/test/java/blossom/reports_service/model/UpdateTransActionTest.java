@@ -14,6 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import blossom.reports_service.inbound.ReportDTO;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+import blossom.reports_service.model.Repositories.ChallengeRepository;
+import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
+import blossom.reports_service.model.Repositories.UserRepository;
+import blossom.reports_service.model.Services.ReportsService;
 
 @SpringBootTest
 public class UpdateTransActionTest {

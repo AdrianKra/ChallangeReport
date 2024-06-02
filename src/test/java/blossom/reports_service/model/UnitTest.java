@@ -4,6 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;

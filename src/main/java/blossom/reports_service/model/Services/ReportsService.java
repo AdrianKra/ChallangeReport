@@ -1,4 +1,4 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Services;
 
 import java.util.Date;
 import java.util.Optional;
@@ -13,6 +13,17 @@ import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import blossom.reports_service.inbound.ReportDTO;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Exceptions.AlreadyExistsException;
+import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+import blossom.reports_service.model.Repositories.ChallengeRepository;
+import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
+import blossom.reports_service.model.Repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.OptimisticLockException;
@@ -224,9 +235,7 @@ public class ReportsService {
 
     // Check if ChallengeReport exists
     Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
-    if (optionalChallengeReport.isEmpty()) {
-      throw new NotFoundException("ChallengeReport not found");
-    }
+    var challengeReport = optionalChallengeReport.orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
 
     // Check if User exists
     Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUser().getId());
@@ -234,15 +243,15 @@ public class ReportsService {
 
     // update challengeSummary attributes
     var challengeSummary = challengeSummaryRepository.findByUser(user).get();
-    // if (optionalChallengeReport.get().getStatus().equals(ChallengeStatus.DONE)) {
-    // challengeSummary.setDoneCount(challengeSummary.getDoneCount() - 1);
-    // } else {
+
     challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
-    // }
-    if (optionalChallengeReport.get().getStatus().equals(ChallengeStatus.OVERDUE)) {
-      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
-    }
     challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() - 1);
+
+    if (challengeReport.getStatus().equals(ChallengeStatus.OVERDUE)) {
+      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
+    } else if (challengeReport.getStatus().equals(ChallengeStatus.DONE)) {
+      challengeSummary.setDoneCount(challengeSummary.getDoneCount() - 1);
+    }
 
     // delete the ChallengeReport
     challengeReportRepository.deleteById(challengeReportId);

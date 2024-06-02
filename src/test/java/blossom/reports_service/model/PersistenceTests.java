@@ -6,6 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+import blossom.reports_service.model.Repositories.ChallengeRepository;
+import blossom.reports_service.model.Repositories.UserRepository;
+
 @DataJpaTest
 public class PersistenceTests {
 

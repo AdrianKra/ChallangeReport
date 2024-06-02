@@ -1,9 +1,11 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Repositories;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import blossom.reports_service.model.Entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

@@ -1,6 +1,9 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Entities;
 
 import java.util.*;
+
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
 import jakarta.persistence.*;
 
 @Entity

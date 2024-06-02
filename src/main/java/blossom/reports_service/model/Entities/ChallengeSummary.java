@@ -1,9 +1,8 @@
-package blossom.reports_service.model;
+package blossom.reports_service.model.Entities;
 
 import jakarta.persistence.*;
 
 import java.util.Date;
-
 import java.util.ArrayList;
 
 @Entity

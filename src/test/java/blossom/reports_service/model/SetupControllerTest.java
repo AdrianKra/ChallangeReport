@@ -8,7 +8,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import blossom.reports_service.inbound.SetupController;
+import blossom.reports_service.inbound.Controller.SetupController;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Exceptions.AlreadyExistsException;
+import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Repositories.UserRepository;
+import blossom.reports_service.model.Services.ReportsService;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

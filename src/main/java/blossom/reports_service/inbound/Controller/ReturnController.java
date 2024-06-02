@@ -1,15 +1,15 @@
-package blossom.reports_service.inbound;
+package blossom.reports_service.inbound.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import blossom.reports_service.model.ChallengeReport;
-import blossom.reports_service.model.ChallengeSummary;
 import blossom.reports_service.model.Quote;
-import blossom.reports_service.model.ReportsService;
-import blossom.reports_service.model.RetryableServiceClient;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Services.ReportsService;
+import blossom.reports_service.model.Services.RetryableServiceClient;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

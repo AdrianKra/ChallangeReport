@@ -2,26 +2,29 @@ package blossom.reports_service.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import blossom.reports_service.inbound.ReportDTO;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
+import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+import blossom.reports_service.model.Repositories.ChallengeRepository;
+import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
+import blossom.reports_service.model.Repositories.UserRepository;
+import blossom.reports_service.model.Services.ReportsService;
 
 @SpringBootTest
 public class CreationTransactionTest {
