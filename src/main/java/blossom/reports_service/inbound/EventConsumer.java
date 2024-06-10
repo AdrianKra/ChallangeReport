@@ -29,6 +29,7 @@ public class EventConsumer implements Consumer<ChallengeProgressUpdateEvent> {
     LOGGER.info("Received event: {}", t);
     reportsService.updateChallengeProgress(
         t.challengeId(),
+        t.challengeProgressId(),
         t.userEmail(),
         t.currentProgress(),
         t.timestamp());

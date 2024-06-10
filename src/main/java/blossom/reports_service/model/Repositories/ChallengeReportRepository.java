@@ -33,4 +33,6 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
 
   Optional<ChallengeReport> findByChallengeIdAndUserId(Long challengeId, Long userId);
 
+  ChallengeReport getOrDefault(Long challengeId, ChallengeReport challengeReport);
+
 }

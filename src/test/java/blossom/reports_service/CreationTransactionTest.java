@@ -55,7 +55,7 @@ public class CreationTransactionTest {
     user = new User("new@email.de");
     challenge = new Challenge("new Challenge name", "new challenge Description", Unit.KM, 2.0, new Date(), 1,
         2, user, Visibility.FRIENDS);
-    challengeReport = new ChallengeReport(challenge, user, new Date(), "new ChallengeReoport Description");
+    challengeReport = new ChallengeReport(user, challenge);
     dto = new ReportDTO(4L, 4L, new Date(), new Date(), "new DTO Description", ChallengeStatus.DONE);
 
     // Persist entities to the database
@@ -90,5 +90,4 @@ public class CreationTransactionTest {
     assertEquals(1, challengeSummary.getChallengeCount());
     assertEquals(1, challengeSummary.getPendingCount());
   }
-
 }

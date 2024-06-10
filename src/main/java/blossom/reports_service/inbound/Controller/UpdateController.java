@@ -20,17 +20,12 @@ public class UpdateController {
     this.reportsService = reportsService;
   }
 
-  @PostMapping("/createChallengeReport")
+  @PostMapping("/createChallengeReport/{challengeId}/{userId}")
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<ChallengeReport> createChallengeReport(@RequestBody ReportDTO dto) {
-    ChallengeReport challengeReport = reportsService.createChallengeReport(dto);
+  public ResponseEntity<ChallengeReport> createChallengeReport(@PathVariable Long challengeId,
+      @PathVariable Long userId) {
+    ChallengeReport challengeReport = reportsService.createChallengeReport(challengeId, userId);
     return ResponseEntity.status(HttpStatus.CREATED).body(challengeReport);
-  }
-
-  @PutMapping("/updateChallengeReport")
-  @ResponseStatus(value = HttpStatus.OK)
-  public ChallengeReport updateReport(@RequestBody ReportDTO dto) {
-    return reportsService.updateChallengeReport(dto);
   }
 
   @DeleteMapping("/deleteChallengeReport/{challengeId}")

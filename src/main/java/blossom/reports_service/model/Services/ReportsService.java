@@ -1,6 +1,8 @@
 package blossom.reports_service.model.Services;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.StaleStateException;
@@ -9,293 +11,214 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.*;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import blossom.reports_service.inbound.ReportDTO;
 import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
-import blossom.reports_service.model.Exceptions.AlreadyExistsException;
+import blossom.reports_service.model.Enums.Visibility;
 import blossom.reports_service.model.Exceptions.NotFoundException;
 import blossom.reports_service.model.Repositories.ChallengeReportRepository;
-import blossom.reports_service.model.Repositories.ChallengeRepository;
 import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
-import blossom.reports_service.model.Repositories.UserRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.persistence.OptimisticLockException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Retryable(include = { OptimisticLockException.class, StaleStateException.class },
-    // StaleStateException sometimes occurs when OptimisticLockException is expected
-    // -> a bug!?
-    maxAttempts = 3, // first attempt and 2 retries
+@Retryable(include = { OptimisticLockException.class,
+    StaleStateException.class }, maxAttempts = 3, // first attempt and 2 retries
     backoff = @Backoff(delay = 100, maxDelay = 500))
 public class ReportsService {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportsService.class);
 
   private final ChallengeReportRepository challengeReportRepository;
   private final ChallengeSummaryRepository challengeSummaryRepository;
-  private final UserRepository userRepository;
-  private final ChallengeRepository challengeRepository;
+  private RestTemplate restTemplate;
 
   @Autowired
-  public ReportsService(ChallengeReportRepository challengeReportRepository,
+  public ReportsService(
+      ChallengeReportRepository challengeReportRepository,
       ChallengeSummaryRepository challengeSummaryRepository,
-      UserRepository userRepository,
-      ChallengeRepository challengeRepository) {
+      RestTemplate restTemplate) {
 
     this.challengeReportRepository = challengeReportRepository;
     this.challengeSummaryRepository = challengeSummaryRepository;
-    this.userRepository = userRepository;
-    this.challengeRepository = challengeRepository;
+    this.restTemplate = restTemplate;
   }
 
-  @PostConstruct
-  public void init() {
-    LOGGER.info("ReportsService initialized");
-  }
+  private static final String USER_SERVICE_URL = "http://localhost:8080/rest/users";
+  private static final String CHALLENGE_SERVICE_URL = "http://localhost:8080/rest/challenge";
 
-  @PreDestroy
-  public void destroy() {
-    LOGGER.info("ReportsService destroyed");
-  }
-
-  // create challengeSummary for a new user
   @Transactional
-  public ChallengeSummary createChallengeSummary(Long userId) {
+  public void createChallengeSummary(Long userId) {
     LOGGER.info("Creating ChallengeSummary for user with id: {}", userId);
+    // Call the user service to register a new user
+    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    User user = restTemplate.getForObject(url, User.class);
 
-    var userOptional = userRepository.findById(userId);
-
-    if (userOptional.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
-    var user = userOptional.get();
-
-    if (challengeSummaryRepository.findByUserId(userId).isPresent()) {
-      throw new AlreadyExistsException("ChallengeSummary already exists");
-    }
-
-    var challengeSummary = new ChallengeSummary(user);
-
-    return challengeSummary;
+    // Create a new ChallengeSummary for the user
+    ChallengeSummary summary = new ChallengeSummary(user);
+    challengeSummaryRepository.save(summary);
   }
 
-  // get the challengeSummary for a User
   @Transactional(readOnly = true)
   public ChallengeSummary getChallengeSummary(Long userId) {
     LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
 
-    var userOptional = userRepository.findById(userId);
-    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
+    // Fetch User from the user service
+    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    User user = restTemplate.getForObject(url, User.class);
 
-    var challengeSummaryOptional = challengeSummaryRepository.findByUser(user);
-    var challengeSummary = challengeSummaryOptional
+    var summaryOpt = challengeSummaryRepository.findByUser(user);
+    var summary = summaryOpt
         .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
 
-    return challengeSummary;
+    return summary;
   }
 
-  // create challengeReport for a new challenge
   @Transactional
-  public ChallengeReport createChallengeReport(ReportDTO dto) {
-    LOGGER.info("Creating ChallengeReport for the challenge with id {} for the user with id: {}. ",
-        dto.getChallengeId(), dto.getUserId());
+  public void updateChallengeProgress(Long challengeId, Long challengeProgressId, String userEmail,
+      Double currentProgress, Date timestamp) {
+    LOGGER.info("Updating ChallengeProgress with id: {} for user with email: {}", challengeProgressId, userEmail);
 
-    // Check if user exists
-    Optional<User> optionalUser = userRepository.findById(dto.getUserId());
-    if (optionalUser.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
-    var user = optionalUser.get();
+    // Fetch User from the user service
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
+    User user = restTemplate.getForObject(url, User.class);
 
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(dto.getChallengeId());
-    if (optionalChallenge.isEmpty()) {
-      throw new NotFoundException("Challenge not found");
-    }
-    var challenge = optionalChallenge.get();
+    // Fetch Challenge from the challenge service
+    url = CHALLENGE_SERVICE_URL + "/getChallengeById/" + challengeId;
+    Challenge challenge = restTemplate.getForObject(url, Challenge.class);
 
-    ChallengeReport challengeReport = new ChallengeReport(challenge, user, dto.getStartDate(), dto.getDescription());
+    // Create new ChallengeProgress
+    ChallengeProgress progress = new ChallengeProgress(user, challenge, currentProgress, Visibility.FRIENDS);
 
-    // Check if ChallengeReport already exists for the given challengeId and userId
-    boolean reportExists = challengeReportRepository.existsByChallengeIdAndUserId(
-        dto.getChallengeId(), dto.getUserId());
-    if (reportExists) {
-      throw new AlreadyExistsException("ChallengeReport already exists");
-    }
+    Optional<ChallengeReport> reportOpt = challengeReportRepository.findByChallenge(challenge);
+    var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, user.getId()));
 
-    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
-    challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() + 1);
-    challengeSummary.setPendingCount(challengeSummary.getPendingCount() + 1);
-
-    challengeSummaryRepository.save(challengeSummary);
-
-    // Save the ChallengeReport
-    challengeReportRepository.save(challengeReport);
-
-    LOGGER.info("ChallengeReport created successfully!");
-
-    return challengeReport;
+    // Add progress to the report
+    report.addChallengeProgress(progress);
   }
 
-  // get all challengeReports for a user
   @Transactional
+  public ChallengeReport createChallengeReport(Long challengeId, Long userId) {
+    LOGGER.info("Creating ChallengeReport for user with id: {} and challenge with id: {}", userId, challengeId);
+    // Fetch User from the user service
+    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    User user = restTemplate.getForObject(url, User.class);
+
+    // Fetch Challenge from the challenge service
+    url = CHALLENGE_SERVICE_URL + "/getChallengeById/" + challengeId;
+    Challenge challenge = restTemplate.getForObject(url, Challenge.class);
+
+    // Create new ChallengeReport
+    ChallengeReport report = new ChallengeReport(user, challenge);
+
+    var summaryOpt = challengeSummaryRepository.findByUser(user);
+    var summary = summaryOpt
+        .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
+
+    summary.setChallengeCount(summary.getChallengeCount() + 1);
+    summary.setPendingCount(summary.getPendingCount() + 1);
+
+    challengeSummaryRepository.save(summary);
+
+    challengeReportRepository.save(report);
+
+    return report;
+  }
+
+  @Transactional(readOnly = true)
   public Iterable<ChallengeReport> getChallengeReports(Long userId) {
     LOGGER.info("Getting all ChallengeReports for user with id: {}", userId);
 
-    var userOptional = userRepository.findById(userId);
-    // Check if User exists with orElseThrow
-    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
+    // Fetch User from the user service
+    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    User user = restTemplate.getForObject(url, User.class);
 
     return challengeReportRepository.findAllByUser(user);
   }
 
-  // update an challengeReport
+  @SuppressWarnings("null")
   @Transactional
-  public ChallengeReport updateChallengeReport(ReportDTO dto) {
-    Long challengeId = dto.getChallengeId();
-    Long userId = dto.getUserId();
-    ChallengeStatus status = dto.getStatus();
+  public ChallengeReport updateReportStatus(Long challengeId, Long challengeProgressId, String userEmail,
+      double currentProgress, long timestamp) {
 
     LOGGER.info("Updating ChallengeReport with id: {}", challengeId);
 
     // Check if ChallengeReport exists
-    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeId);
-    var challengeReport = optionalChallengeReport
-        .orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
+    Optional<ChallengeReport> reportOpt = challengeReportRepository.findById(challengeId);
+    ChallengeReport challengeReport = reportOpt.orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
 
-    // Check if Challenge exists
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
-    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found"));
+    // Fetch User from the user service
+    String userUrl = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
+    User user = restTemplate.getForObject(userUrl, User.class);
 
-    var userOptional = userRepository.findById(userId);
-    var user = userOptional.orElseThrow(() -> new NotFoundException("User not found"));
+    // Fetch Challenge from the challenge service
+    String challengeUrl = CHALLENGE_SERVICE_URL + "/" + challengeId;
+    Challenge challenge = restTemplate.getForObject(challengeUrl, Challenge.class);
 
-    // Convert DTO to ChallengeReport entity
-    // Update challenge report fields
-    challengeReport.setStartDate(dto.getStartDate());
-    challengeReport.setDescription(dto.getDescription());
-    challengeReport.setStatus(dto.getStatus());
-
-    Date date = new Date();
-    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
+    // Update ChallengeSummary
+    ChallengeSummary challengeSummary = challengeSummaryRepository.findByUser(user)
+        .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
 
     // Handle challenge completion status
-    // if status is already DONE, do nothing
-    if (dto.getStatus().equals(ChallengeStatus.DONE)) {
-      challengeReport.setEndDate(date);
-      challengeSummary.setDoneCount(challengeSummary.getDoneCount() + 1);
-      challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
+    Date currentDate = new Date();
+    if (challengeReport.getStatus() == ChallengeStatus.DONE) {
+      challengeReport.setEndDate(currentDate);
+      challengeSummary.incrementDoneCount();
+      challengeSummary.decrementPendingCount();
 
-      // Decrement overdue count if the challenge was overdue
-      if (date.after(challenge.getDeadline())) {
-        challengeSummary.setOverdueCount(Math.max(0, challengeSummary.getOverdueCount() - 1));
+      if (currentDate.after(challenge.getDeadline())) {
+        challengeSummary.decrementOverdueCount();
       }
-    } else {
-      // Handle overdue status if the challenge is not done and overdue
-      if (date.after(challenge.getDeadline())) {
-        challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() + 1);
-        challengeReport.setStatus(ChallengeStatus.OVERDUE);
-      }
+    } else if (currentDate.after(challenge.getDeadline())) {
+      challengeSummary.incrementOverdueCount();
+      challengeReport.setStatus(ChallengeStatus.OVERDUE);
     }
 
     // Update lastActive and consecutive days
-    long currentTime = date.getTime();
+    long currentTime = currentDate.getTime();
     long lastActiveTime = challengeSummary.getLastActive().getTime();
-
     if (currentTime - lastActiveTime > 24 * 60 * 60 * 1000) {
-      challengeSummary.setConsecutiveDays(0);
+      challengeSummary.resetConsecutiveDays();
     } else {
-      challengeSummary.setConsecutiveDays(challengeSummary.getConsecutiveDays() + 1);
+      challengeSummary.incrementConsecutiveDays();
       if (challengeSummary.getConsecutiveDays() > challengeSummary.getLongestStreak()) {
-        challengeSummary.setLongestStreak(challengeSummary.getConsecutiveDays());
+        challengeSummary.updateLongestStreak();
       }
     }
+    challengeSummary.updateLastActive(currentDate);
 
-    challengeSummary.setLastActive(date);
-
-    // Save and return the updated ChallengeReport
+    // Save ChallengeReport and ChallengeSummary
+    challengeSummaryRepository.save(challengeSummary);
     return challengeReportRepository.save(challengeReport);
   }
 
-  // delete an challengeReport
   @Transactional
   public void deleteChallengeReport(Long challengeReportId) {
     LOGGER.info("Deleting ChallengeReport with id: {}", challengeReportId);
 
     // Check if ChallengeReport exists
-    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findById(challengeReportId);
-    var challengeReport = optionalChallengeReport.orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
+    ChallengeReport report = challengeReportRepository.findById(challengeReportId)
+        .orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
 
-    // Check if User exists
-    Optional<User> optionalUser = userRepository.findById(optionalChallengeReport.get().getUser().getId());
-    var user = optionalUser.orElseThrow(() -> new NotFoundException("User not found"));
+    // Update ChallengeSummary attributes
+    ChallengeSummary summary = challengeSummaryRepository.findByUser(report.getUser())
+        .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
 
-    // update challengeSummary attributes
-    var challengeSummary = challengeSummaryRepository.findByUser(user).get();
+    summary.decrementPendingCount();
+    summary.decrementChallengeCount();
 
-    challengeSummary.setPendingCount(challengeSummary.getPendingCount() - 1);
-    challengeSummary.setChallengeCount(challengeSummary.getChallengeCount() - 1);
-
-    if (challengeReport.getStatus().equals(ChallengeStatus.OVERDUE)) {
-      challengeSummary.setOverdueCount(challengeSummary.getOverdueCount() - 1);
-    } else if (challengeReport.getStatus().equals(ChallengeStatus.DONE)) {
-      challengeSummary.setDoneCount(challengeSummary.getDoneCount() - 1);
+    if (report.getStatus().equals(ChallengeStatus.OVERDUE)) {
+      summary.decrementOverdueCount();
+    } else if (report.getStatus().equals(ChallengeStatus.DONE)) {
+      summary.decrementDoneCount();
     }
 
-    // delete the ChallengeReport
+    // Delete the ChallengeReport
     challengeReportRepository.deleteById(challengeReportId);
   }
-
-  // update challenge progress
-  @Transactional
-  public void updateChallengeProgress(Long challengeId, String userEmail, Double progress, Date timestamp) {
-    LOGGER.info("Updating ChallengeProgress for challenge with id: {}", challengeId);
-
-    // Check if Challenge exists
-    Optional<Challenge> optionalChallenge = challengeRepository.findById(challengeId);
-    var challenge = optionalChallenge.orElseThrow(() -> new NotFoundException("Challenge not found"));
-
-    // Check if User exists
-    Optional<User> optionalUser = userRepository.findByEmail(userEmail);
-    if (optionalUser.isEmpty()) {
-      throw new NotFoundException("User not found");
-    }
-
-    // Check if ChallengeReport exists
-    Optional<ChallengeReport> optionalChallengeReport = challengeReportRepository.findByChallenge(challenge);
-    var challengeReport = optionalChallengeReport.orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
-
-    // update progress and timestamp
-    challengeReport.addProgress(progress);
-    challengeReport.addTimestamp(timestamp);
-  }
-
-  // // sort challengeReports by startDate
-  // public Iterable<ChallengeReport> sortChallengeReportsByStartDate(Long userId)
-  // {
-  // var userOptional = userRepository.findById(userId);
-  // if (userOptional.isEmpty()) {
-  // throw new NotFoundException("User not found");
-  // }
-
-  // Iterable<ChallengeReport> challengeReports =
-  // challengeReportRepository.findAllByUser(userOptional.get());
-
-  // List<ChallengeReport> challengeList = toList(challengeReports);
-  // challengeList.sort(Comparator.comparing(ChallengeReport::getStartDate));
-
-  // return challengeList;
-  // }
-
-  // // turn generic Iterable into List
-  // public <T> List<T> toList(Iterable<T> iterable) {
-  // List<T> list = new ArrayList<T>();
-  // iterable.forEach(list::add);
-  // return list;
-  // }
 }

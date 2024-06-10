@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import jakarta.persistence.*;
 
@@ -25,11 +23,12 @@ public class ChallengeReport {
   @JoinColumn(name = "user_FK")
   private User user;
 
+  @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "challenge_progress_FK")
+  private List<ChallengeProgress> challengeProgresses;
+
   private Date startDate;
   private Date endDate;
-  private String description;
-  private List<Double> progress;
-  private List<Date> timestamps;
 
   @Enumerated(EnumType.STRING)
   private ChallengeStatus status;
@@ -41,18 +40,12 @@ public class ChallengeReport {
     this.status = ChallengeStatus.OPEN;
   }
 
-  @Autowired
-  public ChallengeReport(Challenge challenge, User user, Date startDate, String description) {
-
+  public ChallengeReport(User user, Challenge challenge) {
     this.user = user;
-    // this.challenge = challenge;
-    // this.startDate = startDate;
-    // this.endDate = null;
-    // this.description = description;
-    this.progress = new ArrayList<>();
-    this.progress.add(0.0);
-    this.timestamps = new ArrayList<>();
-    this.timestamps.add(null);
+    this.challengeProgresses = new ArrayList<>();
+    this.challenge = challenge;
+    this.startDate = new Date();
+    this.endDate = null;
     this.status = ChallengeStatus.OPEN;
   }
 
@@ -72,12 +65,16 @@ public class ChallengeReport {
     this.user = user;
   }
 
-  public Challenge getChallenge() {
-    return challenge;
+  public List<ChallengeProgress> getChallengeProgresses() {
+    return challengeProgresses;
   }
 
-  public void setChallenge(Challenge challenge) {
-    this.challenge = challenge;
+  public void setChallengeProgresses(List<ChallengeProgress> challengeProgresses) {
+    this.challengeProgresses = challengeProgresses;
+  }
+
+  public void addChallengeProgress(ChallengeProgress challengeProgress) {
+    this.challengeProgresses.add(challengeProgress);
   }
 
   public Date getStartDate() {
@@ -96,44 +93,20 @@ public class ChallengeReport {
     this.endDate = endDate;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public List<Double> getProgress() {
-    return progress;
-  }
-
-  public void setProgress(List<Double> progress) {
-    this.progress = progress;
-  }
-
-  public void addProgress(Double progress) {
-    this.progress.add(progress);
-  }
-
-  public List<Date> getTimestamp() {
-    return timestamps;
-  }
-
-  public void setTimestamp(List<Date> timestamps) {
-    this.timestamps = timestamps;
-  }
-
-  public void addTimestamp(Date timestamp) {
-    this.timestamps.add(timestamp);
-  }
-
   public ChallengeStatus getStatus() {
     return status;
   }
 
   public void setStatus(ChallengeStatus status) {
     this.status = status;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 
 }

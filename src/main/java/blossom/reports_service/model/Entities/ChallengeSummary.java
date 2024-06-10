@@ -173,4 +173,44 @@ public class ChallengeSummary {
     return result;
   }
 
+  public void incrementDoneCount() {
+    this.doneCount++;
+  }
+
+  public void decrementPendingCount() {
+    this.pendingCount--;
+  }
+
+  public void decrementOverdueCount() {
+    this.overdueCount = Math.max(0, this.overdueCount - 1);
+  }
+
+  public void incrementOverdueCount() {
+    this.overdueCount++;
+  }
+
+  public void resetConsecutiveDays() {
+    this.consecutiveDays = 0;
+  }
+
+  public void incrementConsecutiveDays() {
+    this.consecutiveDays++;
+  }
+
+  public void updateLongestStreak() {
+    this.longestStreak = this.consecutiveDays;
+  }
+
+  public void updateLastActive(Date date) {
+    this.lastActive = date;
+  }
+
+  public void decrementChallengeCount() {
+    this.challengeCount--;
+  }
+
+  public void decrementDoneCount() {
+    this.doneCount--;
+  }
+
 }
