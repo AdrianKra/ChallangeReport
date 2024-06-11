@@ -3,6 +3,7 @@ package blossom.reports_service.model.Repositories;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import blossom.reports_service.model.Entities.Challenge;
@@ -32,7 +33,5 @@ public interface ChallengeReportRepository extends JpaRepository<ChallengeReport
   Iterable<ChallengeReport> findAllByUser(User user);
 
   Optional<ChallengeReport> findByChallengeIdAndUserId(Long challengeId, Long userId);
-
-  ChallengeReport getOrDefault(Long challengeId, ChallengeReport challengeReport);
 
 }

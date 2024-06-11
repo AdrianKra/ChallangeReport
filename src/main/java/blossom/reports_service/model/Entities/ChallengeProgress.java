@@ -14,14 +14,18 @@ public class ChallengeProgress {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_fk", referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "challenge_id")
+    @JoinColumn(name = "challenge_fk")
     @OnDelete(action = OnDeleteAction.CASCADE) // Because I am not using a actual bidirectioanl relation (prevents
                                                // circular references) but still want to be able to delete
     private Challenge challenge;
+
+    @ManyToOne
+    @JoinColumn(name = "challenge_report_fk")
+    private ChallengeReport challengeReport;
 
     @Column(name = "current_progress")
     private Double currentProgress;

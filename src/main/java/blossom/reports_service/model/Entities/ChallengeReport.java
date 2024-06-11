@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import jakarta.persistence.*;
 
@@ -23,9 +25,9 @@ public class ChallengeReport {
   @JoinColumn(name = "user_FK")
   private User user;
 
-  @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "challenge_progress_FK")
-  private List<ChallengeProgress> challengeProgresses;
+  @OneToMany(mappedBy = "challengeReport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonManagedReference
+  private List<ChallengeProgress> progressList;
 
   private Date startDate;
   private Date endDate;
@@ -42,7 +44,7 @@ public class ChallengeReport {
 
   public ChallengeReport(User user, Challenge challenge) {
     this.user = user;
-    this.challengeProgresses = new ArrayList<>();
+    this.progressList = new ArrayList<>();
     this.challenge = challenge;
     this.startDate = new Date();
     this.endDate = null;
@@ -65,16 +67,16 @@ public class ChallengeReport {
     this.user = user;
   }
 
-  public List<ChallengeProgress> getChallengeProgresses() {
-    return challengeProgresses;
+  public List<ChallengeProgress> getProgressList() {
+    return progressList;
   }
 
-  public void setChallengeProgresses(List<ChallengeProgress> challengeProgresses) {
-    this.challengeProgresses = challengeProgresses;
+  public void setProgressList(List<ChallengeProgress> progressList) {
+    this.progressList = progressList;
   }
 
-  public void addChallengeProgress(ChallengeProgress challengeProgress) {
-    this.challengeProgresses.add(challengeProgress);
+  public void addProgress(ChallengeProgress progress) {
+    this.progressList.add(progress);
   }
 
   public Date getStartDate() {

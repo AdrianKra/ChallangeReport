@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import blossom.reports_service.inbound.ReportDTO;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Services.ReportsService;
 
