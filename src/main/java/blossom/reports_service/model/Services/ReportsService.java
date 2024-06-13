@@ -99,7 +99,7 @@ public class ReportsService {
     var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, user.getId()));
 
     // Add progress to the report
-    report.addChallengeProgress(progress);
+    report.addProgress(progress);
   }
 
   @Transactional
