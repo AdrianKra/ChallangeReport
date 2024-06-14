@@ -53,10 +53,11 @@ public class ReportsService {
   private static final String CHALLENGE_SERVICE_URL = "http://localhost:8080/rest/challenge";
 
   @Transactional
-  public void createChallengeSummary(Long userId) {
-    LOGGER.info("Creating ChallengeSummary for user with id: {}", userId);
+  public void createChallengeSummary(String userEmail) {
+    LOGGER.info("Creating ChallengeSummary for user with id: {}", userEmail);
+
     // Call the user service to register a new user
-    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
 
     // Create a new ChallengeSummary for the user
@@ -65,11 +66,11 @@ public class ReportsService {
   }
 
   @Transactional(readOnly = true)
-  public ChallengeSummary getChallengeSummary(Long userId) {
-    LOGGER.info("Getting ChallengeSummary for user with id: {}", userId);
+  public ChallengeSummary getChallengeSummary(String userEmail) {
+    LOGGER.info("Getting ChallengeSummary for user with id: {}", userEmail);
 
     // Fetch User from the user service
-    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
 
     var summaryOpt = challengeSummaryRepository.findByUser(user);
@@ -96,17 +97,18 @@ public class ReportsService {
     ChallengeProgress progress = new ChallengeProgress(user, challenge, currentProgress, Visibility.FRIENDS);
 
     Optional<ChallengeReport> reportOpt = challengeReportRepository.findByChallenge(challenge);
-    var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, user.getId()));
+    var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, userEmail));
 
     // Add progress to the report
     report.addProgress(progress);
   }
 
   @Transactional
-  public ChallengeReport createChallengeReport(Long challengeId, Long userId) {
-    LOGGER.info("Creating ChallengeReport for user with id: {} and challenge with id: {}", userId, challengeId);
+  public ChallengeReport createChallengeReport(Long challengeId, String userEmail) {
+    LOGGER.info("Creating ChallengeReport for user with Email: {} and challenge with id: {}", userEmail, challengeId);
+
     // Fetch User from the user service
-    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
 
     // Fetch Challenge from the challenge service
@@ -131,11 +133,11 @@ public class ReportsService {
   }
 
   @Transactional(readOnly = true)
-  public Iterable<ChallengeReport> getChallengeReports(Long userId) {
-    LOGGER.info("Getting all ChallengeReports for user with id: {}", userId);
+  public Iterable<ChallengeReport> getChallengeReports(String userEmail) {
+    LOGGER.info("Getting all ChallengeReports for user with id: {}", userEmail);
 
     // Fetch User from the user service
-    String url = USER_SERVICE_URL + "/getUserById/" + userId;
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
 
     return challengeReportRepository.findAllByUser(user);
