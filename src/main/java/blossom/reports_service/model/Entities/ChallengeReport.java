@@ -79,6 +79,14 @@ public class ChallengeReport {
     this.progressList.add(progress);
   }
 
+  public Challenge getChallenge() {
+    return challenge;
+  }
+
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
+  }
+
   public Date getStartDate() {
     return startDate;
   }
