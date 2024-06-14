@@ -39,9 +39,6 @@ public class Challenge {
     @Version
     private int version;
 
-    /**
-     * Default constructor; is required for entities by JPA
-     */
     public Challenge() {
     }
 

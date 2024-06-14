@@ -124,55 +124,6 @@ public class ChallengeSummary {
         + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + user.toString() + "]";
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    ChallengeSummary other = (ChallengeSummary) obj;
-    if (challengeCount != other.challengeCount)
-      return false;
-    if (consecutiveDays != other.consecutiveDays)
-      return false;
-    if (doneCount != other.doneCount)
-      return false;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
-    if (longestStreak != other.longestStreak)
-      return false;
-    if (overdueCount != other.overdueCount)
-      return false;
-    if (pendingCount != other.pendingCount)
-      return false;
-    if (user == null) {
-      if (other.user != null)
-        return false;
-    } else if (!user.equals(other.user))
-      return false;
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + challengeCount;
-    result = prime * result + consecutiveDays;
-    result = prime * result + doneCount;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + longestStreak;
-    result = prime * result + overdueCount;
-    result = prime * result + pendingCount;
-    result = prime * result + ((user == null) ? 0 : user.hashCode());
-    return result;
-  }
-
   public void incrementDoneCount() {
     this.doneCount++;
   }

@@ -1,4 +1,4 @@
-package blossom.reports_service.UnitTests;
+package blossom.reports_service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
 
 @ExtendWith(MockitoExtension.class)
-public class ChallengeReportTest {
+public class UnitTests {
 
   @Mock
   private Challenge challenge;

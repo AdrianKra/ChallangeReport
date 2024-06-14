@@ -37,9 +37,6 @@ public class ChallengeProgress {
     @Version
     private int version;
 
-    /*
-     * Default constructor; is required for entities by JPA
-     */
     public ChallengeProgress() {
     }
 
