@@ -2,6 +2,7 @@
 INSERT INTO users (email, version) VALUES ('example1@gmail.com', 0);
 INSERT INTO users (email, version) VALUES ('example2@gmail.com', 0);
 INSERT INTO users (email, version) VALUES ('example3@gmail.com', 0);
+INSERT INTO users (email, version) VALUES ('example4@gmail.com', 0);  
 
 -- Einfügen von Herausforderungen
 INSERT INTO challenges (title, description, unit, target_progress, deadline, score_reward, score_penalty, user_id, challenge_visibility, version)
@@ -10,6 +11,8 @@ INSERT INTO challenges (title, description, unit, target_progress, deadline, sco
 VALUES ('Challenge 2', 'Description 2', 'MINUTES', 100.0, '2021-12-31', 10, 5, 2, 'PRIVATE', 0);
 INSERT INTO challenges (title, description, unit, target_progress, deadline, score_reward, score_penalty, user_id, challenge_visibility, version)
 VALUES ('Challenge 3', 'Description 3', 'HOURS', 100.0, '2021-12-31', 10, 5, 3, 'PUBLIC', 0);
+INSERT INTO challenges (title, description, unit, target_progress, deadline, score_reward, score_penalty, user_id, challenge_visibility, version)
+VALUES ('Challenge 4', 'Description 4', 'DAYS', 100.0, '2021-12-31', 10, 5, 4, 'PRIVATE', 0);
 
 -- Einfügen von Challenge Progress
 INSERT INTO challenge_progress (user_fk, challenge_fk, current_progress, progress_visibility, version)

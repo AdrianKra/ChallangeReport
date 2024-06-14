@@ -12,7 +12,7 @@ import blossom.reports_service.model.Enums.Visibility;
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
-    Challenge findOneById(Long id);
+    Optional<Challenge> findOneById(Long id);
 
     Challenge save(@NonNull Challenge challenge);
 
