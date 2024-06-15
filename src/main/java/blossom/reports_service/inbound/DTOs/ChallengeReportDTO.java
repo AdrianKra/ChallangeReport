@@ -1,23 +1,48 @@
 package blossom.reports_service.inbound.DTOs;
 
 import java.util.Date;
+import java.util.List;
+
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeProgress;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.ChallengeStatus;
 
 public class ChallengeReportDTO {
+
   private Long id;
-  private Long challengeId;
-  private Long userId;
-  private String report;
-  private Date reportDate;
+  private Challenge challenge;
+  private User user;
+  private List<ChallengeProgress> progressList;
+  private Date startDate;
+  private Date endDate;
+  private ChallengeStatus status;
+  private int version;
 
   public ChallengeReportDTO() {
   }
 
-  public ChallengeReportDTO(Long id, Long challengeId, Long userId, String report, Date reportDate) {
-    this.id = id;
-    this.challengeId = challengeId;
-    this.userId = userId;
-    this.report = report;
-    this.reportDate = reportDate;
+  public ChallengeReportDTO(Challenge challenge, User user, List<ChallengeProgress> progressList, Date startDate,
+      Date endDate, ChallengeStatus status, int version) {
+    this.challenge = challenge;
+    this.user = user;
+    this.progressList = progressList;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.status = status;
+    this.version = version;
+  }
+
+  public ChallengeReportDTO(ChallengeReport challengeReport) {
+    this.id = challengeReport.getId();
+    this.challenge = challengeReport.getChallenge();
+    this.user = challengeReport.getUser();
+    this.progressList = challengeReport.getProgressList();
+    this.startDate = challengeReport.getStartDate();
+    this.endDate = challengeReport.getEndDate();
+    this.status = challengeReport.getStatus();
+    this.version = challengeReport.getVersion();
   }
 
   public Long getId() {
@@ -28,46 +53,71 @@ public class ChallengeReportDTO {
     this.id = id;
   }
 
-  public Long getChallengeId() {
-    return challengeId;
+  public Challenge getChallenge() {
+    return challenge;
   }
 
-  public void setChallengeId(Long challengeId) {
-    this.challengeId = challengeId;
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
   }
 
-  public Long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public String getReport() {
-    return report;
+  public List<ChallengeProgress> getProgressList() {
+    return progressList;
   }
 
-  public void setReport(String report) {
-    this.report = report;
+  public void setProgressList(List<ChallengeProgress> progressList) {
+    this.progressList = progressList;
   }
 
-  public Date getReportDate() {
-    return reportDate;
+  public Date getStartDate() {
+    return startDate;
   }
 
-  public void setReportDate(Date reportDate) {
-    this.reportDate = reportDate;
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
   }
 
-  @Override
-  public String toString() {
-    return "ChallengeReportDTO{" +
-        "id=" + id +
-        ", challengeId=" + challengeId +
-        ", userId=" + userId +
-        ", report='" + report + '\'' +
-        ", reportDate=" + reportDate +
-        '}';
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
+
+  public ChallengeStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(ChallengeStatus status) {
+    this.status = status;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  public void addProgress(ChallengeProgress progress) {
+    this.progressList.add(progress);
+  }
+
+  public void removeProgress(ChallengeProgress progress) {
+    this.progressList.remove(progress);
+  }
+
+  public void clearProgress() {
+    this.progressList.clear();
   }
 }

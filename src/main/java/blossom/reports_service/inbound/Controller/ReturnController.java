@@ -1,5 +1,8 @@
 package blossom.reports_service.inbound.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import blossom.reports_service.inbound.DTOs.ChallengeReportDTO;
 import blossom.reports_service.inbound.Security.JwtValidator;
 import blossom.reports_service.model.Quote;
 import blossom.reports_service.model.Entities.ChallengeReport;
@@ -40,16 +44,23 @@ public class ReturnController {
     this.jwtValidator = jwtValidator;
   }
 
-  // get all challange reports for a user
+  // get all challange reports for a user and return as list of DTOs
   @GetMapping("/list/{userId}")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-  public Iterable<ChallengeReport> getChallengeReports(@RequestHeader String Authorization) {
+  public List<ChallengeReportDTO> getChallengeReports(@RequestHeader String Authorization) {
 
     String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
     LOGGER.info("Getting challenge reports for user with email: {}", userEmail);
 
     Iterable<ChallengeReport> reports = reportsService.getChallengeReports(userEmail);
-    return reports;
+
+    List<ChallengeReportDTO> reportList = new ArrayList<>();
+    reports.forEach(report -> {
+      ChallengeReportDTO dto = new ChallengeReportDTO(report);
+      reportList.add(dto);
+    });
+
+    return reportList;
   }
 
   // get challange summary by userId

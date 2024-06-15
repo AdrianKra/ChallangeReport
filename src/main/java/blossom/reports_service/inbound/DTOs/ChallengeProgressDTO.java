@@ -1,25 +1,41 @@
 package blossom.reports_service.inbound.DTOs;
 
-import java.util.Date;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeProgress;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.Visibility;
 
 public class ChallengeProgressDTO {
+
   private Long id;
-  private Long userId;
-  private Long challengeId;
-  private int progress;
-  private Date startDate;
-  private Date endDate;
+  private User user;
+  private Challenge challenge;
+  private ChallengeReport challengeReport;
+  private Double currentProgress;
+  private Visibility progressVisibility;
+  private int version;
 
   public ChallengeProgressDTO() {
   }
 
-  public ChallengeProgressDTO(Long id, Long userId, Long challengeId, int progress, Date startDate, Date endDate) {
-    this.id = id;
-    this.userId = userId;
-    this.challengeId = challengeId;
-    this.progress = progress;
-    this.startDate = startDate;
-    this.endDate = endDate;
+  public ChallengeProgressDTO(User user, Challenge challenge, ChallengeReport challengeReport, Double currentProgress,
+      Visibility progressVisibility) {
+    this.user = user;
+    this.challenge = challenge;
+    this.challengeReport = challengeReport;
+    this.currentProgress = currentProgress;
+    this.progressVisibility = progressVisibility;
+  }
+
+  public ChallengeProgressDTO(ChallengeProgress challengeProgress) {
+    this.id = challengeProgress.getId();
+    this.user = challengeProgress.getUser();
+    this.challenge = challengeProgress.getChallenge();
+    this.challengeReport = challengeProgress.getChallengeReport();
+    this.currentProgress = challengeProgress.getCurrentProgress();
+    this.progressVisibility = challengeProgress.getProgressVisibility();
+    this.version = challengeProgress.getVersion();
   }
 
   public Long getId() {
@@ -30,55 +46,51 @@ public class ChallengeProgressDTO {
     this.id = id;
   }
 
-  public Long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public Long getChallengeId() {
-    return challengeId;
+  public Challenge getChallenge() {
+    return challenge;
   }
 
-  public void setChallengeId(Long challengeId) {
-    this.challengeId = challengeId;
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
   }
 
-  public int getProgress() {
-    return progress;
+  public ChallengeReport getChallengeReport() {
+    return challengeReport;
   }
 
-  public void setProgress(int progress) {
-    this.progress = progress;
+  public void setChallengeReport(ChallengeReport challengeReport) {
+    this.challengeReport = challengeReport;
   }
 
-  public Date getStartDate() {
-    return startDate;
+  public Double getCurrentProgress() {
+    return currentProgress;
   }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
+  public void setCurrentProgress(Double currentProgress) {
+    this.currentProgress = currentProgress;
   }
 
-  public Date getEndDate() {
-    return endDate;
+  public Visibility getProgressVisibility() {
+    return progressVisibility;
   }
 
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
+  public void setProgressVisibility(Visibility progressVisibility) {
+    this.progressVisibility = progressVisibility;
   }
 
-  @Override
-  public String toString() {
-    return "ChallengeProgressDTO{" +
-        "id=" + id +
-        ", userId=" + userId +
-        ", challengeId=" + challengeId +
-        ", progress=" + progress +
-        ", startDate=" + startDate +
-        ", endDate=" + endDate +
-        '}';
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 }

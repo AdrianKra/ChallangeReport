@@ -3,7 +3,6 @@ package blossom.reports_service.model.Entities;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.ArrayList;
 
 @Entity
 public class ChallengeSummary {
@@ -17,8 +16,6 @@ public class ChallengeSummary {
   private User user;
 
   private Date lastActive;
-
-  private int dailyChallenges;
 
   private int challengeCount;
   private int doneCount;
@@ -115,6 +112,14 @@ public class ChallengeSummary {
 
   public void setLongestStreak(int longestStreak) {
     this.longestStreak = longestStreak;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override

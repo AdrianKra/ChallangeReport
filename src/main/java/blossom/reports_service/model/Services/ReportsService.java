@@ -62,7 +62,7 @@ public class ReportsService {
 
     // Create a new ChallengeSummary for the user
     ChallengeSummary summary = new ChallengeSummary(user);
-    challengeSummaryRepository.save(summary);
+    challengeSummaryRepository.save(summary); // ???
   }
 
   @Transactional(readOnly = true)

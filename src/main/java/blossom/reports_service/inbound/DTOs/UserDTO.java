@@ -1,21 +1,26 @@
 package blossom.reports_service.inbound.DTOs;
 
+import blossom.reports_service.model.Entities.User;
+
 public class UserDTO {
+
   private Long id;
-  private String username;
   private String email;
-  private String firstName;
-  private String lastName;
+  private int version;
 
   public UserDTO() {
   }
 
-  public UserDTO(Long id, String username, String email, String firstName, String lastName) {
+  public UserDTO(Long id, String email, int version) {
     this.id = id;
-    this.username = username;
     this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.version = version;
+  }
+
+  public UserDTO(User user) {
+    this.id = user.getId();
+    this.email = user.getEmail();
+    this.version = user.getVersion();
   }
 
   public Long getId() {
@@ -26,14 +31,6 @@ public class UserDTO {
     this.id = id;
   }
 
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
   public String getEmail() {
     return email;
   }
@@ -42,30 +39,11 @@ public class UserDTO {
     this.email = email;
   }
 
-  public String getFirstName() {
-    return firstName;
+  public int getVersion() {
+    return version;
   }
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  @Override
-  public String toString() {
-    return "UserDTO{" +
-        "id=" + id +
-        ", username='" + username + '\'' +
-        ", email='" + email + '\'' +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        '}';
+  public void setVersion(int version) {
+    this.version = version;
   }
 }

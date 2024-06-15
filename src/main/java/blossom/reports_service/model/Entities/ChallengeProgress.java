@@ -71,6 +71,14 @@ public class ChallengeProgress {
         this.challenge = challenge;
     }
 
+    public ChallengeReport getChallengeReport() {
+        return challengeReport;
+    }
+
+    public void setChallengeReport(ChallengeReport challengeReport) {
+        this.challengeReport = challengeReport;
+    }
+
     public Double getCurrentProgress() {
         return currentProgress;
     }
@@ -85,6 +93,14 @@ public class ChallengeProgress {
 
     public void setProgressVisibility(Visibility progressVisibility) {
         this.progressVisibility = progressVisibility;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override

@@ -136,6 +136,14 @@ public class Challenge {
         this.challengeVisibility = challengeVisibility;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "Challenge [id=" + id + ", title=" + title + ", description=" + description + ", unit=" + unit

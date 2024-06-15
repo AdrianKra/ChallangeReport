@@ -37,4 +37,21 @@ public class User {
   public void setEmail(String email) {
     this.email = email;
   }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "id=" + id +
+        ", email='" + email + '\'' +
+        ", version=" + version +
+        '}';
+  }
 }

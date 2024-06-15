@@ -2,22 +2,55 @@ package blossom.reports_service.inbound.DTOs;
 
 import java.util.Date;
 
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.Unit;
+import blossom.reports_service.model.Enums.Visibility;
+
 public class ChallengeDTO {
+
   private Long id;
-  private String name;
+  private String title;
   private String description;
-  private Date startDate;
-  private Date endDate;
+  private Unit unit;
+  private double targetProgress;
+  private Date deadline;
+  private Integer scoreReward;
+  private Integer scorePenalty;
+  private User user;
+  private Visibility challengeVisibility;
+  private int version;
 
   public ChallengeDTO() {
   }
 
-  public ChallengeDTO(Long id, String name, String description, Date startDate, Date endDate) {
+  public ChallengeDTO(Long id, String title, String description, Unit unit, double targetProgress, Date deadline,
+      Integer scoreReward, Integer scorePenalty, User user, Visibility challengeVisibility, int version) {
     this.id = id;
-    this.name = name;
+    this.title = title;
     this.description = description;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.unit = unit;
+    this.targetProgress = targetProgress;
+    this.deadline = deadline;
+    this.scoreReward = scoreReward;
+    this.scorePenalty = scorePenalty;
+    this.user = user;
+    this.challengeVisibility = challengeVisibility;
+    this.version = version;
+  }
+
+  public ChallengeDTO(Challenge challenge) {
+    this.id = challenge.getId();
+    this.title = challenge.getTitle();
+    this.description = challenge.getDescription();
+    this.unit = challenge.getUnit();
+    this.targetProgress = challenge.getTargetProgress();
+    this.deadline = challenge.getDeadline();
+    this.scoreReward = challenge.getScoreReward();
+    this.scorePenalty = challenge.getScorePenalty();
+    this.user = challenge.getUser();
+    this.challengeVisibility = challenge.getChallengeVisibility();
+    this.version = challenge.getVersion();
   }
 
   public Long getId() {
@@ -28,12 +61,12 @@ public class ChallengeDTO {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getDescription() {
@@ -44,30 +77,67 @@ public class ChallengeDTO {
     this.description = description;
   }
 
-  public Date getStartDate() {
-    return startDate;
+  public Unit getUnit() {
+    return unit;
   }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
+  public void setUnit(Unit unit) {
+    this.unit = unit;
   }
 
-  public Date getEndDate() {
-    return endDate;
+  public double getTargetProgress() {
+    return targetProgress;
   }
 
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
+  public void setTargetProgress(double targetProgress) {
+    this.targetProgress = targetProgress;
   }
 
-  @Override
-  public String toString() {
-    return "ChallengeDTO{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", startDate=" + startDate +
-        ", endDate=" + endDate +
-        '}';
+  public Date getDeadline() {
+    return deadline;
+  }
+
+  public void setDeadline(Date deadline) {
+    this.deadline = deadline;
+  }
+
+  public Integer getScoreReward() {
+    return scoreReward;
+  }
+
+  public void setScoreReward(Integer scoreReward) {
+    this.scoreReward = scoreReward;
+  }
+
+  public Integer getScorePenalty() {
+    return scorePenalty;
+  }
+
+  public void setScorePenalty(Integer scorePenalty) {
+    this.scorePenalty = scorePenalty;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public Visibility getChallengeVisibility() {
+    return challengeVisibility;
+  }
+
+  public void setChallengeVisibility(Visibility challengeVisibility) {
+    this.challengeVisibility = challengeVisibility;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 }
