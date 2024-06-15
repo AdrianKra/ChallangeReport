@@ -31,9 +31,9 @@ INSERT INTO challenge_report (status, challenge_fk, start_date, end_date, user_f
 VALUES ('OVERDUE', 3, '2021-12-01', null, 3, 0);
 
 -- Einfügen von Challenge Summary
-INSERT INTO challenge_summary (challenge_count, consecutive_days, daily_challenges, done_count, longest_streak, overdue_count, pending_count, last_active, user_fk, version)
-VALUES (1, 0, 0, 0, 0, 0, 1, CURRENT_TIMESTAMP, 1, 0);
-INSERT INTO challenge_summary (challenge_count, consecutive_days, daily_challenges, done_count, longest_streak, overdue_count, pending_count, last_active, user_fk, version)
-VALUES (1, 1, 1, 1, 1, 1, 1, CURRENT_TIMESTAMP, 2, 0);
-INSERT INTO challenge_summary (challenge_count, consecutive_days, daily_challenges, done_count, longest_streak, overdue_count, pending_count, last_active, user_fk, version)
-VALUES (2, 2, 2, 2, 2, 2, 2, CURRENT_TIMESTAMP, 3, 0);
+INSERT INTO challenge_summary (challenge_count, consecutive_days, done_count, longest_streak, overdue_count, pending_count, version, last_active, user_fk)
+VALUES (1, 0, 0,  0, 0, 1, 0, CURRENT_TIMESTAMP, 1);
+INSERT INTO challenge_summary (challenge_count, consecutive_days, done_count, longest_streak, overdue_count, pending_count, version, last_active, user_fk)
+VALUES (1, 1, 1, 1, 1, 1, 0, CURRENT_TIMESTAMP, 2);
+INSERT INTO challenge_summary (challenge_count, consecutive_days, done_count, longest_streak, overdue_count, pending_count, version, last_active, user_fk)
+VALUES (2, 2, 2, 2, 2, 2, 0, CURRENT_TIMESTAMP, 3);
