@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tomcat.util.http.parser.Authorization;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import blossom.reports_service.inbound.DTOs.ChallengeReportDTO;
+import blossom.reports_service.inbound.DTOs.ChallengeSummaryDTO;
 import blossom.reports_service.inbound.Security.JwtValidator;
 import blossom.reports_service.model.Quote;
 import blossom.reports_service.model.Entities.ChallengeReport;
@@ -66,13 +68,18 @@ public class ReturnController {
   // get challange summary by userId
   @GetMapping("/summary/{userId}")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-  public ChallengeSummary getChallengeSummary(@RequestHeader String Authorization) {
+  public ChallengeSummaryDTO getChallengeSummary(@RequestHeader String Authorization) {
 
     String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
     LOGGER.info("Getting challenge summary for user with email: {}", userEmail);
 
     ChallengeSummary summary = reportsService.getChallengeSummary(userEmail);
-    return summary;
+
+    // map the summary to DTO
+    ModelMapper modelMapper = new ModelMapper();
+    ChallengeSummaryDTO summaryDTO = modelMapper.map(summary, ChallengeSummaryDTO.class);
+
+    return summaryDTO;
   }
 
   // get feign client quote

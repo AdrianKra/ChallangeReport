@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import blossom.reports_service.inbound.Security.JwtValidator;
-import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Services.ReportsService;
 
 @RestController
