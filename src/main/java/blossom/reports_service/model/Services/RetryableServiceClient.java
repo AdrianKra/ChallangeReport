@@ -12,11 +12,15 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 
 import feign.RetryableException;
+import jakarta.persistence.OptimisticLockException;
 
+import org.hibernate.StaleStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
+@Retryable(include = { OptimisticLockException.class,
+    StaleStateException.class }, maxAttempts = 3, backoff = @Backoff(delay = 100, maxDelay = 500))
 public class RetryableServiceClient {
 
   private final Logger LOGGER = LoggerFactory.getLogger(RetryableServiceClient.class);

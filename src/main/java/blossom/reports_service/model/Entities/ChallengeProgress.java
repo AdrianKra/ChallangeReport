@@ -105,7 +105,9 @@ public class ChallengeProgress {
 
     @Override
     public String toString() {
-        return "ChallengeProgress [user=" + user + ", challenge=" + challenge + ", currentProgress=" + currentProgress
-                + ", progressVisibility=" + progressVisibility + "]";
+        return "ChallengeProgress {id=" + id + ", challenge=" + challenge + ", user=" + user + ", challengeReport="
+                + challengeReport + ", currentProgress=" + currentProgress + ", progressVisibility="
+                + progressVisibility
+                + ", version=" + version + "}";
     }
 }

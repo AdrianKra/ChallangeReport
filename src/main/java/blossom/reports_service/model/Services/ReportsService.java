@@ -6,12 +6,18 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.StaleStateException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import blossom.reports_service.model.Entities.Challenge;
@@ -22,15 +28,14 @@ import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import blossom.reports_service.model.Enums.Visibility;
 import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Exceptions.UnauthorizedException;
 import blossom.reports_service.model.Repositories.ChallengeReportRepository;
 import blossom.reports_service.model.Repositories.ChallengeSummaryRepository;
 import jakarta.persistence.OptimisticLockException;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Retryable(include = { OptimisticLockException.class,
-    StaleStateException.class }, maxAttempts = 3, // first attempt and 2 retries
-    backoff = @Backoff(delay = 100, maxDelay = 500))
+    StaleStateException.class }, maxAttempts = 3, backoff = @Backoff(delay = 100, maxDelay = 500))
 public class ReportsService {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportsService.class);
 
@@ -132,18 +137,43 @@ public class ReportsService {
     return report;
   }
 
+  @SuppressWarnings("null")
   @Transactional(readOnly = true)
   public Iterable<ChallengeReport> getChallengeReports(String userEmail) {
     LOGGER.info("Getting all ChallengeReports for user with id: {}", userEmail);
+
+    // Get the authenticated user's email
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String authenticatedUserEmail = null;
+
+    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      authenticatedUserEmail = userDetails.getUsername();
+    } else if (authentication != null && authentication.getPrincipal() instanceof String) {
+      authenticatedUserEmail = (String) authentication.getPrincipal();
+    }
+
+    if (authenticatedUserEmail == null) {
+      throw new RuntimeException("Unable to retrieve authenticated user's email");
+    }
+
+    // Check if the user is authorized (creator or friend)
+    Boolean isFriend = restTemplate.getForObject(
+        USER_SERVICE_URL + "/friendship/checkFriendship/" + authenticatedUserEmail + "/" + userEmail,
+        Boolean.class);
+
+    if (!isFriend) {
+      throw new UnauthorizedException("User is not authorized to view challenge reports for this user");
+    }
 
     // Fetch User from the user service
     String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
 
     return challengeReportRepository.findAllByUser(user);
+
   }
 
-  @SuppressWarnings("null")
   @Transactional
   public ChallengeReport updateReportStatus(Long challengeId, Long challengeProgressId, String userEmail,
       double currentProgress, long timestamp) {

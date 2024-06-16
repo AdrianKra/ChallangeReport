@@ -1,6 +1,7 @@
 package blossom.reports_service.model.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -9,20 +10,34 @@ public class ChallengeSummary {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @NotNull
   private Long id;
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
+  @NotNull
   private User user;
 
+  @Temporal(TemporalType.DATE)
+  @NotNull
   private Date lastActive;
 
+  @NotNull
   private int challengeCount;
+
+  @NotNull
   private int doneCount;
+
+  @NotNull
   private int pendingCount;
+
+  @NotNull
   private int overdueCount;
 
+  @NotNull
   private int consecutiveDays;
+
+  @NotNull
   private int longestStreak;
 
   @Version
@@ -122,13 +137,6 @@ public class ChallengeSummary {
     this.version = version;
   }
 
-  @Override
-  public String toString() {
-    return "ChallengeSummary [challengeCount=" + challengeCount + ", consecutiveDays="
-        + consecutiveDays + ", doneCount=" + doneCount + ", id=" + id + ", longestStreak=" + longestStreak
-        + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", userId=" + user.toString() + "]";
-  }
-
   public void incrementDoneCount() {
     this.doneCount++;
   }
@@ -169,4 +177,11 @@ public class ChallengeSummary {
     this.doneCount--;
   }
 
+  @Override
+  public String toString() {
+    return "ChallengeSummary {id=" + id + ", user=" + user + ", lastActive=" + lastActive + ", challengeCount="
+        + challengeCount + ", doneCount=" + doneCount + ", pendingCount=" + pendingCount + ", overdueCount="
+        + overdueCount + ", consecutiveDays=" + consecutiveDays + ", longestStreak=" + longestStreak + ", version="
+        + version + "}";
+  }
 }

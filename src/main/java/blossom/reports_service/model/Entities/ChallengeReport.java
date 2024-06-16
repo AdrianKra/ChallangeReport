@@ -8,37 +8,48 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class ChallengeReport {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @NotNull
   private Long id;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "challenge_FK")
+  @NotNull
   private Challenge challenge;
 
   // fk of user
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_FK")
+  @NotNull
   private User user;
 
   @OneToMany(mappedBy = "challengeReport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
   private List<ChallengeProgress> progressList;
 
+  @Temporal(TemporalType.DATE)
+  @NotNull
   private Date startDate;
+
+  @Temporal(TemporalType.DATE)
   private Date endDate;
 
   @Enumerated(EnumType.STRING)
+  @NotNull
   private ChallengeStatus status;
 
   @Version
   private int version;
 
   public ChallengeReport() {
+    this.progressList = new ArrayList<>();
+    this.startDate = new Date();
     this.status = ChallengeStatus.OPEN;
   }
 
@@ -117,6 +128,13 @@ public class ChallengeReport {
 
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "ChallengeReport {id=" + id + ", user=" + user + ", challenge=" + challenge + ", progressList="
+        + progressList + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status + ", version="
+        + version + "}";
   }
 
 }

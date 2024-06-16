@@ -146,10 +146,10 @@ public class Challenge {
 
     @Override
     public String toString() {
-        return "Challenge [id=" + id + ", title=" + title + ", description=" + description + ", unit=" + unit
+        return "Challenge {id=" + id + ", title=" + title + ", description=" + description + ", unit=" + unit
                 + ", targetProgress=" + targetProgress + ", deadline=" + deadline + ", scoreReward=" + scoreReward
                 + ", scorePenalty=" + scorePenalty + ", user=" + user + ", challengeVisibility="
-                + challengeVisibility + "]";
+                + challengeVisibility + ", version=" + version + "}";
     }
 
 }
