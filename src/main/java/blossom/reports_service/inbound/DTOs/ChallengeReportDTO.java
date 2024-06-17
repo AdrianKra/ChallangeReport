@@ -8,15 +8,20 @@ import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
+import jakarta.validation.constraints.NotNull;
 
 public class ChallengeReportDTO {
 
   private Long id;
+  @NotNull
   private Challenge challenge;
+  @NotNull
   private User user;
   private List<ChallengeProgress> progressList;
+  @NotNull
   private Date startDate;
   private Date endDate;
+  @NotNull
   private ChallengeStatus status;
   private int version;
 

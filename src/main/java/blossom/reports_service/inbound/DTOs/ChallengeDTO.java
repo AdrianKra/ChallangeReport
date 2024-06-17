@@ -6,10 +6,13 @@ import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.Unit;
 import blossom.reports_service.model.Enums.Visibility;
+import jakarta.validation.constraints.NotNull;
 
 public class ChallengeDTO {
 
   private Long id;
+
+  @NotNull
   private String title;
   private String description;
   private Unit unit;

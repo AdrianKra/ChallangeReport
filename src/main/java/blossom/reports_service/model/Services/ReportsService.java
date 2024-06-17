@@ -1,12 +1,10 @@
 package blossom.reports_service.model.Services;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.StaleStateException;
-
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import blossom.reports_service.inbound.DTOs.ChallengeDTO;
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
@@ -96,7 +95,11 @@ public class ReportsService {
 
     // Fetch Challenge from the challenge service
     url = CHALLENGE_SERVICE_URL + "/getChallengeById/" + challengeId;
-    Challenge challenge = restTemplate.getForObject(url, Challenge.class);
+    ChallengeDTO challengeDTO = restTemplate.getForObject(url, ChallengeDTO.class);
+
+    // map to Challenge
+    ModelMapper modelMapper = new ModelMapper();
+    Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
 
     // Create new ChallengeProgress
     ChallengeProgress progress = new ChallengeProgress(user, challenge, currentProgress, Visibility.FRIENDS);
@@ -118,7 +121,11 @@ public class ReportsService {
 
     // Fetch Challenge from the challenge service
     url = CHALLENGE_SERVICE_URL + "/getChallengeById/" + challengeId;
-    Challenge challenge = restTemplate.getForObject(url, Challenge.class);
+    ChallengeDTO challengeDTO = restTemplate.getForObject(url, ChallengeDTO.class);
+
+    // map to Challenge
+    ModelMapper modelMapper = new ModelMapper();
+    Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
 
     // Create new ChallengeReport
     ChallengeReport report = new ChallengeReport(user, challenge);
@@ -190,7 +197,11 @@ public class ReportsService {
 
     // Fetch Challenge from the challenge service
     String challengeUrl = CHALLENGE_SERVICE_URL + "/" + challengeId;
-    Challenge challenge = restTemplate.getForObject(challengeUrl, Challenge.class);
+    ChallengeDTO challengeDTO = restTemplate.getForObject(challengeUrl, ChallengeDTO.class);
+
+    // map to Challenge
+    ModelMapper modelMapper = new ModelMapper();
+    Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
 
     // Update ChallengeSummary
     ChallengeSummary challengeSummary = challengeSummaryRepository.findByUser(user)

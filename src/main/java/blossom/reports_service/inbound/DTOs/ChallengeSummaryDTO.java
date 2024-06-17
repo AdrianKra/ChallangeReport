@@ -4,17 +4,34 @@ import java.util.Date;
 
 import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Entities.User;
+import jakarta.validation.constraints.NotNull;
 
 public class ChallengeSummaryDTO {
 
   private Long id;
+
+  @NotNull
   private User user;
+
+  @NotNull
   private Date lastActive;
+
+  @NotNull
   private int challengeCount;
+
+  @NotNull
   private int doneCount;
+
+  @NotNull
   private int pendingCount;
+
+  @NotNull
   private int overdueCount;
+
+  @NotNull
   private int consecutiveDays;
+
+  @NotNull
   private int longestStreak;
   private int version;
 
@@ -127,5 +144,4 @@ public class ChallengeSummaryDTO {
   public void setVersion(int version) {
     this.version = version;
   }
-
 }

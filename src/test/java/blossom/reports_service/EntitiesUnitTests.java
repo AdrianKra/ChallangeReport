@@ -1,5 +1,7 @@
 package blossom.reports_service;
 
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -8,6 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
+import java.util.Set;
+
+import jakarta.validation.*;
 
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
@@ -19,7 +24,7 @@ import blossom.reports_service.model.Enums.Unit;
 import blossom.reports_service.model.Enums.Visibility;
 
 @ExtendWith(MockitoExtension.class)
-public class UnitTests {
+public class EntitiesUnitTests {
 
   @Mock
   private Challenge challenge;
@@ -36,6 +41,15 @@ public class UnitTests {
   @Mock
   private ChallengeSummary challengeSummary;
 
+  private Validator validator;
+
+  @BeforeEach
+  public void setUp() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    validator = factory.getValidator();
+  }
+
+  // Test-Cases for ChallengeReport
   @Test
   public void testChallengeReport() {
     ChallengeReport challengeReport = new ChallengeReport();
@@ -78,6 +92,16 @@ public class UnitTests {
     assertEquals(ChallengeStatus.OPEN, challengeReport.getStatus());
   }
 
+  // Test ChallengeRport for NotNull
+  @Test
+  public void testChallengeReportNotNull() {
+    ChallengeReport challengeReport = new ChallengeReport();
+
+    Set<ConstraintViolation<ChallengeReport>> violations = validator.validate(challengeReport);
+    assertEquals(2, violations.size());
+  }
+
+  // Test-Cases for ChallengeSummary
   @Test
   public void testChallengeSummary() {
     ChallengeSummary challengeSummary = new ChallengeSummary(user);
@@ -136,14 +160,30 @@ public class UnitTests {
   }
 
   @Test
-  public void testChallengeProgressConstructor() {
-    ChallengeProgress challengeProgress = new ChallengeProgress(user, challenge, 0.0, Visibility.PRIVATE);
+  public void testChallengeSummaryConstructor() {
+    ChallengeSummary challengeSummary = new ChallengeSummary(user);
 
-    assertEquals(user, challengeProgress.getUser());
-    assertEquals(challenge, challengeProgress.getChallenge());
-    assertEquals(0.0, challengeProgress.getCurrentProgress());
-    assertEquals(Visibility.PRIVATE, challengeProgress.getProgressVisibility());
+    assertEquals(user, challengeSummary.getUser());
+    assertNotNull(challengeSummary.getLastActive());
+    assertEquals(0, challengeSummary.getChallengeCount());
+    assertEquals(0, challengeSummary.getDoneCount());
+    assertEquals(0, challengeSummary.getPendingCount());
+    assertEquals(0, challengeSummary.getOverdueCount());
+    assertEquals(0, challengeSummary.getConsecutiveDays());
+    assertEquals(0, challengeSummary.getLongestStreak());
+    assertEquals(0, challengeSummary.getVersion());
   }
+
+  // Test ChallengeSummary for NotNull
+  @Test
+  public void testChallengeSummaryNotNull() {
+    ChallengeSummary challengeSummary = new ChallengeSummary();
+
+    Set<ConstraintViolation<ChallengeSummary>> violations = validator.validate(challengeSummary);
+    assertEquals(3, violations.size());
+  }
+
+  // Test-Cases for ChallengeProgress
 
   @Test
   public void testChallengeProgress() {
@@ -172,20 +212,30 @@ public class UnitTests {
   }
 
   @Test
-  public void testChallengeConstructor() {
-    Challenge challenge = new Challenge("Challenge", "Description", Unit.HOURS, 0.0, new Date(), 0, 0, user,
-        Visibility.PRIVATE);
+  public void testChallengeProgressConstructor() {
+    ChallengeProgress challengeProgress = new ChallengeProgress(user, challenge, 0.0, Visibility.PRIVATE);
 
-    assertEquals("Challenge", challenge.getTitle());
-    assertEquals("Description", challenge.getDescription());
-    assertEquals(Unit.HOURS, challenge.getUnit());
-    assertEquals(0.0, challenge.getTargetProgress());
-    assertEquals(0, challenge.getScoreReward());
-    assertEquals(0, challenge.getScorePenalty());
-    assertEquals(user, challenge.getUser());
-    assertEquals(Visibility.PRIVATE, challenge.getChallengeVisibility());
-    assertEquals(0, challenge.getVersion());
+    assertEquals(user, challengeProgress.getUser());
+    assertEquals(challenge, challengeProgress.getChallenge());
+    assertEquals(0.0, challengeProgress.getCurrentProgress());
+    assertEquals(Visibility.PRIVATE, challengeProgress.getProgressVisibility());
   }
+
+  // Test ChallengeProgress for NotNull
+  @Test
+  public void testChallengeProgressNotNull() {
+    ChallengeProgress challengeProgress = new ChallengeProgress();
+    challengeProgress.setChallenge(null);
+    challengeProgress.setUser(null);
+    challengeProgress.setChallengeReport(null); // can be null
+    challengeProgress.setCurrentProgress(null);
+    challengeProgress.setProgressVisibility(null);
+
+    Set<ConstraintViolation<ChallengeProgress>> violations = validator.validate(challengeProgress);
+    assertEquals(4, violations.size());
+  }
+
+  // Test-Cases for Challenge
 
   @Test
   public void testChallenge() {
@@ -222,12 +272,39 @@ public class UnitTests {
   }
 
   @Test
-  public void testUserConstructor() {
-    User user = new User("first@email.org");
-    assertEquals("first@email.org", user.getEmail());
-    assertEquals(0, user.getVersion());
+  public void testChallengeConstructor() {
+    Challenge challenge = new Challenge("Challenge", "Description", Unit.HOURS, 0.0, new Date(), 0, 0, user,
+        Visibility.PRIVATE);
+
+    assertEquals("Challenge", challenge.getTitle());
+    assertEquals("Description", challenge.getDescription());
+    assertEquals(Unit.HOURS, challenge.getUnit());
+    assertEquals(0.0, challenge.getTargetProgress());
+    assertEquals(0, challenge.getScoreReward());
+    assertEquals(0, challenge.getScorePenalty());
+    assertEquals(user, challenge.getUser());
+    assertEquals(Visibility.PRIVATE, challenge.getChallengeVisibility());
+    assertEquals(0, challenge.getVersion());
   }
 
+  // Test Challenge for NotNull
+  @Test
+  public void testChallengeNotNull() {
+    Challenge challenge = new Challenge();
+    challenge.setTitle(null);
+    challenge.setDescription(null); // can be null
+    challenge.setUnit(null);
+    challenge.setDeadline(null); // can be null
+    challenge.setScoreReward(null);
+    challenge.setScorePenalty(null);
+    challenge.setUser(null);
+    challenge.setChallengeVisibility(null);
+
+    Set<ConstraintViolation<Challenge>> violations = validator.validate(challenge);
+    assertEquals(6, violations.size());
+  }
+
+  // Test-Cases for User
   @Test
   public void testUser() {
     User user = new User();
@@ -241,5 +318,22 @@ public class UnitTests {
     // test toString
     assertEquals("User{id=1, email='example@email.org', version=0}",
         user.toString());
+  }
+
+  @Test
+  public void testUserConstructor() {
+    User user = new User("first@email.org");
+    assertEquals("first@email.org", user.getEmail());
+    assertEquals(0, user.getVersion());
+  }
+
+  // Test User for NotNull
+  @Test
+  public void testUserNotNull() {
+    User user = new User();
+    user.setEmail(null);
+
+    Set<ConstraintViolation<User>> violations = validator.validate(user);
+    assertEquals(1, violations.size());
   }
 }

@@ -5,6 +5,7 @@ import java.util.*;
 import blossom.reports_service.model.Enums.Unit;
 import blossom.reports_service.model.Enums.Visibility;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "challenges", catalog = "", schema = "")
@@ -13,27 +14,34 @@ public class Challenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String title;
 
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Unit unit;
 
+    @NotNull
     private double targetProgress;
 
     @Temporal(TemporalType.DATE)
     private Date deadline;
 
+    @NotNull
     private Integer scoreReward;
 
+    @NotNull
     private Integer scorePenalty;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Visibility challengeVisibility;
 
     @Version

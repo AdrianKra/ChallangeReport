@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import blossom.reports_service.model.Enums.Visibility;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "challenge_progress")
@@ -15,12 +16,14 @@ public class ChallengeProgress {
 
     @ManyToOne
     @JoinColumn(name = "user_fk", referencedColumnName = "id")
+    @NotNull
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "challenge_fk")
     @OnDelete(action = OnDeleteAction.CASCADE) // Because I am not using a actual bidirectioanl relation (prevents
                                                // circular references) but still want to be able to delete
+    @NotNull
     private Challenge challenge;
 
     @ManyToOne
@@ -28,10 +31,12 @@ public class ChallengeProgress {
     private ChallengeReport challengeReport;
 
     @Column(name = "current_progress")
+    @NotNull
     private Double currentProgress;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "progress_visibility")
+    @NotNull
     private Visibility progressVisibility;
 
     @Version

@@ -15,7 +15,6 @@ public class ChallengeReport {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @NotNull
   private Long id;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -41,7 +40,6 @@ public class ChallengeReport {
   private Date endDate;
 
   @Enumerated(EnumType.STRING)
-  @NotNull
   private ChallengeStatus status;
 
   @Version
