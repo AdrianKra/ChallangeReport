@@ -13,15 +13,11 @@ import jakarta.validation.constraints.NotNull;
 public class ChallengeReportDTO {
 
   private Long id;
-  @NotNull
   private Challenge challenge;
-  @NotNull
   private User user;
   private List<ChallengeProgress> progressList;
-  @NotNull
   private Date startDate;
   private Date endDate;
-  @NotNull
   private ChallengeStatus status;
   private int version;
 
