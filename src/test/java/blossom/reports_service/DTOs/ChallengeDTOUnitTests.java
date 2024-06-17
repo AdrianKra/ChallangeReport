@@ -22,14 +22,24 @@ public class ChallengeDTOUnitTests {
   @Mock
   private User user;
 
-  private Date deadline;
+  private final Date date = new Date();
+
+  private final Long id = 1L;
+  private final String title = "Challenge Title";
+  private final String description = "Challenge Description";
+  private final Unit unit = Unit.MONTHS;
+  private final Double targetProgress = 100.0;
+  private final Date deadline = date;
+  private final int scoreReward = 50;
+  private final int scorePenalty = 10;
+  private final Visibility visibility = Visibility.PUBLIC;
+  private final int version = 1;
 
   @BeforeEach
   public void setUp() {
     user = mock(User.class);
-    deadline = mock(Date.class);
-    challengeDTO = new ChallengeDTO(1L, "Challenge Title", "Challenge Description", Unit.MONTHS, 100.0, deadline,
-        50, 10, user, Visibility.PUBLIC, 1);
+    challengeDTO = new ChallengeDTO(id, title, description, unit, targetProgress, deadline, scoreReward, scorePenalty,
+        user, visibility, version);
   }
 
   @Test
@@ -40,17 +50,17 @@ public class ChallengeDTOUnitTests {
 
   @Test
   public void testParameterizedConstructor() {
-    assertEquals(1L, challengeDTO.getId());
-    assertEquals("Challenge Title", challengeDTO.getTitle());
-    assertEquals("Challenge Description", challengeDTO.getDescription());
-    assertEquals(Unit.MONTHS, challengeDTO.getUnit());
-    assertEquals(100.0, challengeDTO.getTargetProgress());
+    assertEquals(id, challengeDTO.getId());
+    assertEquals(title, challengeDTO.getTitle());
+    assertEquals(description, challengeDTO.getDescription());
+    assertEquals(unit, challengeDTO.getUnit());
+    assertEquals(targetProgress, challengeDTO.getTargetProgress());
     assertEquals(deadline, challengeDTO.getDeadline());
-    assertEquals(50, challengeDTO.getScoreReward());
-    assertEquals(10, challengeDTO.getScorePenalty());
+    assertEquals(scoreReward, challengeDTO.getScoreReward());
+    assertEquals(scorePenalty, challengeDTO.getScorePenalty());
     assertEquals(user, challengeDTO.getUser());
-    assertEquals(Visibility.PUBLIC, challengeDTO.getChallengeVisibility());
-    assertEquals(1, challengeDTO.getVersion());
+    assertEquals(visibility, challengeDTO.getChallengeVisibility());
+    assertEquals(version, challengeDTO.getVersion());
   }
 
   @Test

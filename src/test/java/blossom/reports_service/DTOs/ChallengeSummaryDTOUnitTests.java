@@ -33,25 +33,26 @@ public class ChallengeSummaryDTOUnitTests {
   @Mock
   private Challenge challenge;
 
-  private Long id;
-  private Date lastActive;
-  private int challengeCount;
-  private int doneCount;
-  private int pendingCount;
-  private int overdueCount;
-  private int consecutiveDays;
-  private int longestStreak;
-  private int version;
+  private final Date date = new Date();
+
+  private final Long id = 1L;
+  private final Date lastActive = date;
+  private final int challengeCount = 10;
+  private final int doneCount = 5;
+  private final int pendingCount = 3;
+  private final int overdueCount = 2;
+  private final int consecutiveDays = 7;
+  private final int longestStreak = 14;
+  private final int version = 1;
+
   private ChallengeSummaryDTO challengeSummaryDTO;
+
   private Validator validator;
 
   @BeforeEach
   public void setUp() {
-    lastActive = mock(Date.class);
-    MockitoAnnotations.openMocks(this);
-
-    user = mock(User.class);
-    challengeSummaryDTO = new ChallengeSummaryDTO(1L, user, lastActive, 10, 5, 3, 2, 7, 14, 1);
+    challengeSummaryDTO = new ChallengeSummaryDTO(id, user, lastActive, challengeCount, doneCount, pendingCount,
+        overdueCount, consecutiveDays, longestStreak, version);
 
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     validator = factory.getValidator();
@@ -66,16 +67,16 @@ public class ChallengeSummaryDTOUnitTests {
 
   @Test
   public void testParameterizedConstructor() {
-    assertEquals(1L, challengeSummaryDTO.getId());
+    assertEquals(id, challengeSummaryDTO.getId());
     assertEquals(user, challengeSummaryDTO.getUser());
     assertEquals(lastActive, challengeSummaryDTO.getLastActive());
-    assertEquals(10, challengeSummaryDTO.getChallengeCount());
-    assertEquals(5, challengeSummaryDTO.getDoneCount());
-    assertEquals(3, challengeSummaryDTO.getPendingCount());
-    assertEquals(2, challengeSummaryDTO.getOverdueCount());
-    assertEquals(7, challengeSummaryDTO.getConsecutiveDays());
-    assertEquals(14, challengeSummaryDTO.getLongestStreak());
-    assertEquals(1, challengeSummaryDTO.getVersion());
+    assertEquals(challengeCount, challengeSummaryDTO.getChallengeCount());
+    assertEquals(doneCount, challengeSummaryDTO.getDoneCount());
+    assertEquals(pendingCount, challengeSummaryDTO.getPendingCount());
+    assertEquals(overdueCount, challengeSummaryDTO.getOverdueCount());
+    assertEquals(consecutiveDays, challengeSummaryDTO.getConsecutiveDays());
+    assertEquals(longestStreak, challengeSummaryDTO.getLongestStreak());
+    assertEquals(version, challengeSummaryDTO.getVersion());
   }
 
   @Test
@@ -110,6 +111,7 @@ public class ChallengeSummaryDTOUnitTests {
     User newUser = mock(User.class);
     Date newLastActive = mock(Date.class);
 
+    challengeSummaryDTO.setId(2L);
     challengeSummaryDTO.setUser(newUser);
     challengeSummaryDTO.setLastActive(newLastActive);
     challengeSummaryDTO.setChallengeCount(15);
@@ -120,6 +122,7 @@ public class ChallengeSummaryDTOUnitTests {
     challengeSummaryDTO.setLongestStreak(20);
     challengeSummaryDTO.setVersion(2);
 
+    assertEquals(2L, challengeSummaryDTO.getId());
     assertEquals(newUser, challengeSummaryDTO.getUser());
     assertEquals(newLastActive, challengeSummaryDTO.getLastActive());
     assertEquals(15, challengeSummaryDTO.getChallengeCount());

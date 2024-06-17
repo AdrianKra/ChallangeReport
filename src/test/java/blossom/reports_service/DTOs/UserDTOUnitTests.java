@@ -11,9 +11,13 @@ public class UserDTOUnitTests {
 
   private UserDTO userDTO;
 
+  private final Long id = 1L;
+  private final String email = "test@example.com";
+  private final int version = 1;
+
   @BeforeEach
   public void setUp() {
-    userDTO = new UserDTO(1L, "test@example.com", 1);
+    userDTO = new UserDTO(id, email, version);
   }
 
   @Test
@@ -24,9 +28,9 @@ public class UserDTOUnitTests {
 
   @Test
   public void testParameterizedConstructor() {
-    assertEquals(1L, userDTO.getId());
-    assertEquals("test@example.com", userDTO.getEmail());
-    assertEquals(1, userDTO.getVersion());
+    assertEquals(id, userDTO.getId());
+    assertEquals(email, userDTO.getEmail());
+    assertEquals(version, userDTO.getVersion());
   }
 
   @Test

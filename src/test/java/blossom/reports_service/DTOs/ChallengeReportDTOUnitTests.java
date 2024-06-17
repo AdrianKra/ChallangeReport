@@ -9,11 +9,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.validation.*;
 
@@ -36,28 +35,29 @@ public class ChallengeReportDTOUnitTests {
   @Mock
   private ChallengeReport challengeReport;
 
+  private final Date date = new Date();
+
+  private final Long id = 1L;
   private List<ChallengeProgress> progressList;
-  private Date startDate;
-  private Date endDate;
-  private Long id;
-  private int version;
+  private final Date startDate = date;
+  private final Date endDate = date;
+  private final ChallengeStatus status = ChallengeStatus.DONE;
+  private final int version = 0;
+
+  private ChallengeReportDTO dto;
+
   private Validator validator;
-  private ChallengeStatus status;
 
   @BeforeEach
   public void setUp() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     validator = factory.getValidator();
 
+    progressList = new ArrayList<>();
+
     MockitoAnnotations.openMocks(this);
-    id = 1L;
-    user = mock(User.class);
-    challenge = mock(Challenge.class);
-    progressList = mock(List.class);
-    startDate = mock(Date.class);
-    endDate = mock(Date.class);
-    status = ChallengeStatus.OPEN;
-    version = 1;
+
+    dto = new ChallengeReportDTO(challenge, user, progressList, startDate, endDate, status, version);
   }
 
   @Test
@@ -83,14 +83,15 @@ public class ChallengeReportDTOUnitTests {
 
   @Test
   public void testConstructorFromChallengeReport() {
-    when(challengeReport.getId()).thenReturn(id);
-    when(challengeReport.getChallenge()).thenReturn(challenge);
-    when(challengeReport.getUser()).thenReturn(user);
-    when(challengeReport.getProgressList()).thenReturn(progressList);
-    when(challengeReport.getStartDate()).thenReturn(startDate);
-    when(challengeReport.getEndDate()).thenReturn(endDate);
-    when(challengeReport.getStatus()).thenReturn(status);
-    when(challengeReport.getVersion()).thenReturn(version);
+    ChallengeReport challengeReport = new ChallengeReport();
+    challengeReport.setId(id);
+    challengeReport.setChallenge(challenge);
+    challengeReport.setUser(user);
+    challengeReport.setProgressList(progressList);
+    challengeReport.setStartDate(startDate);
+    challengeReport.setEndDate(endDate);
+    challengeReport.setStatus(ChallengeStatus.DONE);
+    challengeReport.setVersion(version);
 
     ChallengeReportDTO dto = new ChallengeReportDTO(challengeReport);
 
@@ -100,8 +101,64 @@ public class ChallengeReportDTOUnitTests {
     assertEquals(progressList, dto.getProgressList());
     assertEquals(startDate, dto.getStartDate());
     assertEquals(endDate, dto.getEndDate());
-    assertEquals(status, dto.getStatus());
+    assertEquals(ChallengeStatus.DONE, dto.getStatus());
     assertEquals(version, dto.getVersion());
+  }
+
+  @Test
+  public void testSettersAndGetters() {
+    ChallengeReportDTO dto = new ChallengeReportDTO();
+    Challenge newChallenge = new Challenge();
+    User newUser = new User();
+
+    dto.setId(2L);
+    dto.setChallenge(newChallenge);
+    dto.setUser(newUser);
+    dto.setProgressList(progressList);
+    dto.setStartDate(date);
+    dto.setEndDate(date);
+    dto.setStatus(ChallengeStatus.DONE);
+    dto.setVersion(1);
+
+    assertEquals(2L, dto.getId());
+    assertEquals(newChallenge, dto.getChallenge());
+    assertEquals(newUser, dto.getUser());
+    assertEquals(progressList, dto.getProgressList());
+    assertEquals(date, dto.getStartDate());
+    assertEquals(date, dto.getEndDate());
+    assertEquals(ChallengeStatus.DONE, dto.getStatus());
+    assertEquals(1, dto.getVersion());
+  }
+
+  @Test
+  public void testProgressFunctionality() {
+    ChallengeReportDTO dto = new ChallengeReportDTO(challenge, user, progressList, startDate, endDate,
+        status, version);
+
+    ChallengeProgress progress1 = mock(ChallengeProgress.class);
+    ChallengeProgress progress2 = mock(ChallengeProgress.class);
+    ChallengeProgress progress3 = mock(ChallengeProgress.class);
+    dto.addProgress(progress1);
+    dto.addProgress(progress2);
+    dto.addProgress(progress3);
+
+    assertEquals(3, dto.getProgressList().size());
+    assertTrue(dto.getProgressList().contains(progress1));
+    assertTrue(dto.getProgressList().contains(progress2));
+    assertTrue(dto.getProgressList().contains(progress3));
+
+    dto.removeProgress(progress1);
+
+    assertEquals(2, dto.getProgressList().size());
+    assertFalse(dto.getProgressList().contains(progress1));
+    assertTrue(dto.getProgressList().contains(progress2));
+    assertTrue(dto.getProgressList().contains(progress3));
+
+    dto.clearProgress();
+
+    assertEquals(0, dto.getProgressList().size());
+    assertFalse(dto.getProgressList().contains(progress2));
+    assertFalse(dto.getProgressList().contains(progress3));
   }
 
   // @Test

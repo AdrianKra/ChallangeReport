@@ -40,9 +40,4 @@ public class EventConsumer implements Consumer<ChallengeProgressUpdateEvent> {
   public void init() {
     LOGGER.info("EventConsumer initialized");
   }
-
-  @PreDestroy
-  public void destroy() {
-    LOGGER.info("EventConsumer destroyed");
-  }
 }
