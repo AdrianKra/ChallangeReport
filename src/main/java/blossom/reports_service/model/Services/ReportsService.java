@@ -54,7 +54,7 @@ public class ReportsService {
   }
 
   private static final String USER_SERVICE_URL = "http://localhost:8080/rest/users";
-  private static final String CHALLENGE_SERVICE_URL = "http://localhost:8080/rest/challenge";
+  private static final String CHALLENGE_SERVICE_URL = "http://localhost:8081/rest/challenge";
 
   @Transactional
   public void createChallengeSummary(String userEmail) {
@@ -108,7 +108,7 @@ public class ReportsService {
     var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, userEmail));
 
     // Add progress to the report
-    report.addProgress(progress);
+    report.addProgress(timestamp, progress);
   }
 
   @Transactional
@@ -183,7 +183,7 @@ public class ReportsService {
 
   @Transactional
   public ChallengeReport updateReportStatus(Long challengeId, Long challengeProgressId, String userEmail,
-      double currentProgress, long timestamp) {
+      Double currentProgress, Date timestamp) {
 
     LOGGER.info("Updating ChallengeReport with id: {}", challengeId);
 
@@ -261,7 +261,10 @@ public class ReportsService {
       summary.decrementDoneCount();
     }
 
+    challengeSummaryRepository.save(summary);
+
     // Delete the ChallengeReport
     challengeReportRepository.deleteById(challengeReportId);
+
   }
 }

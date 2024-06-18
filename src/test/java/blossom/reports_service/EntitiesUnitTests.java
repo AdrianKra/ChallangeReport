@@ -52,12 +52,15 @@ public class EntitiesUnitTests {
   // Test-Cases for ChallengeReport
   @Test
   public void testChallengeReport() {
+    Date date = new Date();
+    Date starDate = new Date();
+
     ChallengeReport challengeReport = new ChallengeReport();
     challengeReport.setId(1L);
     challengeReport.setChallenge(challenge);
     challengeReport.setUser(user);
-    challengeReport.addProgress(challengeProgress);
-    challengeReport.setStartDate(new Date());
+    challengeReport.addProgress(date, challengeProgress);
+    challengeReport.setStartDate(starDate);
     challengeReport.setEndDate(null);
     challengeReport.setStatus(ChallengeStatus.OPEN);
     challengeReport.setVersion(0);
@@ -65,9 +68,11 @@ public class EntitiesUnitTests {
     assertEquals(1L, challengeReport.getId());
     assertEquals(challenge, challengeReport.getChallenge());
     assertEquals(user, challengeReport.getUser());
-    assertEquals(challengeProgress, challengeReport.getProgressList().get(0));
     assertEquals(1, challengeReport.getProgressList().size());
-    assertEquals(challengeProgress, challengeReport.getProgressList().get(0));
+    assertTrue(challengeReport.getProgressList().containsKey(date));
+    assertTrue(challengeReport.getProgressList().containsValue(challengeProgress));
+    assertEquals(starDate, challengeReport.getStartDate());
+    assertNull(challengeReport.getEndDate());
     assertEquals(0, challengeReport.getVersion());
     assertEquals(ChallengeStatus.OPEN, challengeReport.getStatus());
 

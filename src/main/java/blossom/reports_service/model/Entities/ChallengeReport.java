@@ -2,6 +2,7 @@ package blossom.reports_service.model.Entities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,7 +31,7 @@ public class ChallengeReport {
 
   @OneToMany(mappedBy = "challengeReport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
-  private List<ChallengeProgress> progressList;
+  private HashMap<Date, ChallengeProgress> progressList;
 
   @Temporal(TemporalType.DATE)
   @NotNull
@@ -46,14 +47,14 @@ public class ChallengeReport {
   private int version;
 
   public ChallengeReport() {
-    this.progressList = new ArrayList<>();
+    this.progressList = new HashMap<>();
     this.startDate = new Date();
     this.status = ChallengeStatus.OPEN;
   }
 
   public ChallengeReport(User user, Challenge challenge) {
     this.user = user;
-    this.progressList = new ArrayList<>();
+    this.progressList = new HashMap<>();
     this.challenge = challenge;
     this.startDate = new Date();
     this.endDate = null;
@@ -76,16 +77,16 @@ public class ChallengeReport {
     this.user = user;
   }
 
-  public List<ChallengeProgress> getProgressList() {
+  public HashMap<Date, ChallengeProgress> getProgressList() {
     return progressList;
   }
 
-  public void setProgressList(List<ChallengeProgress> progressList) {
+  public void setProgressList(HashMap<Date, ChallengeProgress> progressList) {
     this.progressList = progressList;
   }
 
-  public void addProgress(ChallengeProgress progress) {
-    this.progressList.add(progress);
+  public void addProgress(Date timestamp, ChallengeProgress progress) {
+    this.progressList.put(timestamp, progress);
   }
 
   public Challenge getChallenge() {

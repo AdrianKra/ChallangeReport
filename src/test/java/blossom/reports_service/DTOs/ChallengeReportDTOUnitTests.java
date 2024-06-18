@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import jakarta.validation.*;
@@ -38,7 +39,7 @@ public class ChallengeReportDTOUnitTests {
   private final Date date = new Date();
 
   private final Long id = 1L;
-  private List<ChallengeProgress> progressList;
+  private HashMap<Date, ChallengeProgress> progressList;
   private final Date startDate = date;
   private final Date endDate = date;
   private final ChallengeStatus status = ChallengeStatus.DONE;
@@ -53,7 +54,7 @@ public class ChallengeReportDTOUnitTests {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     validator = factory.getValidator();
 
-    progressList = new ArrayList<>();
+    progressList = new HashMap<>();
 
     MockitoAnnotations.openMocks(this);
 
@@ -135,30 +136,35 @@ public class ChallengeReportDTOUnitTests {
     ChallengeReportDTO dto = new ChallengeReportDTO(challenge, user, progressList, startDate, endDate,
         status, version);
 
+    Date otherDate = new Date();
+    Date otherDate2 = new Date(otherDate.getTime() + 1000);
+
     ChallengeProgress progress1 = mock(ChallengeProgress.class);
     ChallengeProgress progress2 = mock(ChallengeProgress.class);
     ChallengeProgress progress3 = mock(ChallengeProgress.class);
-    dto.addProgress(progress1);
-    dto.addProgress(progress2);
-    dto.addProgress(progress3);
+    dto.addProgress(date, progress3);
+    dto.addProgress(otherDate, progress2);
+    dto.addProgress(otherDate2, progress1);
 
     assertEquals(3, dto.getProgressList().size());
-    assertTrue(dto.getProgressList().contains(progress1));
-    assertTrue(dto.getProgressList().contains(progress2));
-    assertTrue(dto.getProgressList().contains(progress3));
+    assertTrue(dto.getProgressList().containsKey(date));
+    assertTrue(dto.getProgressList().containsValue(progress1));
+    assertTrue(dto.getProgressList().containsKey(otherDate));
+    assertTrue(dto.getProgressList().containsValue(progress2));
+    assertTrue(dto.getProgressList().containsKey(otherDate2));
+    assertTrue(dto.getProgressList().containsValue(progress3));
 
-    dto.removeProgress(progress1);
+    dto.removeProgress(otherDate2);
 
     assertEquals(2, dto.getProgressList().size());
-    assertFalse(dto.getProgressList().contains(progress1));
-    assertTrue(dto.getProgressList().contains(progress2));
-    assertTrue(dto.getProgressList().contains(progress3));
 
     dto.clearProgress();
 
     assertEquals(0, dto.getProgressList().size());
-    assertFalse(dto.getProgressList().contains(progress2));
-    assertFalse(dto.getProgressList().contains(progress3));
+    assertFalse(dto.getProgressList().containsKey(date));
+    assertFalse(dto.getProgressList().containsValue(progress1));
+    assertFalse(dto.getProgressList().containsKey(otherDate));
+    assertFalse(dto.getProgressList().containsValue(progress2));
   }
 
   // @Test

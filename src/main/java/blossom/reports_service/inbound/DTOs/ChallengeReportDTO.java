@@ -1,6 +1,7 @@
 package blossom.reports_service.inbound.DTOs;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import blossom.reports_service.model.Entities.Challenge;
@@ -15,7 +16,7 @@ public class ChallengeReportDTO {
   private Long id;
   private Challenge challenge;
   private User user;
-  private List<ChallengeProgress> progressList;
+  private HashMap<Date, ChallengeProgress> progressList;
   private Date startDate;
   private Date endDate;
   private ChallengeStatus status;
@@ -24,7 +25,8 @@ public class ChallengeReportDTO {
   public ChallengeReportDTO() {
   }
 
-  public ChallengeReportDTO(Challenge challenge, User user, List<ChallengeProgress> progressList, Date startDate,
+  public ChallengeReportDTO(Challenge challenge, User user, HashMap<Date, ChallengeProgress> progressList,
+      Date startDate,
       Date endDate, ChallengeStatus status, int version) {
     this.challenge = challenge;
     this.user = user;
@@ -70,11 +72,11 @@ public class ChallengeReportDTO {
     this.user = user;
   }
 
-  public List<ChallengeProgress> getProgressList() {
+  public HashMap<Date, ChallengeProgress> getProgressList() {
     return progressList;
   }
 
-  public void setProgressList(List<ChallengeProgress> progressList) {
+  public void setProgressList(HashMap<Date, ChallengeProgress> progressList) {
     this.progressList = progressList;
   }
 
@@ -110,12 +112,12 @@ public class ChallengeReportDTO {
     this.version = version;
   }
 
-  public void addProgress(ChallengeProgress progress) {
-    this.progressList.add(progress);
+  public void addProgress(Date timestamp, ChallengeProgress progress) {
+    this.progressList.put(timestamp, progress);
   }
 
-  public void removeProgress(ChallengeProgress progress) {
-    this.progressList.remove(progress);
+  public void removeProgress(Date timestamp) {
+    this.progressList.remove(timestamp);
   }
 
   public void clearProgress() {
