@@ -31,7 +31,7 @@ public class ChallengeReport {
 
   @OneToMany(mappedBy = "challengeReport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
-  private HashMap<Date, ChallengeProgress> progressList;
+  private HashMap<Date, ChallengeProgress> progressMap;
 
   @Temporal(TemporalType.DATE)
   @NotNull
@@ -47,14 +47,14 @@ public class ChallengeReport {
   private int version;
 
   public ChallengeReport() {
-    this.progressList = new HashMap<>();
+    this.progressMap = new HashMap<>();
     this.startDate = new Date();
     this.status = ChallengeStatus.OPEN;
   }
 
   public ChallengeReport(User user, Challenge challenge) {
     this.user = user;
-    this.progressList = new HashMap<>();
+    this.progressMap = new HashMap<>();
     this.challenge = challenge;
     this.startDate = new Date();
     this.endDate = null;
@@ -78,15 +78,15 @@ public class ChallengeReport {
   }
 
   public HashMap<Date, ChallengeProgress> getProgressList() {
-    return progressList;
+    return progressMap;
   }
 
-  public void setProgressList(HashMap<Date, ChallengeProgress> progressList) {
-    this.progressList = progressList;
+  public void setProgressList(HashMap<Date, ChallengeProgress> progressMap) {
+    this.progressMap = progressMap;
   }
 
   public void addProgress(Date timestamp, ChallengeProgress progress) {
-    this.progressList.put(timestamp, progress);
+    this.progressMap.put(timestamp, progress);
   }
 
   public Challenge getChallenge() {
@@ -131,8 +131,8 @@ public class ChallengeReport {
 
   @Override
   public String toString() {
-    return "ChallengeReport {id=" + id + ", user=" + user + ", challenge=" + challenge + ", progressList="
-        + progressList + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status + ", version="
+    return "ChallengeReport {id=" + id + ", user=" + user + ", challenge=" + challenge + ", progressMap="
+        + progressMap + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status + ", version="
         + version + "}";
   }
 

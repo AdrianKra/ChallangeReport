@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import blossom.reports_service.inbound.DTOs.ChallengeDTO;
 import blossom.reports_service.model.Entities.*;
-import blossom.reports_service.model.Enums.ChallengeStatus;
 import blossom.reports_service.model.Enums.Visibility;
 import blossom.reports_service.model.Exceptions.NotFoundException;
 import blossom.reports_service.model.Exceptions.UnauthorizedException;
@@ -139,23 +137,27 @@ class ReportsServiceTest {
 
   // @Test
   // void testDeleteChallengeReport() {
-  // Date timestamp = new Date();
+  // Date deadline = new Date();
 
-  // when(challengeReportRepository.findById(id)).thenReturn(Optional.of(challengeReport));
-  // when(challengeSummaryRepository.findByUser(user)).thenReturn(Optional.of(challengeSummary));
-  // when(restTemplate.getForObject(USER_SERVICE_URL + "/getUserByEmail/" + email,
-  // User.class)).thenReturn(user);
-  // when(restTemplate.getForObject(CHALLENGE_SERVICE_URL + "/" + id,
-  // ChallengeDTO.class))
-  // .thenReturn(challengeDTO);
-  // when(challengeReportRepository.save(any(ChallengeReport.class))).thenReturn(challengeReport);
+  // // Arrange
+  // given(challengeReportRepository.findById(id)).willReturn(Optional.of(challengeReport));
+  // given(challengeSummaryRepository.findByUser(user)).willReturn(Optional.of(challengeSummary));
+  // given(restTemplate.getForObject(USER_SERVICE_URL + "/getUserByEmail/" +
+  // email, User.class)).willReturn(user);
+  // given(restTemplate.getForObject(CHALLENGE_SERVICE_URL + "/" + id,
+  // ChallengeDTO.class)).willReturn(challengeDTO);
+  // given(challengeReportRepository.save(any(ChallengeReport.class))).willReturn(challengeReport);
+  // given(challengeSummaryRepository.save(any(ChallengeSummary.class))).willReturn(challengeSummary);
+  // given(challenge.getDeadline()).willReturn(deadline);
 
   // ModelMapper modelMapper = mock(ModelMapper.class);
-  // when(modelMapper.map(challengeDTO, Challenge.class)).thenReturn(challenge);
+  // given(modelMapper.map(challengeDTO, Challenge.class)).willReturn(challenge);
 
+  // // Act
   // ChallengeReport updatedReport = reportsService.updateReportStatus(id, id,
-  // email, progress, timestamp);
+  // email, progress, deadline);
 
+  // // Assert
   // verify(challengeReportRepository).findById(id);
   // verify(challengeSummaryRepository).findByUser(user);
   // verify(restTemplate).getForObject(USER_SERVICE_URL + "/getUserByEmail/" +

@@ -3,27 +3,18 @@ package blossom.reports_service.inbound.Security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import blossom.reports_service.model.Role;
-import blossom.reports_service.model.Exceptions.NotFoundException;
+import blossom.reports_service.model.Exceptions.InvalidException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -33,8 +24,8 @@ public class JwtValidator {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private PublicKey publicKey;
 
-    public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
+    public String resolveToken(HttpServletRequest httpServletRequest) {
+        String bearerToken = httpServletRequest.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
@@ -50,7 +41,7 @@ public class JwtValidator {
             return true;
         } catch (Exception e) {
             LOG.info("Token rejected because " + e.getMessage());
-            throw new NotFoundException("JWT invalid");
+            throw new InvalidException("JWT invalid");
         }
     }
 

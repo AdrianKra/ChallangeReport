@@ -6,6 +6,9 @@ spring:
         eventConsumer-in-0:
           destination: blossom.prod.challenge.progress.updated
           binder: cloud_rabbit
+        eventConsumer-in-1:
+          destination: blossom.prod.user.event.registered
+          binder: cloud_rabbit
       binders:
         cloud_rabbit:
           type: rabbit

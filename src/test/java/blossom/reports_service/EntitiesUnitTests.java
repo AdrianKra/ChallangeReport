@@ -78,7 +78,7 @@ public class EntitiesUnitTests {
 
     // test toString
     assertEquals(
-        "ChallengeReport {id=1, user=" + user + ", challenge=" + challenge + ", progressList="
+        "ChallengeReport {id=1, user=" + user + ", challenge=" + challenge + ", progressMap="
             + challengeReport.getProgressList()
             + ", startDate=" + challengeReport.getStartDate() + ", endDate=" + challengeReport.getEndDate()
             + ", status=OPEN, version=0}",

@@ -3,7 +3,6 @@ package blossom.reports_service.inbound.Controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import blossom.reports_service.inbound.Security.JwtValidator;
 import blossom.reports_service.model.Quote;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.ChallengeSummary;
+import blossom.reports_service.model.Exceptions.InvalidException;
 import blossom.reports_service.model.Services.ReportsService;
 import blossom.reports_service.model.Services.RetryableServiceClient;
 
@@ -92,7 +92,7 @@ public class ReturnController {
 
     if (apiKey == null || apiKey.isEmpty()) {
       LOGGER.error("API key is not configured");
-      throw new IllegalArgumentException("API key is not configured");
+      throw new InvalidException("API key is not configured");
     }
     return quotesService.getQuotes(category);
   }

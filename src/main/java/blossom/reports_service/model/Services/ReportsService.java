@@ -1,6 +1,7 @@
 package blossom.reports_service.model.Services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.StaleStateException;
@@ -26,6 +27,7 @@ import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import blossom.reports_service.model.Enums.Visibility;
+import blossom.reports_service.model.Exceptions.AuthenticationFailedException;
 import blossom.reports_service.model.Exceptions.NotFoundException;
 import blossom.reports_service.model.Exceptions.UnauthorizedException;
 import blossom.reports_service.model.Repositories.ChallengeReportRepository;
@@ -161,7 +163,7 @@ public class ReportsService {
     }
 
     if (authenticatedUserEmail == null) {
-      throw new RuntimeException("Unable to retrieve authenticated user's email");
+      throw new AuthenticationFailedException("Unable to retrieve authenticated user's email");
     }
 
     // Check if the user is authorized (creator or friend)
