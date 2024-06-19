@@ -1,4 +1,3 @@
--- Einfügen von Benutzern
 INSERT INTO users (email, version) VALUES ('example1@gmail.com', 0);
 INSERT INTO users (email, version) VALUES ('example2@gmail.com', 0);
 INSERT INTO users (email, version) VALUES ('example3@gmail.com', 0);
