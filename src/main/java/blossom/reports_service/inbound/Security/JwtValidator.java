@@ -3,9 +3,13 @@ package blossom.reports_service.inbound.Security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +18,13 @@ import org.springframework.stereotype.Component;
 import blossom.reports_service.model.Role;
 import blossom.reports_service.model.Exceptions.InvalidException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -23,6 +33,18 @@ public class JwtValidator {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private PublicKey publicKey;
+
+    @PostConstruct
+    public void loadSigningKeys() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        // read public key
+        InputStream inputStream = new ClassPathResource("publicKey").getInputStream();
+        byte[] encodedPublicKey = IOUtils.toByteArray(inputStream);
+
+        // encode publicKey
+        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        this.publicKey = keyFactory.generatePublic(publicKeySpec);
+    }
 
     public String resolveToken(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader("Authorization");
@@ -78,5 +100,9 @@ public class JwtValidator {
             result.add(Role.ADMIN);
         }
         return result;
+    }
+
+    public PublicKey getPublicKey() {
+        return this.publicKey;
     }
 }
