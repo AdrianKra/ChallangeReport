@@ -44,7 +44,7 @@ public class SetupController {
    * @param Authorization
    * @param userEmail
    */
-  @PostMapping("/createSummary/{userEmail}")
+  @PostMapping("/createSummary")
   @ResponseStatus(value = HttpStatus.OK)
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public void createChallengeSummary(@RequestHeader String Authorization) {

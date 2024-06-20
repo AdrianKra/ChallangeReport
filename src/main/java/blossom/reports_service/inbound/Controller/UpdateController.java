@@ -51,7 +51,7 @@ public class UpdateController {
     String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
     LOGGER.info("Creating ChallengeReport for user with email: {}", userEmail);
 
-    ChallengeReport challengeReport = reportsService.createChallengeReport(challengeId, userEmail);
+    ChallengeReport challengeReport = reportsService.createChallengeReport(userEmail, challengeId);
 
     ModelMapper modelMapper = new ModelMapper();
     ChallengeReportDTO challengeReportDTO = modelMapper.map(challengeReport, ChallengeReportDTO.class);
@@ -64,12 +64,14 @@ public class UpdateController {
    * @param challengeId
    * @return ResponseEntity<ChallengeReportDTO>
    */
-  @DeleteMapping("/deleteChallengeReport/{challengeId}")
+  @DeleteMapping("/deleteChallengeReport/{challengeReportId}")
   @ResponseStatus(value = HttpStatus.OK)
   @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteReport(@PathVariable Long challengeId) {
+  public void deleteReport(@RequestHeader String Authorization, @PathVariable Long challengeReportId) {
 
-    LOGGER.info("Deleting ChallengeReport with id: {}", challengeId);
-    reportsService.deleteChallengeReport(challengeId);
+    String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
+    LOGGER.info("Deleting ChallengeReport for user with email: {} and challengeId: {}", userEmail, challengeReportId);
+
+    reportsService.deleteChallengeReport(userEmail, challengeReportId);
   }
 }

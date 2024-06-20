@@ -44,20 +44,29 @@ public class ReportsService {
   private final ChallengeSummaryRepository challengeSummaryRepository;
   private RestTemplate restTemplate;
 
+  private RetryableFriendshipApiClient retryableFriendshipApiClient;
+
   @Autowired
   public ReportsService(
       ChallengeReportRepository challengeReportRepository,
       ChallengeSummaryRepository challengeSummaryRepository,
-      RestTemplate restTemplate) {
+      RestTemplate restTemplate,
+      RetryableFriendshipApiClient retryableFriendshipApiClient) {
 
     this.challengeReportRepository = challengeReportRepository;
     this.challengeSummaryRepository = challengeSummaryRepository;
     this.restTemplate = restTemplate;
+    this.retryableFriendshipApiClient = retryableFriendshipApiClient;
   }
 
   private static final String USER_SERVICE_URL = "http://localhost:8080/rest/users";
   private static final String CHALLENGE_SERVICE_URL = "http://localhost:8081/rest/challenge";
 
+  /**
+   * Create a new ChallengeSummary for the user with the given email
+   * 
+   * @param userEmail
+   */
   @Transactional
   public void createChallengeSummary(String userEmail) {
     LOGGER.info("Creating ChallengeSummary for user with id: {}", userEmail);
@@ -86,6 +95,16 @@ public class ReportsService {
     return summary;
   }
 
+  /**
+   * Update the ChallengeProgress with the given id for the user with the given
+   * email
+   * 
+   * @param challengeId
+   * @param challengeProgressId
+   * @param userEmail
+   * @param currentProgress
+   * @param timestamp
+   */
   @Transactional
   public void updateChallengeProgress(Long challengeId, Long challengeProgressId, String userEmail,
       Double currentProgress, Date timestamp) {
@@ -107,14 +126,22 @@ public class ReportsService {
     ChallengeProgress progress = new ChallengeProgress(user, challenge, currentProgress, Visibility.FRIENDS);
 
     Optional<ChallengeReport> reportOpt = challengeReportRepository.findByChallenge(challenge);
-    var report = reportOpt.orElseGet(() -> createChallengeReport(challengeId, userEmail));
+    var report = reportOpt.orElseGet(() -> createChallengeReport(userEmail, challengeId));
 
     // Add progress to the report
     report.addProgress(timestamp, progress);
   }
 
+  /**
+   * Create a new ChallengeReport for the user with the given email and the
+   * challenge with the given id
+   * 
+   * @param challengeId
+   * @param userEmail
+   * @return
+   */
   @Transactional
-  public ChallengeReport createChallengeReport(Long challengeId, String userEmail) {
+  public ChallengeReport createChallengeReport(String userEmail, Long challengeId) {
     LOGGER.info("Creating ChallengeReport for user with Email: {} and challenge with id: {}", userEmail, challengeId);
 
     // Fetch User from the user service
@@ -146,6 +173,12 @@ public class ReportsService {
     return report;
   }
 
+  /**
+   * Get all ChallengeReports for the user with the given email
+   * 
+   * @param userEmail
+   * @return
+   */
   @SuppressWarnings("null")
   @Transactional(readOnly = true)
   public Iterable<ChallengeReport> getChallengeReports(String userEmail) {
@@ -155,6 +188,7 @@ public class ReportsService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String authenticatedUserEmail = null;
 
+    // Get the authenticated user's email from the authentication object
     if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
       authenticatedUserEmail = userDetails.getUsername();
@@ -183,6 +217,17 @@ public class ReportsService {
 
   }
 
+  /**
+   * Update the ChallengeReport with the given id for the user with the given
+   * email
+   * 
+   * @param challengeId
+   * @param challengeProgressId
+   * @param userEmail
+   * @param currentProgress
+   * @param timestamp
+   * @return
+   */
   @Transactional
   public ChallengeReport updateReportStatus(Long challengeId, Long challengeProgressId, String userEmail,
       Double currentProgress, Date timestamp) {
@@ -242,8 +287,13 @@ public class ReportsService {
     return challengeReportRepository.save(challengeReport);
   }
 
+  /**
+   * Delete the ChallengeReport with the given id
+   * 
+   * @param challengeReportId
+   */
   @Transactional
-  public void deleteChallengeReport(Long challengeReportId) {
+  public void deleteChallengeReport(String userEmail, Long challengeReportId) {
     LOGGER.info("Deleting ChallengeReport with id: {}", challengeReportId);
 
     // Check if ChallengeReport exists
@@ -269,4 +319,114 @@ public class ReportsService {
     challengeReportRepository.deleteById(challengeReportId);
 
   }
+
+  /**
+   * Get the total progress of the ChallengeReport
+   * 
+   * @param userEmail
+   * @param challengeReport
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public double getTotalProgress(String userEmail, Long challengeReportId) {
+    LOGGER.info("Getting total progress for ChallengeReport with id: {}", challengeReportId);
+
+    // Fetch ChallengeReport from the database
+    ChallengeReport challengeReport = challengeReportRepository.findById(challengeReportId)
+        .orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
+
+    // Fetch User from the user service
+    String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
+    User user = restTemplate.getForObject(url, User.class);
+
+    // Check if the user is allowed to read the content
+    if (!canRead(user, challengeReport.getUser(), challengeReport.getChallenge().getChallengeVisibility())) {
+      throw new UnauthorizedException("User is not allowed to read the content");
+    }
+
+    return challengeReport.getProgressList().values().stream().mapToDouble(progress -> progress.getCurrentProgress())
+        .sum();
+  }
+
+  /**
+   * Get the average daily progress of the ChallengeReport
+   * 
+   * @param userEmail
+   * @param challengeReport
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public double getAverageDailyProgress(String userEmail, Long challengeId) {
+    LOGGER.info("Getting average daily progress for ChallengeReport with id: {}", challengeId);
+
+    // Fetch Challenge from the challenge service
+    String url = CHALLENGE_SERVICE_URL + "/getChallengeById/" + challengeId;
+    ChallengeDTO challengeDTO = restTemplate.getForObject(url, ChallengeDTO.class);
+
+    // map to Challenge
+    ModelMapper modelMapper = new ModelMapper();
+    Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
+
+    User user = restTemplate.getForObject(USER_SERVICE_URL + "/getUserByEmail/" + userEmail, User.class);
+
+    ChallengeReport challengeReport = challengeReportRepository.findByChallenge(challenge)
+        .orElseThrow(() -> new NotFoundException("ChallengeReport not found"));
+
+    // get challengeSummary for user
+    ChallengeSummary challengeSummary = challengeSummaryRepository.findByUser(user)
+        .orElseThrow(() -> new NotFoundException("ChallengeSummary not found"));
+
+    long activeDays = challengeSummary.getConsecutiveDays();
+    return activeDays == 0 ? 0 : getTotalProgress(userEmail, challengeReport.getId()) / activeDays;
+  }
+
+  /***
+   * Helper method to check if the user is allowed to read the content
+   * 
+   * @param currentUser   The user who wants to read the content
+   * @param contentAuthor The author of the content
+   * @param visibility    The visibility of the content
+   * @return true if the user is allowed to read the content
+   * @return false if the user is not allowed to read the content
+   */
+  private boolean canRead(User currentUser, User contentAuthor, Visibility visibility) {
+    if (visibility == Visibility.PUBLIC) {
+      LOGGER.info(
+          "User with email " + currentUser.getEmail() + " is allowed to read content, because the content is public.");
+      return true;
+    }
+    if (visibility == Visibility.PRIVATE) {
+      if (currentUser.getEmail().equals(contentAuthor.getEmail())) {
+        LOGGER.info("User with email " + currentUser.getEmail()
+            + " is allowed to read content, because the content is private and the user is the author.");
+        return true;
+      } else {
+        LOGGER.error("User with email " + currentUser.getEmail()
+            + " is not allowed to read content, because the content is private and the user is not the author.");
+        return false;
+      }
+    }
+    if (visibility == Visibility.FRIENDS) {
+      if (currentUser.getEmail().equals(contentAuthor.getEmail())) {
+        LOGGER.info("User with email " + currentUser.getEmail()
+            + " is allowed to read content, because the content is visible to friends and the user is the author.");
+        return true;
+      }
+      Boolean isFriend = retryableFriendshipApiClient.isFriendWith(contentAuthor.getEmail(),
+          currentUser.getEmail());
+
+      if (isFriend) {
+        LOGGER.info("User with email " + currentUser.getEmail()
+            + " is allowed to read content, because the content is visible to friends and the user is a friend of the author.");
+        return true;
+      } else {
+        LOGGER.error("User with email " + currentUser.getEmail()
+            + " is not allowed to read content, because the content is visible to friends and the user is not a friend of the author. The current user is also not the author of the content.");
+        return false;
+      }
+
+    }
+    throw new IllegalArgumentException("Visibility not supported");
+  }
+
 }

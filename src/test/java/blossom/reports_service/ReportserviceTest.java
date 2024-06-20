@@ -128,7 +128,7 @@ class ReportsServiceTest {
     when(challengeReportRepository.save(any(ChallengeReport.class))).thenReturn(challengeReport);
     when(challengeSummaryRepository.save(any(ChallengeSummary.class))).thenReturn(challengeSummary);
 
-    ChallengeReport report = reportsService.createChallengeReport(id, email);
+    ChallengeReport report = reportsService.createChallengeReport(email, id);
 
     assertNotNull(report);
     verify(challengeReportRepository, times(1)).save(any(ChallengeReport.class));

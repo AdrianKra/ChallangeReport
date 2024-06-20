@@ -65,7 +65,7 @@ public class ReturnController {
    * @return List<ChallengeReportDTO> - List of challenge reports
    * 
    */
-  @GetMapping("/list/{userId}")
+  @GetMapping("/list")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public List<ChallengeReportDTO> getChallengeReports(@RequestHeader String Authorization) {
 
@@ -84,13 +84,48 @@ public class ReturnController {
   }
 
   /**
+   * Get total progress by userId and challengeReportId
+   * 
+   * @param Authorization - JWT token
+   * @param userId        - User ID
+   */
+  @GetMapping("/progress/{challengeId}")
+  @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+  public double getTotalProgress(@RequestHeader String Authorization, @PathVariable Long challengeReportId) {
+
+    String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
+    LOGGER.info("Getting total progress for user with email: {} and challengeReportId: {}", userEmail,
+        challengeReportId);
+
+    return reportsService.getTotalProgress(userEmail, challengeReportId);
+  }
+
+  /**
+   * 
+   * @param Authorization - JWT token
+   * @param userId        - User ID
+   * @param challengeId   - Challenge ID
+   * @return double - Average daily progress
+   * 
+   */
+  @GetMapping("/average{challengeId}")
+  @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+  public double getAverageDailyProgress(@RequestHeader String Authorization, @PathVariable Long challengeId) {
+
+    String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
+    LOGGER.info("Getting average daily progress for user with email: {} and challengeId: {}", userEmail, challengeId);
+
+    return reportsService.getAverageDailyProgress(userEmail, challengeId);
+  }
+
+  /**
    * Get challenge summary by userId
    * 
    * @param Authorization - JWT token
    * @return ChallengeSummaryDTO - Challenge summary
    * 
    */
-  @GetMapping("/summary/{userId}")
+  @GetMapping("/summary")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public ChallengeSummaryDTO getChallengeSummary(@RequestHeader String Authorization) {
 
@@ -115,12 +150,9 @@ public class ReturnController {
    * 
    */
   @GetMapping("/quote/{category}")
-  @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-  public Quote[] getQuotes(@RequestHeader String Authorization, @PathVariable String category) {
+  public Quote[] getQuotes(@PathVariable String category) {
 
-    String userEmail = jwtValidator.getUserEmail(Authorization.substring(7));
-    LOGGER.info("Getting quotes for user with email: {}", userEmail);
-
+    LOGGER.info("Getting quotes for category: {}", category);
     if (apiKey == null || apiKey.isEmpty()) {
       LOGGER.error("API key is not configured");
       throw new InvalidException("API key is not configured");

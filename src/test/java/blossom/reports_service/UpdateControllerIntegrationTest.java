@@ -88,7 +88,7 @@ public class UpdateControllerIntegrationTest {
                 challengeReport.setStatus(ChallengeStatus.DONE);
                 challengeReport.setVersion(1);
 
-                given(reportsService.createChallengeReport(any(Long.class), any(String.class)))
+                given(reportsService.createChallengeReport(any(String.class), any(Long.class)))
                                 .willReturn(challengeReport);
 
                 this.mvc.perform(post("/rest/call/createChallengeReport/{challengeId}/{userId}", 1L, 1L)

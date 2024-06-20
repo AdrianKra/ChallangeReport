@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Entities.User;
 
 @Repository
