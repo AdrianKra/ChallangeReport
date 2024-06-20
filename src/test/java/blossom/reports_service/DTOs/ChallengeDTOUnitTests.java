@@ -122,4 +122,13 @@ public class ChallengeDTOUnitTests {
     assertEquals(Visibility.PUBLIC, dto.getChallengeVisibility());
     assertEquals(1, dto.getVersion());
   }
+
+  @Test
+  public void testtoString() {
+    String expected = "ChallengeDTO [challengeVisibility=" + challengeDTO.getChallengeVisibility() + ", deadline="
+        + deadline + ", description="
+        + description + ", id=" + id + ", scorePenalty=" + scorePenalty + ", scoreReward=" + scoreReward + ", title="
+        + title + ", unit=" + unit + ", user=" + user + ", version=" + version + "]";
+    assertEquals(expected, challengeDTO.toString());
+  }
 }

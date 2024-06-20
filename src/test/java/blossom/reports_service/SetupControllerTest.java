@@ -22,30 +22,32 @@ public class SetupControllerTest {
     @InjectMocks
     private SetupController setupController;
 
-    //TODO: die Funktionen gibt es alle überhaupt nicht, wieso soll das getestet werden?
+    // TODO: die Funktionen gibt es alle überhaupt nicht, wieso soll das getestet
+    // werden?
     // @Test
     // public void testSaveChallengeReport() {
-    //     ChallengeReportDTO challengeReportDTO = new ChallengeReportDTO();
-    //     ChallengeReport challengeReport = new ChallengeReport();
+    // ChallengeReportDTO challengeReportDTO = new ChallengeReportDTO();
+    // ChallengeReport challengeReport = new ChallengeReport();
 
-    //     given(ChallengeReportRepository.save(challengeReport)).thenReturn(challengeReport);
+    // given(ChallengeReportRepository.save(challengeReport)).thenReturn(challengeReport);
 
-    //     ResponseEntity<ChallengeReportDTO> response =
-    //     setupController.save(challengeReportDTO);
+    // ResponseEntity<ChallengeReportDTO> response =
+    // setupController.save(challengeReportDTO);
 
-    //     verify(reportsService).saveChallengeReport(challengeReportDTO);
+    // verify(reportsService).saveChallengeReport(challengeReportDTO);
     // }
 
     // @Test
     // public void testDeleteChallengeReport() {
-    //     ResponseEntity<Void> response = setupController.deleteChallengeReport(1L);
+    // ResponseEntity<Void> response = setupController.deleteChallengeReport(1L);
 
-    //     verify(reportsService).deleteChallengeReport(anyLong());
+    // verify(reportsService).deleteChallengeReport(anyLong());
     // }
 
     @Test
-    public void testCreateChallengeReport(){
-        //TODO: hier muss nur ein valider JWT mit einer User-Mail übergeben werden. Das sollte easy sein
-        setupController.createChallengeSummary(null);
+    public void testCreateChallengeReport() {
+        // TODO: hier muss nur ein valider JWT mit einer User-Mail übergeben werden. Das
+        // sollte easy sein
+        // setupController.createChallengeSummary(null);
     }
 }

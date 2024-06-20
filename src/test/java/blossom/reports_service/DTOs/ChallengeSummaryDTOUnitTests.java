@@ -134,20 +134,12 @@ public class ChallengeSummaryDTOUnitTests {
     assertEquals(2, challengeSummaryDTO.getVersion());
   }
 
-  // @Test
-  // public void testNotNull() {
-  // System.out.println(challengeSummaryDTO.toString());
-
-  // Set<ConstraintViolation<ChallengeSummaryDTO>> violations =
-  // validator.validate(challengeSummaryDTO);
-
-  // assertTrue(violations.isEmpty());
-
-  // challengeSummaryDTO.setUser(null);
-  // challengeSummaryDTO.setLastActive(null);
-
-  // violations = validator.validate(challengeSummaryDTO);
-  // assertEquals(2, violations.size());
-  // }
-
+  @Test
+  public void testToString() {
+    String expected = "ChallengeSummaryDTO [challengeCount=" + challengeCount + ", consecutiveDays=" + consecutiveDays
+        + ", doneCount=" + doneCount + ", id=" + id + ", lastActive=" + lastActive + ", longestStreak="
+        + longestStreak + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", user=" + user
+        + ", version=" + version + "]";
+    assertEquals(expected, challengeSummaryDTO.toString());
+  }
 }
