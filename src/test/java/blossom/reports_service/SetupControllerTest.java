@@ -1,6 +1,5 @@
 package blossom.reports_service;
 
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -44,10 +43,10 @@ public class SetupControllerTest {
     // verify(reportsService).deleteChallengeReport(anyLong());
     // }
 
-    @Test
-    public void testCreateChallengeReport() {
-        // TODO: hier muss nur ein valider JWT mit einer User-Mail übergeben werden. Das
-        // sollte easy sein
-        // setupController.createChallengeSummary(null);
-    }
+    // @Test
+    // public void testCreateChallengeReport(){
+    // //TODO: hier muss nur ein valider JWT mit einer User-Mail übergeben werden.
+    // Das sollte easy sein
+    // setupController.createChallengeSummary(null);
+    // }
 }
