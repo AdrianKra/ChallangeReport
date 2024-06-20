@@ -7,6 +7,9 @@ import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.Unit;
 import blossom.reports_service.model.Enums.Visibility;
 
+/**
+ * Data Transfer Object for Challenge
+ */
 public class ChallengeDTO {
 
   private Long id;
@@ -22,9 +25,15 @@ public class ChallengeDTO {
   private Visibility challengeVisibility;
   private int version;
 
+  /**
+   * Default Constructor for ChallengeDTO
+   */
   public ChallengeDTO() {
   }
 
+  /**
+   * Parameterized Constructor for ChallengeDTO
+   */
   public ChallengeDTO(Long id, String title, String description, Unit unit, double targetProgress, Date deadline,
       Integer scoreReward, Integer scorePenalty, User user, Visibility challengeVisibility, int version) {
     this.id = id;
@@ -40,6 +49,9 @@ public class ChallengeDTO {
     this.version = version;
   }
 
+  /**
+   * Constructor for ChallengeDTO from Challenge
+   */
   public ChallengeDTO(Challenge challenge) {
     this.id = challenge.getId();
     this.title = challenge.getTitle();
@@ -140,5 +152,12 @@ public class ChallengeDTO {
 
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "ChallengeDTO [challengeVisibility=" + challengeVisibility + ", deadline=" + deadline + ", description="
+        + description + ", id=" + id + ", scorePenalty=" + scorePenalty + ", scoreReward=" + scoreReward + ", title="
+        + title + ", unit=" + unit + ", user=" + user + ", version=" + version + "]";
   }
 }

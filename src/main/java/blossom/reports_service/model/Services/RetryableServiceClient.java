@@ -46,7 +46,7 @@ public class RetryableServiceClient {
   }
 
   @Recover
-  public Quote[] recover(NotFoundException e) {
+  public Quote[] recover(RetryableException e) {
     LOGGER.error("Failed to get quotes: {}. Use fallback! ", e.getMessage());
     return new Quote[] { new Quote("No quotes found for the given category", "Unknown") };
   }

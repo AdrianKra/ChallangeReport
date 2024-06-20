@@ -19,9 +19,15 @@ public class ChallengeSummaryDTO {
   private int longestStreak;
   private int version;
 
+  /**
+   * Default Constructor for ChallengeSummaryDTO
+   */
   public ChallengeSummaryDTO() {
   }
 
+  /**
+   * Parameterized Constructor for ChallengeSummaryDTO
+   */
   public ChallengeSummaryDTO(Long id, User user, Date lastActive, int challengeCount, int doneCount, int pendingCount,
       int overdueCount, int consecutiveDays, int longestStreak, int version) {
     this.id = id;
@@ -36,6 +42,9 @@ public class ChallengeSummaryDTO {
     this.version = version;
   }
 
+  /**
+   * Constructor for ChallengeSummaryDTO from ChallengeSummary
+   */
   public ChallengeSummaryDTO(ChallengeSummary challengeSummary) {
     this.id = challengeSummary.getId();
     this.user = challengeSummary.getUser();
@@ -127,5 +136,13 @@ public class ChallengeSummaryDTO {
 
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "ChallengeSummaryDTO [challengeCount=" + challengeCount + ", consecutiveDays=" + consecutiveDays
+        + ", doneCount=" + doneCount + ", id=" + id + ", lastActive=" + lastActive + ", longestStreak="
+        + longestStreak + ", overdueCount=" + overdueCount + ", pendingCount=" + pendingCount + ", user=" + user
+        + ", version=" + version + "]";
   }
 }

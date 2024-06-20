@@ -26,6 +26,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+/**
+ * Controller class for handling REST requests related to reports
+ * 
+ * @RestController - Indicates that this class is a controller class for REST
+ *                 requests
+ * @RequestMapping - Annotation for mapping web requests onto methods in request
+ */
 @RestController
 @RequestMapping("/rest/report")
 public class ReturnController {
@@ -35,6 +42,11 @@ public class ReturnController {
   private RetryableServiceClient quotesService;
   private JwtValidator jwtValidator;
 
+  /**
+   * API key for the quotes service
+   * 
+   * @Value - Annotation for injecting values from properties file
+   */
   @Value("${api.ninjas.key}")
   private String apiKey;
 
@@ -46,7 +58,13 @@ public class ReturnController {
     this.jwtValidator = jwtValidator;
   }
 
-  // get all challange reports for a user and return as list of DTOs
+  /**
+   * Get challenge reports by userId
+   * 
+   * @param Authorization - JWT token
+   * @return List<ChallengeReportDTO> - List of challenge reports
+   * 
+   */
   @GetMapping("/list/{userId}")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public List<ChallengeReportDTO> getChallengeReports(@RequestHeader String Authorization) {
@@ -65,7 +83,13 @@ public class ReturnController {
     return reportList;
   }
 
-  // get challange summary by userId
+  /**
+   * Get challenge summary by userId
+   * 
+   * @param Authorization - JWT token
+   * @return ChallengeSummaryDTO - Challenge summary
+   * 
+   */
   @GetMapping("/summary/{userId}")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public ChallengeSummaryDTO getChallengeSummary(@RequestHeader String Authorization) {
@@ -82,7 +106,14 @@ public class ReturnController {
     return summaryDTO;
   }
 
-  // get feign client quote
+  /**
+   * Get quotes by category
+   * 
+   * @param Authorization - JWT token
+   * @param category      - Quote category
+   * @return Quote[] - Array of quotes
+   * 
+   */
   @GetMapping("/quote/{category}")
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public Quote[] getQuotes(@RequestHeader String Authorization, @PathVariable String category) {

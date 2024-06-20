@@ -6,6 +6,9 @@ import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.Visibility;
 
+/**
+ * Data Transfer Object for ChallengeProgress
+ */
 public class ChallengeProgressDTO {
 
   private Long id;
@@ -16,9 +19,15 @@ public class ChallengeProgressDTO {
   private Visibility progressVisibility;
   private int version;
 
+  /**
+   * Default Constructor for ChallengeProgressDTO
+   */
   public ChallengeProgressDTO() {
   }
 
+  /**
+   * Parameterized Constructor for ChallengeProgressDTO
+   */
   public ChallengeProgressDTO(User user, Challenge challenge, ChallengeReport challengeReport, Double currentProgress,
       Visibility progressVisibility) {
     this.user = user;
@@ -28,6 +37,9 @@ public class ChallengeProgressDTO {
     this.progressVisibility = progressVisibility;
   }
 
+  /**
+   * Constructor for ChallengeProgressDTO from ChallengeProgress
+   */
   public ChallengeProgressDTO(ChallengeProgress challengeProgress) {
     this.id = challengeProgress.getId();
     this.user = challengeProgress.getUser();
@@ -92,5 +104,14 @@ public class ChallengeProgressDTO {
 
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "ChallengeProgressDTO [challenge=" + challenge + ", challengeReport=" + challengeReport
+        + ", currentProgress="
+        + currentProgress + ", id=" + id + ", progressVisibility=" + progressVisibility + ", user=" + user
+        + ", version="
+        + version + "]";
   }
 }

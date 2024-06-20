@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
-import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Repositories.ChallengeProgressRepository;
 import blossom.reports_service.model.Repositories.ChallengeReportRepository;

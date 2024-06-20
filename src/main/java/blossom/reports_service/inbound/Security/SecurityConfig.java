@@ -38,6 +38,7 @@ public class SecurityConfig {
             .requestMatchers("/swagger-ui/**").permitAll()
             .requestMatchers("/v3/api-docs/**").permitAll()
             .requestMatchers("/error").permitAll()
+            .requestMatchers("/fallback").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore((Filter) new JwtFilter(jwtValidator), UsernamePasswordAuthenticationFilter.class)
         .headers(headers -> headers.frameOptions(header -> header.disable())) // h2-console uses i-frame

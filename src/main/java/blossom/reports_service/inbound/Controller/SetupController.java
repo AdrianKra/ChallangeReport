@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import blossom.reports_service.inbound.Security.JwtValidator;
 import blossom.reports_service.model.Services.ReportsService;
 
+/**
+ * Controller class for handling REST requests related to setup
+ * 
+ * @RestController - Indicates that this class is a controller class for REST
+ *                 requests
+ * @RequestMapping - Annotation for mapping web requests onto methods in
+ *                 request-
+ */
 @RestController
 @RequestMapping("/rest/setup")
 public class SetupController {
@@ -30,7 +38,13 @@ public class SetupController {
     this.jwtValidator = jwtValidator;
   }
 
-  @PostMapping("/createSummary/{userId}") // change to email
+  /**
+   * Create ChallengeSummary for the user with the given email
+   * 
+   * @param Authorization
+   * @param userEmail
+   */
+  @PostMapping("/createSummary/{userEmail}")
   @ResponseStatus(value = HttpStatus.OK)
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
   public void createChallengeSummary(@RequestHeader String Authorization) {

@@ -8,15 +8,24 @@ public class UserDTO {
   private String email;
   private int version;
 
+  /**
+   * Default Constructor for UserDTO
+   */
   public UserDTO() {
   }
 
+  /**
+   * Parameterized Constructor for UserDTO
+   */
   public UserDTO(Long id, String email, int version) {
     this.id = id;
     this.email = email;
     this.version = version;
   }
 
+  /**
+   * Constructor for UserDTO from User
+   */
   public UserDTO(User user) {
     this.id = user.getId();
     this.email = user.getEmail();
@@ -45,5 +54,14 @@ public class UserDTO {
 
   public void setVersion(int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return "UserDTO{" +
+        "id=" + id +
+        ", email='" + email + '\'' +
+        ", version=" + version +
+        '}';
   }
 }

@@ -2,15 +2,15 @@ package blossom.reports_service.inbound.DTOs;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
-import jakarta.validation.constraints.NotNull;
 
+/**
+ * Data Transfer Object for ChallengeReport
+ */
 public class ChallengeReportDTO {
 
   private Long id;
@@ -22,9 +22,15 @@ public class ChallengeReportDTO {
   private ChallengeStatus status;
   private int version;
 
+  /**
+   * Default Constructor for ChallengeReportDTO
+   */
   public ChallengeReportDTO() {
   }
 
+  /**
+   * Parameterized Constructor for ChallengeReportDTO
+   */
   public ChallengeReportDTO(Challenge challenge, User user, HashMap<Date, ChallengeProgress> progressList,
       Date startDate,
       Date endDate, ChallengeStatus status, int version) {
@@ -37,6 +43,9 @@ public class ChallengeReportDTO {
     this.version = version;
   }
 
+  /**
+   * Constructor for ChallengeReportDTO from ChallengeReport
+   */
   public ChallengeReportDTO(ChallengeReport challengeReport) {
     this.id = challengeReport.getId();
     this.challenge = challengeReport.getChallenge();
@@ -80,6 +89,14 @@ public class ChallengeReportDTO {
     this.progressList = progressList;
   }
 
+  public void removeProgress(Date timestamp) {
+    this.progressList.remove(timestamp);
+  }
+
+  public void clearProgress() {
+    this.progressList.clear();
+  }
+
   public Date getStartDate() {
     return startDate;
   }
@@ -116,11 +133,11 @@ public class ChallengeReportDTO {
     this.progressList.put(timestamp, progress);
   }
 
-  public void removeProgress(Date timestamp) {
-    this.progressList.remove(timestamp);
+  @Override
+  public String toString() {
+    return "ChallengeReportDTO [challenge=" + challenge + ", endDate=" + endDate + ", id=" + id + ", progressList="
+        + progressList + ", startDate=" + startDate + ", status=" + status + ", user=" + user + ", version=" + version
+        + "]";
   }
 
-  public void clearProgress() {
-    this.progressList.clear();
-  }
 }

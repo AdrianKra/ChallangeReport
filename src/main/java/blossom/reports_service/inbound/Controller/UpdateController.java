@@ -15,6 +15,13 @@ import blossom.reports_service.inbound.Security.JwtValidator;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Services.ReportsService;
 
+/**
+ * Controller class for handling REST requests related to updates
+ * 
+ * @RestController - Indicates that this class is a controller class for REST
+ *                 requests
+ * @RequestMapping - Annotation for mapping web requests onto methods in request
+ */
 @RestController
 @RequestMapping("/rest/call")
 public class UpdateController {
@@ -29,6 +36,12 @@ public class UpdateController {
     this.jwtValidator = jwtValidator;
   }
 
+  /**
+   * 
+   * @param Authorization
+   * @param challengeId
+   * @return ResponseEntity<ChallengeReportDTO>
+   */
   @PostMapping("/createChallengeReport/{challengeId}/{userId}")
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
@@ -46,6 +59,11 @@ public class UpdateController {
     return ResponseEntity.status(HttpStatus.CREATED).body(challengeReportDTO);
   }
 
+  /**
+   * 
+   * @param challengeId
+   * @return ResponseEntity<ChallengeReportDTO>
+   */
   @DeleteMapping("/deleteChallengeReport/{challengeId}")
   @ResponseStatus(value = HttpStatus.OK)
   @PreAuthorize("hasAuthority('ADMIN')")
