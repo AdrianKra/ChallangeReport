@@ -1,57 +1,51 @@
-// package blossom.reports_service;
+package blossom.reports_service;
 
-// import static org.mockito.Mockito.when;
-// import static org.mockito.Mockito.verify;
-// import static org.mockito.ArgumentMatchers.anyLong;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
+import blossom.reports_service.inbound.Controller.SetupController;
+import blossom.reports_service.inbound.Security.JwtValidator;
+import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+import blossom.reports_service.model.Services.ReportsService;
 
-// import static org.mockito.BDDMockito.given;
+public class SetupControllerTest {
+    @Mock
+    private ReportsService reportsService;
 
-// import blossom.reports_service.inbound.Controller.SetupController;
-// import blossom.reports_service.inbound.DTOs.ChallengeReportDTO;
-// import blossom.reports_service.inbound.Security.JwtValidator;
-// import blossom.reports_service.model.Entities.ChallengeReport;
-// import blossom.reports_service.model.Services.ReportsService;
-// import blossom.reports_service.model.Repositories.ChallengeReportRepository;
+    @Mock
+    private JwtValidator jwtValidator;
 
-// public class SetupControllerTest {
+    @Mock
+    private ChallengeReportRepository ChallengeReportRepository;
 
-// @Mock
-// private ReportsService reportsService;
+    @InjectMocks
+    private SetupController setupController;
 
-// @Mock
-// private JwtValidator jwtValidator;
+    //TODO: die Funktionen gibt es alle überhaupt nicht, wieso soll das getestet werden?
+    // @Test
+    // public void testSaveChallengeReport() {
+    //     ChallengeReportDTO challengeReportDTO = new ChallengeReportDTO();
+    //     ChallengeReport challengeReport = new ChallengeReport();
 
-// @Mock
-// private ChallengeReportRepository ChallengeReportRepository;
+    //     given(ChallengeReportRepository.save(challengeReport)).thenReturn(challengeReport);
 
-// @InjectMocks
-// private SetupController setupController;
+    //     ResponseEntity<ChallengeReportDTO> response =
+    //     setupController.save(challengeReportDTO);
 
-// @Test
-// public void testSaveChallengeReport() {
-// ChallengeReportDTO challengeReportDTO = new ChallengeReportDTO();
-// ChallengeReport challengeReport = new ChallengeReport();
+    //     verify(reportsService).saveChallengeReport(challengeReportDTO);
+    // }
 
-// given(ChallengeReportRepository.save(challengeReport)).thenReturn(challengeReport);
+    // @Test
+    // public void testDeleteChallengeReport() {
+    //     ResponseEntity<Void> response = setupController.deleteChallengeReport(1L);
 
-// ResponseEntity<ChallengeReportDTO> response =
-// setupController.save(challengeReportDTO);
+    //     verify(reportsService).deleteChallengeReport(anyLong());
+    // }
 
-// verify(reportsService).saveChallengeReport(challengeReportDTO);
-// }
-
-// @Test
-// public void testDeleteChallengeReport() {
-// ResponseEntity<Void> response = setupController.deleteChallengeReport(1L);
-
-// verify(reportsService).deleteChallengeReport(anyLong());
-// }
-// }
+    @Test
+    public void testCreateChallengeReport(){
+        //TODO: hier muss nur ein valider JWT mit einer User-Mail übergeben werden. Das sollte easy sein
+        setupController.createChallengeSummary(null);
+    }
+}
