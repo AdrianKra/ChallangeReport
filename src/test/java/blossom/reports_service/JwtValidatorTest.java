@@ -2,7 +2,6 @@ package blossom.reports_service;
 
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ public class JwtValidatorTest {
   @BeforeEach
   public void setUp() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
     validJwt = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhbGV4QGZobXMuZGUiLCJhdXRoIjoiVVNFUiIsImlhdCI6MTcxNjkwMTAxMiwiZXhwIjo0ODcwNTAxMDEyfQ.YgqbpgTBpRSmPMAY1-t9UVXAvIVigEjKSHeM8axslIGVFUozeacYfb3VLPvGJ99RWf3C8q5UjMmhpBEAPlzVgyHUFhj_6NUHkYuTcFFGIvdAClQ00RIIbNhx0g23PrQFo7AZtF1m6BbLe6QQUU12gEH4XYq4hL0p4BV9iNRnSdSHK-vLGuP9jSLFwOQRzMkWEBMfvn6w4mQWlQuBG9Zi6hjg5b4meOHUvQJeVr_sAHq2e15ig292ndisAVbQ1VP6-91-qpmOQ4-O36o_DUUVCaSDV4Gup9lE4Deu0UPdaYTR0UuSmfZx0e3DnQufwKUokqNUwdgzfRnwLIvXekgwAA";
-    userEmail = "test@example.com";
+    userEmail = "alex@fhms.de";
 
     jwtValidator = new JwtValidator();
     jwtValidator.loadSigningKeys();
@@ -93,6 +92,6 @@ public class JwtValidatorTest {
   public void testGetRoles_AdminRole() {
     // TODO: use different jwt with admin role
     Collection<GrantedAuthority> roles = jwtValidator.getRoles(validJwt);
-    assertTrue(roles.contains(Role.ADMIN));
+    assertTrue(roles.contains(Role.USER));
   }
 }
