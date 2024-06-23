@@ -2,6 +2,8 @@ package blossom.reports_service.inbound.DTOs;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
@@ -16,7 +18,7 @@ public class ChallengeReportDTO {
   private Long id;
   private Challenge challenge;
   private User user;
-  private HashMap<Date, ChallengeProgress> progressList;
+  private Map<Date, ChallengeProgress> progressList;
   private Date startDate;
   private Date endDate;
   private ChallengeStatus status;
@@ -31,7 +33,7 @@ public class ChallengeReportDTO {
   /**
    * Parameterized Constructor for ChallengeReportDTO
    */
-  public ChallengeReportDTO(Challenge challenge, User user, HashMap<Date, ChallengeProgress> progressList,
+  public ChallengeReportDTO(Challenge challenge, User user, Map<Date, ChallengeProgress> progressList,
       Date startDate,
       Date endDate, ChallengeStatus status, int version) {
     this.challenge = challenge;
@@ -81,11 +83,11 @@ public class ChallengeReportDTO {
     this.user = user;
   }
 
-  public HashMap<Date, ChallengeProgress> getProgressList() {
+  public Map<Date, ChallengeProgress> getProgressList() {
     return progressList;
   }
 
-  public void setProgressList(HashMap<Date, ChallengeProgress> progressList) {
+  public void setProgressList(Map<Date, ChallengeProgress> progressList) {
     this.progressList = progressList;
   }
 

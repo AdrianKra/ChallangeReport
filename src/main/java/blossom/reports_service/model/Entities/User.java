@@ -12,6 +12,9 @@ public class User {
   private Long id;
 
   @NotNull
+  private String name;
+
+  @NotNull
   private String email;
 
   @Version
@@ -20,7 +23,8 @@ public class User {
   public User() {
   }
 
-  public User(String email) {
+  public User(String name, String email) {
+    this.name = name;
     this.email = email;
   }
 
@@ -30,6 +34,14 @@ public class User {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getEmail() {
@@ -52,6 +64,7 @@ public class User {
   public String toString() {
     return "User{" +
         "id=" + id +
+        ", name='" + name + '\'' +
         ", email='" + email + '\'' +
         ", version=" + version +
         '}';

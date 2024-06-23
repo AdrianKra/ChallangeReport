@@ -10,23 +10,22 @@ import org.springframework.stereotype.Component;
 import blossom.reports_service.model.ChallengeProgressUpdateEvent;
 import blossom.reports_service.model.Services.ReportsService;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 
 @Component
-public class EventConsumer implements Consumer<ChallengeProgressUpdateEvent> {
+public class ChallengeProgressEventConsumer implements Consumer<ChallengeProgressUpdateEvent> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(EventConsumer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ChallengeProgressEventConsumer.class);
 
   private ReportsService reportsService;
 
   @Autowired
-  public EventConsumer(ReportsService reportsService) {
+  public ChallengeProgressEventConsumer(ReportsService reportsService) {
     this.reportsService = reportsService;
   }
 
   @Override
   public void accept(ChallengeProgressUpdateEvent t) {
-    LOGGER.info("Received event: {}", t);
+    LOGGER.info("Received challenge progress update event: {}", t);
     reportsService.updateChallengeProgress(
         t.challengeId(),
         t.challengeProgressId(),
@@ -38,6 +37,6 @@ public class EventConsumer implements Consumer<ChallengeProgressUpdateEvent> {
 
   @PostConstruct
   public void init() {
-    LOGGER.info("EventConsumer initialized");
+    LOGGER.info("Progress Update EventConsumer initialized");
   }
 }

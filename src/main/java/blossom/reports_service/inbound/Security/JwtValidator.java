@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Component;
 import blossom.reports_service.model.Role;
 import blossom.reports_service.model.Exceptions.InvalidException;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -96,5 +100,9 @@ public class JwtValidator {
             result.add(Role.ADMIN);
         }
         return result;
+    }
+
+    public PublicKey getPublicKey() {
+        return this.publicKey;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -31,7 +32,13 @@ public class ChallengeReport {
 
   @OneToMany(mappedBy = "challengeReport", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JsonManagedReference
-  private HashMap<Date, ChallengeProgress> progressMap;
+  private List<ChallengeProgress> progressList;
+
+  @ElementCollection
+  @CollectionTable(name = "challenge_progress_map", joinColumns = @JoinColumn(name = "challenge_report_id"))
+  @MapKeyColumn(name = "timestamp")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private Map<Date, ChallengeProgress> progressMap;
 
   @Temporal(TemporalType.DATE)
   @NotNull
@@ -77,11 +84,11 @@ public class ChallengeReport {
     this.user = user;
   }
 
-  public HashMap<Date, ChallengeProgress> getProgressList() {
+  public Map<Date, ChallengeProgress> getProgressList() {
     return progressMap;
   }
 
-  public void setProgressList(HashMap<Date, ChallengeProgress> progressMap) {
+  public void setProgressList(Map<Date, ChallengeProgress> progressMap) {
     this.progressMap = progressMap;
   }
 
