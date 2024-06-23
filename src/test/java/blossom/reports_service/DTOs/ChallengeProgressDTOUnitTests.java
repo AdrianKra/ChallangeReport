@@ -1,18 +1,19 @@
 package blossom.reports_service.DTOs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
 import blossom.reports_service.inbound.DTOs.ChallengeProgressDTO;
 import blossom.reports_service.model.Entities.Challenge;
 import blossom.reports_service.model.Entities.ChallengeProgress;
 import blossom.reports_service.model.Entities.ChallengeReport;
 import blossom.reports_service.model.Entities.User;
-import blossom.reports_service.model.Enums.ChallengeStatus;
 import blossom.reports_service.model.Enums.Visibility;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 public class ChallengeProgressDTOUnitTests {
 
@@ -28,8 +29,8 @@ public class ChallengeProgressDTOUnitTests {
   private ChallengeReport challengeReport;
 
   private final Long id = 1L;
-  private final Double currenProgress = 50.0;
-  private final Visibility visibility = Visibility.PUBLIC;
+  private final Double currentProgress = 50.0;
+  private final Visibility progressVisibility = Visibility.PUBLIC;
   private final int version = 0;
 
   @BeforeEach
@@ -37,7 +38,8 @@ public class ChallengeProgressDTOUnitTests {
     user = mock(User.class);
     challenge = mock(Challenge.class);
     challengeReport = mock(ChallengeReport.class);
-    challengeProgressDTO = new ChallengeProgressDTO(user, challenge, challengeReport, currenProgress, visibility);
+    challengeProgressDTO = new ChallengeProgressDTO(user, challenge, challengeReport, currentProgress,
+        progressVisibility);
     challengeProgressDTO.setId(id);
   }
 
@@ -53,8 +55,8 @@ public class ChallengeProgressDTOUnitTests {
     assertEquals(user, challengeProgressDTO.getUser());
     assertEquals(challenge, challengeProgressDTO.getChallenge());
     assertEquals(challengeReport, challengeProgressDTO.getChallengeReport());
-    assertEquals(currenProgress, challengeProgressDTO.getCurrentProgress());
-    assertEquals(visibility, challengeProgressDTO.getProgressVisibility());
+    assertEquals(currentProgress, challengeProgressDTO.getCurrentProgress());
+    assertEquals(progressVisibility, challengeProgressDTO.getProgressVisibility());
     assertEquals(version, challengeProgressDTO.getVersion());
   }
 
@@ -101,5 +103,15 @@ public class ChallengeProgressDTOUnitTests {
     assertEquals(50.0, dto.getCurrentProgress());
     assertEquals(Visibility.PUBLIC, dto.getProgressVisibility());
     assertEquals(version, dto.getVersion());
+  }
+
+  @Test
+  public void testToString() {
+    String expected = "ChallengeProgressDTO [challenge=" + challenge + ", challengeReport=" + challengeReport
+        + ", currentProgress="
+        + currentProgress + ", id=" + id + ", progressVisibility=" + progressVisibility + ", user=" + user
+        + ", version="
+        + version + "]";
+    assertEquals(expected, challengeProgressDTO.toString());
   }
 }

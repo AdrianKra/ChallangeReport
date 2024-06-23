@@ -1,11 +1,13 @@
 package blossom.reports_service.DTOs;
 
-import blossom.reports_service.inbound.DTOs.UserDTO;
-import blossom.reports_service.model.Entities.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import blossom.reports_service.inbound.DTOs.UserDTO;
+import blossom.reports_service.model.Entities.User;
 
 public class UserDTOUnitTests {
 
@@ -56,5 +58,15 @@ public class UserDTOUnitTests {
     assertEquals(1L, dto.getId());
     assertEquals("test@example.com", dto.getEmail());
     assertEquals(1, dto.getVersion());
+  }
+
+  @Test
+  public void testToString() {
+    String expected = "UserDTO{" +
+        "id=" + id +
+        ", email='" + email + '\'' +
+        ", version=" + version +
+        '}';
+    assertEquals(expected, userDTO.toString());
   }
 }
