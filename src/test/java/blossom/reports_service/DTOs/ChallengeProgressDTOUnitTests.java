@@ -38,8 +38,7 @@ public class ChallengeProgressDTOUnitTests {
     user = mock(User.class);
     challenge = mock(Challenge.class);
     challengeReport = mock(ChallengeReport.class);
-    challengeProgressDTO = new ChallengeProgressDTO(user, challenge, challengeReport, currentProgress,
-        progressVisibility);
+    challengeProgressDTO = new ChallengeProgressDTO(user, challenge, challengeReport, currentProgress, progressVisibility);
     challengeProgressDTO.setId(id);
   }
 

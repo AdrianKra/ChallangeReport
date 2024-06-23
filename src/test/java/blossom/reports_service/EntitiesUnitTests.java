@@ -314,6 +314,7 @@ public class EntitiesUnitTests {
   public void testUser() {
     User user = new User();
     user.setId(1L);
+    user.setName("Tom");
     user.setEmail("example@email.org");
     user.setVersion(0);
 
@@ -321,14 +322,15 @@ public class EntitiesUnitTests {
     assertEquals("example@email.org", user.getEmail());
     assertEquals(0, user.getVersion());
     // test toString
-    assertEquals("User{id=1, email='example@email.org', version=0}",
+    assertEquals("User{id=1, name='Tom', email='example@email.org', version=0}",
         user.toString());
   }
 
   @Test
   public void testUserConstructor() {
-    User user = new User("first@email.org");
+    User user = new User("Tom", "first@email.org");
     assertEquals("first@email.org", user.getEmail());
+    assertEquals("Tom", user.getName());
     assertEquals(0, user.getVersion());
   }
 
@@ -339,6 +341,6 @@ public class EntitiesUnitTests {
     user.setEmail(null);
 
     Set<ConstraintViolation<User>> violations = validator.validate(user);
-    assertEquals(1, violations.size());
+    assertEquals(2, violations.size());
   }
 }

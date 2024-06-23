@@ -2,7 +2,7 @@
 -- INSERT INTO users (email, version) VALUES ('example2@gmail.com', 0);
 -- INSERT INTO users (email, version) VALUES ('example3@gmail.com', 0);
 -- INSERT INTO users (email, version) VALUES ('example4@gmail.com', 0);  
-INSERT INTO users (email, version) VALUES ('example5@gmail.com', 0);  
+INSERT INTO users (name, email, version) VALUES ('Paul', 'paul@gmail.com', 0);  
 
 -- -- Einfügen von Herausforderungen
 -- INSERT INTO challenges (title, description, unit, target_progress, deadline, score_reward, score_penalty, user_id, challenge_visibility, version)

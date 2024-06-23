@@ -7,7 +7,7 @@ import java.util.Date;
 
 import static org.mockito.Mockito.times;
 
-import blossom.reports_service.inbound.EventConsumer;
+import blossom.reports_service.inbound.ChallengeProgressEventConsumer;
 import blossom.reports_service.model.ChallengeProgressUpdateEvent;
 import blossom.reports_service.model.Services.ReportsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ public class EventConsumerTest {
   private Logger logger;
 
   @InjectMocks
-  private EventConsumer eventConsumer;
+  private ChallengeProgressEventConsumer eventConsumer;
 
   private final Date date = new Date();
   private ChallengeProgressUpdateEvent event;
@@ -38,7 +38,7 @@ public class EventConsumerTest {
   public void setUp() {
     event = new ChallengeProgressUpdateEvent(1L, 1L, "user@example.com", 50.0, date);
 
-    eventConsumer = new EventConsumer(reportsService);
+    eventConsumer = new ChallengeProgressEventConsumer(reportsService);
   }
 
   @Test

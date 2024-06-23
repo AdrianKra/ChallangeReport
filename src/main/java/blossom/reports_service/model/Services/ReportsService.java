@@ -27,6 +27,7 @@ import blossom.reports_service.model.Entities.ChallengeSummary;
 import blossom.reports_service.model.Entities.User;
 import blossom.reports_service.model.Enums.ChallengeStatus;
 import blossom.reports_service.model.Enums.Visibility;
+import blossom.reports_service.model.Exceptions.AlreadyExistsException;
 import blossom.reports_service.model.Exceptions.AuthenticationFailedException;
 import blossom.reports_service.model.Exceptions.NotFoundException;
 import blossom.reports_service.model.Exceptions.UnauthorizedException;
@@ -74,6 +75,11 @@ public class ReportsService {
     // Call the user service to register a new user
     String url = USER_SERVICE_URL + "/getUserByEmail/" + userEmail;
     User user = restTemplate.getForObject(url, User.class);
+
+    challengeSummaryRepository.findByUser(user)
+        .ifPresent(summary -> {
+          throw new AlreadyExistsException("ChallengeSummary already exists for user with id: " + userEmail);
+        });
 
     // Create a new ChallengeSummary for the user
     ChallengeSummary summary = new ChallengeSummary(user);

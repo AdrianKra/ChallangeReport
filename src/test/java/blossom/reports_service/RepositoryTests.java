@@ -42,24 +42,29 @@ public class RepositoryTests {
     List<User> users = userRepository.findAll();
     assertThat(users).hasSize(5);
 
-    User user1 = userRepository.findByEmail("example1@gmail.com").orElseThrow();
-    assertThat(user1.getEmail()).isEqualTo("example1@gmail.com");
+    User user1 = userRepository.findByEmail("user1@example.org").orElseThrow();
+    assertThat(user1.getEmail()).isEqualTo("user1@example.org");
+    assertThat(user1.getName()).isEqualTo("User 1");
     assertThat(user1.getVersion()).isEqualTo(0);
 
     User user2 = userRepository.findById(2L).orElseThrow();
-    assertThat(user2.getEmail()).isEqualTo("example2@gmail.com");
+    assertThat(user2.getEmail()).isEqualTo("user2@example.org");
+    assertThat(user2.getName()).isEqualTo("User 2");
     assertThat(user2.getVersion()).isEqualTo(0);
 
     User user3 = userRepository.findById(3L).orElseThrow();
-    assertThat(user3.getEmail()).isEqualTo("example3@gmail.com", 0);
+    assertThat(user3.getEmail()).isEqualTo("user3@example.org", 0);
+    assertThat(user3.getName()).isEqualTo("User 3", 0);
     assertThat(user3.getVersion()).isEqualTo(0);
 
     User user4 = userRepository.findById(4L).orElseThrow();
-    assertThat(user4.getEmail()).isEqualTo("example4@gmail.com", 0);
+    assertThat(user4.getEmail()).isEqualTo("user4@example.org", 0);
+    assertThat(user4.getName()).isEqualTo("User 4", 0);
     assertThat(user4.getVersion()).isEqualTo(0);
 
     User user5 = userRepository.findById(5L).orElseThrow();
-    assertThat(user5.getEmail()).isEqualTo("example5@gmail.com", 0);
+    assertThat(user5.getEmail()).isEqualTo("paul@gmail.com", 0);
+    assertThat(user5.getName()).isEqualTo("Paul", 0);
     assertThat(user5.getVersion()).isEqualTo(0);
 
   }
