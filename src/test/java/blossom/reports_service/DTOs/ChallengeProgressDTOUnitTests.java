@@ -1,134 +1,117 @@
 package blossom.reports_service.DTOs;
 
-import blossom.reports_service.inbound.DTOs.ChallengeDTO;
-import blossom.reports_service.model.Entities.Challenge;
-import blossom.reports_service.model.Entities.User;
-import blossom.reports_service.model.Enums.Unit;
-import blossom.reports_service.model.Enums.Visibility;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.Date;
+import blossom.reports_service.inbound.DTOs.ChallengeProgressDTO;
+import blossom.reports_service.model.Entities.Challenge;
+import blossom.reports_service.model.Entities.ChallengeProgress;
+import blossom.reports_service.model.Entities.ChallengeReport;
+import blossom.reports_service.model.Entities.User;
+import blossom.reports_service.model.Enums.Visibility;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+public class ChallengeProgressDTOUnitTests {
 
-public class ChallengeDTOUnitTests {
-
-  @Mock
-  private ChallengeDTO challengeDTO;
+  private ChallengeProgressDTO challengeProgressDTO;
 
   @Mock
   private User user;
 
-  private final Date date = new Date();
+  @Mock
+  private Challenge challenge;
+
+  @Mock
+  private ChallengeReport challengeReport;
 
   private final Long id = 1L;
-  private final String title = "Challenge Title";
-  private final String description = "Challenge Description";
-  private final Unit unit = Unit.MONTHS;
-  private final Double targetProgress = 100.0;
-  private final Date deadline = date;
-  private final int scoreReward = 50;
-  private final int scorePenalty = 10;
-  private final Visibility visibility = Visibility.PUBLIC;
-  private final int version = 1;
+  private final Double currentProgress = 50.0;
+  private final Visibility progressVisibility = Visibility.PUBLIC;
+  private final int version = 0;
 
   @BeforeEach
   public void setUp() {
     user = mock(User.class);
-    challengeDTO = new ChallengeDTO(id, title, description, unit, targetProgress, deadline, scoreReward, scorePenalty,
-        user, visibility, version);
+    challenge = mock(Challenge.class);
+    challengeReport = mock(ChallengeReport.class);
+    challengeProgressDTO = new ChallengeProgressDTO(user, challenge, challengeReport, currentProgress,
+        progressVisibility);
+    challengeProgressDTO.setId(id);
   }
 
   @Test
   public void testDefaultConstructor() {
-    ChallengeDTO dto = new ChallengeDTO();
+    ChallengeProgressDTO dto = new ChallengeProgressDTO();
     assertNotNull(dto);
   }
 
   @Test
   public void testParameterizedConstructor() {
-    assertEquals(id, challengeDTO.getId());
-    assertEquals(title, challengeDTO.getTitle());
-    assertEquals(description, challengeDTO.getDescription());
-    assertEquals(unit, challengeDTO.getUnit());
-    assertEquals(targetProgress, challengeDTO.getTargetProgress());
-    assertEquals(deadline, challengeDTO.getDeadline());
-    assertEquals(scoreReward, challengeDTO.getScoreReward());
-    assertEquals(scorePenalty, challengeDTO.getScorePenalty());
-    assertEquals(user, challengeDTO.getUser());
-    assertEquals(visibility, challengeDTO.getChallengeVisibility());
-    assertEquals(version, challengeDTO.getVersion());
+    assertEquals(id, challengeProgressDTO.getId());
+    assertEquals(user, challengeProgressDTO.getUser());
+    assertEquals(challenge, challengeProgressDTO.getChallenge());
+    assertEquals(challengeReport, challengeProgressDTO.getChallengeReport());
+    assertEquals(currentProgress, challengeProgressDTO.getCurrentProgress());
+    assertEquals(progressVisibility, challengeProgressDTO.getProgressVisibility());
+    assertEquals(version, challengeProgressDTO.getVersion());
   }
 
   @Test
   public void testSettersAndGetters() {
     User newUser = new User();
-    Date newDeadline = new Date();
+    Challenge newChallenge = new Challenge();
+    ChallengeReport newChallengeReport = new ChallengeReport();
 
-    challengeDTO.setId(2L);
-    challengeDTO.setTitle("New Challenge Title");
-    challengeDTO.setDescription("New Challenge Description");
-    challengeDTO.setUnit(Unit.GRAMM);
-    challengeDTO.setTargetProgress(200.0);
-    challengeDTO.setDeadline(newDeadline);
-    challengeDTO.setScoreReward(100);
-    challengeDTO.setScorePenalty(20);
-    challengeDTO.setUser(newUser);
-    challengeDTO.setChallengeVisibility(Visibility.PRIVATE);
-    challengeDTO.setVersion(2);
+    challengeProgressDTO.setId(2L);
+    challengeProgressDTO.setUser(newUser);
+    challengeProgressDTO.setChallenge(newChallenge);
+    challengeProgressDTO.setChallengeReport(newChallengeReport);
+    challengeProgressDTO.setCurrentProgress(75.0);
+    challengeProgressDTO.setProgressVisibility(Visibility.PRIVATE);
+    challengeProgressDTO.setVersion(1);
 
-    assertEquals(2L, challengeDTO.getId());
-    assertEquals("New Challenge Title", challengeDTO.getTitle());
-    assertEquals("New Challenge Description", challengeDTO.getDescription());
-    assertEquals(Unit.GRAMM, challengeDTO.getUnit());
-    assertEquals(200.0, challengeDTO.getTargetProgress());
-    assertEquals(newDeadline, challengeDTO.getDeadline());
-    assertEquals(100, challengeDTO.getScoreReward());
-    assertEquals(20, challengeDTO.getScorePenalty());
-    assertEquals(newUser, challengeDTO.getUser());
-    assertEquals(Visibility.PRIVATE, challengeDTO.getChallengeVisibility());
-    assertEquals(2, challengeDTO.getVersion());
+    assertEquals(2L, challengeProgressDTO.getId());
+    assertEquals(newUser, challengeProgressDTO.getUser());
+    assertEquals(newChallenge, challengeProgressDTO.getChallenge());
+    assertEquals(newChallengeReport, challengeProgressDTO.getChallengeReport());
+    assertEquals(75.0, challengeProgressDTO.getCurrentProgress());
+    assertEquals(Visibility.PRIVATE, challengeProgressDTO.getProgressVisibility());
+    assertEquals(1, challengeProgressDTO.getVersion());
   }
 
   @Test
-  public void testConstructorFromChallenge() {
-    Challenge challenge = new Challenge();
-    challenge.setId(1L);
-    challenge.setTitle("Challenge Title");
-    challenge.setDescription("Challenge Description");
-    challenge.setUnit(Unit.MONTHS);
-    challenge.setTargetProgress(100.0);
-    challenge.setDeadline(deadline);
-    challenge.setScoreReward(50);
-    challenge.setScorePenalty(10);
-    challenge.setUser(user);
-    challenge.setChallengeVisibility(Visibility.PUBLIC);
-    challenge.setVersion(1);
+  public void testConstructorFromChallengeProgress() {
+    ChallengeProgress challengeProgress = new ChallengeProgress();
+    challengeProgress.setId(id);
+    challengeProgress.setUser(user);
+    challengeProgress.setChallenge(challenge);
+    challengeProgress.setChallengeReport(challengeReport);
+    challengeProgress.setCurrentProgress(50.0);
+    challengeProgress.setProgressVisibility(Visibility.PUBLIC);
+    challengeProgress.setVersion(version);
 
-    ChallengeDTO dto = new ChallengeDTO(challenge);
+    ChallengeProgressDTO dto = new ChallengeProgressDTO(challengeProgress);
 
-    assertEquals(1L, dto.getId());
-    assertEquals("Challenge Title", dto.getTitle());
-    assertEquals("Challenge Description", dto.getDescription());
-    assertEquals(Unit.MONTHS, dto.getUnit());
-    assertEquals(100.0, dto.getTargetProgress());
-    assertEquals(deadline, dto.getDeadline());
-    assertEquals(50, dto.getScoreReward());
-    assertEquals(10, dto.getScorePenalty());
+    assertEquals(id, dto.getId());
     assertEquals(user, dto.getUser());
-    assertEquals(Visibility.PUBLIC, dto.getChallengeVisibility());
-    assertEquals(1, dto.getVersion());
+    assertEquals(challenge, dto.getChallenge());
+    assertEquals(challengeReport, dto.getChallengeReport());
+    assertEquals(50.0, dto.getCurrentProgress());
+    assertEquals(Visibility.PUBLIC, dto.getProgressVisibility());
+    assertEquals(version, dto.getVersion());
   }
 
   @Test
-  public void testtoString() {
-    String expected = "ChallengeDTO [challengeVisibility=" + challengeDTO.getChallengeVisibility() + ", deadline="
-        + deadline + ", description="
-        + description + ", id=" + id + ", scorePenalty=" + scorePenalty + ", scoreReward=" + scoreReward + ", title="
-        + title + ", unit=" + unit + ", user=" + user + ", version=" + version + "]";
-    assertEquals(expected, challengeDTO.toString());
+  public void testToString() {
+    String expected = "ChallengeProgressDTO [challenge=" + challenge + ", challengeReport=" + challengeReport
+        + ", currentProgress="
+        + currentProgress + ", id=" + id + ", progressVisibility=" + progressVisibility + ", user=" + user
+        + ", version="
+        + version + "]";
+    assertEquals(expected, challengeProgressDTO.toString());
   }
 }

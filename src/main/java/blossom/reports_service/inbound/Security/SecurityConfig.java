@@ -12,9 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import blossom.reports_service.inbound.Security.JwtFilter;
-import blossom.reports_service.inbound.Security.JwtValidator;
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
