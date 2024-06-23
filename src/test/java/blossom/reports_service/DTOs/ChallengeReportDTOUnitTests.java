@@ -59,6 +59,7 @@ public class ChallengeReportDTOUnitTests {
     MockitoAnnotations.openMocks(this);
 
     dto = new ChallengeReportDTO(challenge, user, progressList, startDate, endDate, status, version);
+    dto.setId(id);
   }
 
   @Test
@@ -165,6 +166,15 @@ public class ChallengeReportDTOUnitTests {
     assertFalse(dto.getProgressList().containsValue(progress1));
     assertFalse(dto.getProgressList().containsKey(otherDate));
     assertFalse(dto.getProgressList().containsValue(progress2));
+  }
+
+  @Test
+  public void testToString() {
+    String expected = "ChallengeReportDTO [challenge=" + challenge + ", endDate=" + endDate + ", id=" + id
+        + ", progressList="
+        + progressList + ", startDate=" + startDate + ", status=" + status + ", user=" + user + ", version=" + version
+        + "]";
+    assertEquals(expected, dto.toString());
   }
 
   // @Test
